@@ -1,0 +1,15 @@
+# Vendor files — not redistributed; see README for sources
+ESP32-PoE-ISO_Rev_N.step
+ESP32-PoE-ISO_Rev_N.stl
+PAN_AQY21-DIP4_PAN.step
+aF4 Automated Aquarium Feeder - Smart Fish Feeding System – inD aquatics.pdf
+inD connect.pdf
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# CAD/build artifacts
+*.step.bak
+__pycache__/
+*.pyc

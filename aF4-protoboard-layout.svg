@@ -1,0 +1,134 @@
+<svg viewBox="0 0 900 645" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <title>aF4 trigger protoboard layout</title>
+  <desc>25x25mm perfboard, component side: AQY212GH PhotoMOS SSR, 220 ohm resistor, 10k GPIO pulldown, control wires from ESP32 on the left, 12V/output side on the right. Polyfuse and 10.4V buck sit inline on the +12V lead off-board; SMAJ12A TVS inside the 3.5mm plug.</desc>
+
+  <text x="70" y="28" font-size="19" font-weight="bold" fill="#333">aF4 trigger — protoboard layout (component side)</text>
+
+  <!-- external wires (behind board edge) -->
+  <path d="M188.7,157.4 C180,110 130,72 102,56" stroke="#e67e22" stroke-width="5" fill="none"/>
+  <path d="M229.3,157.4 C229,108 205,75 188,58" stroke="#555" stroke-width="5" fill="none"/>
+  <path d="M310.6,157.4 C310,108 332,72 348,56" stroke="#d64541" stroke-width="5" fill="none"/>
+  <path d="M432.5,157.4 C433,108 448,72 456,56" stroke="#555" stroke-width="5" fill="none"/>
+  <path d="M310.6,482.5 C310,520 300,545 294,560" stroke="#e0b020" stroke-width="5" fill="none"/>
+  <path d="M432.5,482.5 C433,520 440,545 444,560" stroke="#555" stroke-width="5" fill="none"/>
+  <text x="60" y="46" font-size="13" font-weight="bold" fill="#e67e22">GPIO13 (ESP32)</text>
+  <text x="168" y="40" font-size="13" font-weight="bold" fill="#555">GND (ESP32)</text>
+  <text x="322" y="46" font-size="13" font-weight="bold" fill="#d64541">10.4V in (see ①)</text>
+  <text x="440" y="46" font-size="13" font-weight="bold" fill="#555">12V− (buck OUT−)</text>
+  <text x="216" y="584" font-size="13" font-weight="bold" fill="#b28c00">TIP → 3.5mm plug (see ②)</text>
+  <text x="416" y="584" font-size="13" font-weight="bold" fill="#555">SLEEVE → 3.5mm plug</text>
+
+  <!-- rev B: off-board protection parts -->
+  <g font-size="12" fill="#333">
+    <rect x="500" y="532" width="378" height="104" rx="8" fill="#f6f4ef" stroke="#ddd"/>
+    <text x="518" y="552" font-weight="bold" font-size="13">Off-board protection (rev B)</text>
+    <text x="518" y="572">① +12V lead, inline: splitter → 500 mA polyfuse →</text>
+    <text x="530" y="588">buck module set to 10.4 V → board pad</text>
+    <text x="518" y="606">② SMAJ12A TVS spliced ~1" behind plug: cathode→tip, anode→sleeve</text>
+    <text x="518" y="626">R3 preloads the buck (~5 mA) so its light-load setpoint holds</text>
+  </g>
+
+  <!-- board -->
+  <rect x="70" y="120" width="400" height="400" rx="8" fill="#2f7d52" stroke="#1d5236" stroke-width="2"/>
+
+  <!-- grid holes 9x9 -->
+  <g fill="#f2ead8" stroke="#c9a227" stroke-width="1.5">
+    <g id="row">
+      <circle cx="107.4" cy="157.4" r="4.5"/><circle cx="148.1" cy="157.4" r="4.5"/><circle cx="188.7" cy="157.4" r="4.5"/><circle cx="229.3" cy="157.4" r="4.5"/><circle cx="270.0" cy="157.4" r="4.5"/><circle cx="310.6" cy="157.4" r="4.5"/><circle cx="351.2" cy="157.4" r="4.5"/><circle cx="391.9" cy="157.4" r="4.5"/><circle cx="432.5" cy="157.4" r="4.5"/>
+    </g>
+    <use href="#row" y="40.6"/><use href="#row" y="81.3"/><use href="#row" y="122.0"/><use href="#row" y="162.6"/><use href="#row" y="203.2"/><use href="#row" y="243.8"/><use href="#row" y="284.5"/><use href="#row" y="325.1"/>
+  </g>
+
+  <!-- mounting holes: drill out 4 grid holes, 6 pitches apart -->
+  <g fill="#ffffff" stroke="#666" stroke-width="2" stroke-dasharray="4 3">
+    <circle cx="148.1" cy="198.1" r="17"/><circle cx="391.9" cy="198.1" r="17"/>
+    <circle cx="148.1" cy="441.9" r="17"/><circle cx="391.9" cy="441.9" r="17"/>
+  </g>
+
+  <!-- solder-side bridges -->
+  <g stroke="#9fb7cc" stroke-width="7" stroke-linecap="round" opacity="0.8" fill="none">
+    <line x1="188.7" y1="157.4" x2="188.7" y2="198.1"/>
+    <line x1="188.7" y1="238.7" x2="188.7" y2="279.4"/>
+    <polyline points="229.3,157.4 229.3,320 188.7,320"/>
+    <line x1="310.6" y1="157.4" x2="310.6" y2="279.4"/>
+    <line x1="310.6" y1="320" x2="310.6" y2="482.5"/>
+    <line x1="432.5" y1="157.4" x2="432.5" y2="482.5"/>
+  </g>
+
+  <!-- isolation boundary -->
+  <line x1="270" y1="133" x2="270" y2="243" stroke="#c0392b" stroke-width="2" stroke-dasharray="7 5"/>
+  <line x1="270" y1="356" x2="270" y2="508" stroke="#c0392b" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="262" y="505" font-size="11" font-weight="bold" fill="#ffffff" transform="rotate(-90 262 505)">isolation boundary — 3.3V side | 12V side</text>
+
+  <!-- resistor R2 (10k pulldown, GPIO net -> GND column) -->
+  <line x1="188.7" y1="198.1" x2="195" y2="198.1" stroke="#888" stroke-width="3"/>
+  <line x1="222" y1="198.1" x2="229.3" y2="198.1" stroke="#888" stroke-width="3"/>
+  <rect x="195" y="189" width="27" height="18" rx="4" fill="#7d9fd4" stroke="#3a5a8c" stroke-width="1.5"/>
+  <text x="208" y="184" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">R2 10kΩ pulldown</text>
+
+  <!-- resistor R3 (2.2k bleed/preload across buck output: 10.4V col <-> 12V- col) -->
+  <line x1="310.6" y1="238.7" x2="340" y2="238.7" stroke="#888" stroke-width="3"/>
+  <line x1="402" y1="238.7" x2="432.5" y2="238.7" stroke="#888" stroke-width="3"/>
+  <rect x="340" y="229.7" width="62" height="18" rx="4" fill="#c48fd4" stroke="#7a4a8c" stroke-width="1.5"/>
+  <text x="371" y="225" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">R3 2.2kΩ (buck preload)</text>
+
+  <!-- resistor R1 -->
+  <line x1="188.7" y1="198.1" x2="188.7" y2="204" stroke="#888" stroke-width="3"/>
+  <line x1="188.7" y1="233" x2="188.7" y2="238.7" stroke="#888" stroke-width="3"/>
+  <rect x="177" y="204" width="23" height="29" rx="5" fill="#d9a441" stroke="#8c6a1d" stroke-width="1.5"/>
+  <line x1="177" y1="211" x2="200" y2="211" stroke="#c0392b" stroke-width="3"/>
+  <line x1="177" y1="218" x2="200" y2="218" stroke="#c0392b" stroke-width="3"/>
+  <line x1="177" y1="225" x2="200" y2="225" stroke="#7a5b16" stroke-width="3"/>
+  <text x="170" y="223" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="end">R1 220Ω</text>
+
+  <!-- SSR pads -->
+  <g fill="#e8c25a" stroke="#8c6a1d" stroke-width="1.5">
+    <circle cx="188.7" cy="279.4" r="6.5"/><circle cx="188.7" cy="320" r="6.5"/>
+    <circle cx="310.6" cy="279.4" r="6.5"/><circle cx="310.6" cy="320" r="6.5"/>
+  </g>
+  <!-- SSR body -->
+  <g stroke="#999" stroke-width="9">
+    <line x1="196" y1="279.4" x2="204" y2="279.4"/><line x1="196" y1="320" x2="204" y2="320"/>
+    <line x1="295" y1="279.4" x2="303" y2="279.4"/><line x1="295" y1="320" x2="303" y2="320"/>
+  </g>
+  <rect x="203" y="255" width="94" height="89" rx="6" fill="#24262a" stroke="#000" stroke-width="1.5"/>
+  <path d="M241,255 a9,9 0 0 0 18,0 z" fill="#2f7d52"/>
+  <circle cx="216" cy="270" r="4" fill="#fff"/>
+  <text x="250" y="296" font-size="13" font-weight="bold" fill="#fff" text-anchor="middle">AQY212GH</text>
+  <text x="250" y="312" font-size="10" fill="#bbb" text-anchor="middle">PhotoMOS SSR</text>
+  <!-- pin labels -->
+  <text x="178" y="274" font-size="12" font-weight="bold" fill="#fff" text-anchor="end">1 · LED+</text>
+  <text x="178" y="336" font-size="12" font-weight="bold" fill="#fff" text-anchor="end">2 · LED−</text>
+  <text x="322" y="274" font-size="12" font-weight="bold" fill="#fff">4 · OUT</text>
+  <text x="322" y="336" font-size="12" font-weight="bold" fill="#fff">3 · OUT</text>
+
+  <!-- wire attach pads -->
+  <g fill="#e8c25a" stroke="#8c6a1d" stroke-width="1.5">
+    <circle cx="188.7" cy="157.4" r="6.5"/><circle cx="229.3" cy="157.4" r="6.5"/>
+    <circle cx="310.6" cy="157.4" r="6.5"/><circle cx="432.5" cy="157.4" r="6.5"/>
+    <circle cx="310.6" cy="482.5" r="6.5"/><circle cx="432.5" cy="482.5" r="6.5"/>
+  </g>
+
+  <!-- legend / notes -->
+  <g font-size="13" fill="#333">
+    <rect x="500" y="120" width="378" height="400" rx="8" fill="#f6f4ef" stroke="#ddd"/>
+    <text x="518" y="148" font-weight="bold" font-size="14">Wires</text>
+    <line x1="518" y1="164" x2="548" y2="164" stroke="#e67e22" stroke-width="5"/><text x="556" y="168">GPIO13 — 3.3V control</text>
+    <line x1="518" y1="186" x2="548" y2="186" stroke="#555" stroke-width="5"/><text x="556" y="190">grounds / returns</text>
+    <line x1="518" y1="208" x2="548" y2="208" stroke="#d64541" stroke-width="5"/><text x="556" y="212">10.4V in (splitter → fuse → buck, ①)</text>
+    <line x1="518" y1="230" x2="548" y2="230" stroke="#e0b020" stroke-width="5"/><text x="556" y="234">switched 10.4V → jack tip</text>
+    <line x1="518" y1="252" x2="548" y2="252" stroke="#9fb7cc" stroke-width="7" opacity="0.8"/><text x="556" y="256">solder-side bridge (wire leg or solder)</text>
+    <text x="518" y="292" font-weight="bold" font-size="14">Notes</text>
+    <text x="518" y="312">· Board: 25×25 mm pad-per-hole FR4 (9×9 grid)</text>
+    <text x="518" y="332">· Mount: drill the 4 dashed holes to Ø2.2 mm —</text>
+    <text x="528" y="350">they are 6 grid pitches (15.24 mm) apart,</text>
+    <text x="528" y="368">matching the case bosses. M2 screws.</text>
+    <text x="518" y="392">· SSR notch / pin-1 dot faces the resistor.</text>
+    <text x="518" y="416">· SLEEVE ties to the 12V− strip only — never</text>
+    <text x="528" y="434">to ESP32 GND (keeps PhotoMOS isolation).</text>
+    <text x="518" y="458">· Pins 3/4 have no polarity — either can take</text>
+    <text x="528" y="476">+12V in / tip out.</text>
+    <text x="518" y="500">· Viewed from component side; bridges run</text>
+    <text x="528" y="518">on the solder side.</text>
+  </g>
+</svg>

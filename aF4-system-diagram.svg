@@ -1,0 +1,157 @@
+<svg viewBox="0 0 1020 700" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+  <title>aF4 PoE trigger system electrical diagram</title>
+  <desc>Overall system: Home Assistant to PoE switch to ESP32-POE-ISO, PhotoMOS SSR trigger board, MP1584EN buck from feeder 12V splitter, 3.5mm plug with TVS into aF4 0-10V port.</desc>
+
+  <text x="40" y="34" font-size="20" font-weight="bold" fill="#333">aF4 PoE Trigger — System Diagram (rev B)</text>
+
+  <!-- ================== enclosure ================== -->
+  <rect x="390" y="60" width="400" height="560" rx="10" fill="#f4f3ef" stroke="#999" stroke-width="1.5" stroke-dasharray="8 5"/>
+  <text x="700" y="82" font-size="12" fill="#777" font-style="italic" text-anchor="middle">printed enclosure</text>
+
+  <!-- ================== outside: HA + switch ================== -->
+  <g font-size="12">
+    <rect x="40" y="75" width="150" height="80" rx="6" fill="#eef2f7" stroke="#5a7ca6" stroke-width="1.5"/>
+    <text x="115" y="100" text-anchor="middle" font-weight="bold" fill="#333">Home Assistant</text>
+    <text x="115" y="118" text-anchor="middle" fill="#555">time automations press</text>
+    <text x="115" y="134" text-anchor="middle" fill="#555">button.af4_feed</text>
+
+    <rect x="40" y="195" width="150" height="70" rx="6" fill="#eef2f7" stroke="#5a7ca6" stroke-width="1.5"/>
+    <text x="115" y="220" text-anchor="middle" font-weight="bold" fill="#333">PoE switch</text>
+    <text x="115" y="238" text-anchor="middle" fill="#555">802.3af</text>
+
+    <line x1="115" y1="155" x2="115" y2="195" stroke="#5a7ca6" stroke-width="3"/>
+    <text x="125" y="180" fill="#777">LAN</text>
+  </g>
+
+  <!-- ethernet cable to RJ45 -->
+  <path d="M190,230 h150 v-90 h34" stroke="#5a7ca6" stroke-width="4" fill="none"/>
+  <text x="230" y="222" font-size="12" fill="#5a7ca6" font-weight="bold">Ethernet + PoE power</text>
+  <rect x="374" y="115" width="16" height="50" fill="#c9c9c9" stroke="#666"/>
+  <text x="368" y="180" font-size="11" fill="#666">RJ45 flush</text>
+
+  <!-- ================== ESP32 ================== -->
+  <rect x="430" y="100" width="330" height="95" rx="6" fill="#dde7f2" stroke="#3a5a8c" stroke-width="2"/>
+  <text x="595" y="124" text-anchor="middle" font-size="13" font-weight="bold" fill="#222">Olimex ESP32-POE-ISO · ESPHome</text>
+  <text x="595" y="142" text-anchor="middle" font-size="11" fill="#444">PoE powered — LAN galvanically isolated (3000 V)</text>
+  <text x="595" y="158" text-anchor="middle" font-size="11" fill="#444">on-device logic: 10 s pulse · 290 s lockout (mode: single)</text>
+  <text x="595" y="174" text-anchor="middle" font-size="11" fill="#444">GPIO13 + GND via Dupont to EXT header</text>
+
+  <!-- ================== protoboard ================== -->
+  <rect x="430" y="240" width="330" height="185" rx="6" fill="none" stroke="#4a8a5a" stroke-width="1.5" stroke-dasharray="6 4"/>
+  <text x="438" y="258" font-size="11" fill="#4a8a5a" font-style="italic">protoboard (aF4-protoboard-layout.svg)</text>
+
+  <!-- GPIO13 wire -->
+  <path d="M470,195 v113 h10" stroke="#e67e22" stroke-width="4" fill="none"/>
+  <text x="404" y="290" font-size="11" font-weight="bold" fill="#e67e22">GPIO13</text>
+  <!-- GND wire -->
+  <path d="M540,195 v183 h20" stroke="#555" stroke-width="4" fill="none"/>
+  <text x="498" y="240" font-size="11" font-weight="bold" fill="#555">GND</text>
+
+  <!-- R1 -->
+  <rect x="480" y="300" width="46" height="16" rx="3" fill="#d9a441" stroke="#8c6a1d"/>
+  <text x="503" y="295" font-size="11" text-anchor="middle" fill="#333" font-weight="bold">R1 220Ω</text>
+  <line x1="526" y1="308" x2="560" y2="308" stroke="#e67e22" stroke-width="4"/>
+
+  <!-- R2 pulldown between GPIO and GND -->
+  <rect x="462" y="330" width="16" height="34" rx="3" fill="#7d9fd4" stroke="#3a5a8c"/>
+  <path d="M470,308 v22" stroke="#e67e22" stroke-width="3"/>
+  <path d="M470,364 v14 h70" stroke="#555" stroke-width="3"/>
+  <text x="452" y="352" font-size="11" text-anchor="end" fill="#3a5a8c" font-weight="bold">R2 10kΩ</text>
+
+  <!-- SSR -->
+  <rect x="560" y="278" width="110" height="115" rx="6" fill="#24262a" stroke="#000"/>
+  <text x="615" y="270" font-size="12" text-anchor="middle" font-weight="bold" fill="#333">AQY212GH PhotoMOS</text>
+  <line x1="615" y1="284" x2="615" y2="387" stroke="#c0392b" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="568" y="308" font-size="10" fill="#fff">1 LED+</text>
+  <text x="568" y="382" font-size="10" fill="#fff">2 LED−</text>
+  <text x="664" y="308" font-size="10" fill="#fff" text-anchor="end">4 OUT</text>
+  <text x="664" y="382" font-size="10" fill="#fff" text-anchor="end">3 OUT</text>
+  <path d="M596,330 l8,14 h-6 l8,14" stroke="#f5d060" stroke-width="2" fill="none"/>
+  <text x="615" y="410" font-size="10" text-anchor="middle" fill="#c0392b" font-weight="bold">isolation boundary — no shared ground</text>
+
+  <!-- LED side connections -->
+  <line x1="540" y1="378" x2="560" y2="378" stroke="#555" stroke-width="4"/>
+
+  <!-- ================== buck ================== -->
+  <rect x="430" y="470" width="160" height="85" rx="6" fill="#fdf3d7" stroke="#b8912f" stroke-width="2"/>
+  <text x="510" y="492" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">MP1584EN buck</text>
+  <text x="510" y="509" text-anchor="middle" font-size="11" fill="#555">set 10.40 V (bench, loaded)</text>
+  <text x="510" y="525" text-anchor="middle" font-size="11" fill="#555">R3 2.2 kΩ preload on board</text>
+  <text x="510" y="541" text-anchor="middle" font-size="11" fill="#555">in wall pocket, pot faces out</text>
+
+  <!-- 10.4V to SSR pin 4 -->
+  <path d="M590,495 h50 v-187 h30" stroke="#d64541" stroke-width="4" fill="none"/>
+  <text x="648" y="470" font-size="11" font-weight="bold" fill="#d64541">+10.4 V</text>
+  <!-- OUT- to sleeve -->
+  <path d="M590,535 h130 v-177" stroke="#555" stroke-width="4" fill="none"/>
+  <text x="700" y="555" font-size="11" font-weight="bold" fill="#555">12 V− (OUT−)</text>
+  <!-- tip from SSR pin 3 -->
+  <path d="M670,378 h30 v-32" stroke="#e0b020" stroke-width="4" fill="none"/>
+  <text x="688" y="398" font-size="11" font-weight="bold" fill="#b28c00">TIP</text>
+
+  <!-- output gland -->
+  <rect x="782" y="330" width="16" height="40" fill="#c9c9c9" stroke="#666"/>
+  <text x="775" y="325" font-size="11" fill="#666">PG7 gland</text>
+  <path d="M700,346 h82" stroke="#e0b020" stroke-width="4"/>
+  <path d="M720,358 h62" stroke="#555" stroke-width="4"/>
+
+  <!-- ================== 12V path (outside, bottom) ================== -->
+  <g font-size="12">
+    <rect x="40" y="470" width="150" height="70" rx="6" fill="#f7eeee" stroke="#a65a5a" stroke-width="1.5"/>
+    <text x="115" y="495" text-anchor="middle" font-weight="bold" fill="#333">12 V 12.5 A PSU</text>
+    <text x="115" y="513" text-anchor="middle" fill="#555">feeder's own supply</text>
+  </g>
+  <circle cx="250" cy="505" r="6" fill="#a33"/>
+  <text x="250" y="490" font-size="11" text-anchor="middle" fill="#a33" font-weight="bold">Y-splitter 5.5×2.5 mm</text>
+  <line x1="190" y1="505" x2="244" y2="505" stroke="#a33" stroke-width="5"/>
+  <!-- splitter to feeder (bottom route) -->
+  <path d="M250,511 v154 h610 v-45" stroke="#a33" stroke-width="5" fill="none"/>
+  <text x="480" y="658" font-size="11" fill="#a33" font-weight="bold">12 V to feeder (uninterrupted — never power-cycle the fridge)</text>
+  <!-- splitter tap into enclosure -->
+  <rect x="374" y="525" width="16" height="40" fill="#c9c9c9" stroke="#666"/>
+  <text x="330" y="588" font-size="11" fill="#666">PG7 gland</text>
+  <path d="M256,505 h54 v40 h64" stroke="#a33" stroke-width="4" fill="none"/>
+  <!-- polyfuse -->
+  <rect x="394" y="497" width="14" height="30" rx="3" fill="#e8e8e8" stroke="#666"/>
+  <path d="M401,527 v18" stroke="#a33" stroke-width="3"/>
+  <path d="M401,497 v-8 h29" stroke="#a33" stroke-width="3"/>
+  <path d="M430,489 v0" stroke="#a33" stroke-width="3"/>
+  <text x="388" y="482" font-size="10" fill="#666" font-weight="bold" text-anchor="end">0.5 A polyfuse</text>
+  <path d="M401,545 h-11" stroke="#a33" stroke-width="0"/>
+  <line x1="390" y1="545" x2="430" y2="545" stroke="#a33" stroke-width="4"/>
+  <text x="398" y="562" font-size="10" fill="#a33">12 V pair in</text>
+
+  <!-- ================== plug + TVS + feeder ================== -->
+  <g font-size="11">
+    <rect x="830" y="300" width="155" height="95" rx="6" fill="#fbf6e8" stroke="#b8912f" stroke-width="1.5"/>
+    <text x="907" y="322" text-anchor="middle" font-weight="bold" font-size="12" fill="#333">3.5 mm TS plug</text>
+    <text x="907" y="339" text-anchor="middle" fill="#555">MP3-3501, tip = signal</text>
+    <text x="907" y="355" text-anchor="middle" fill="#555">SMAJ12A TVS spliced ~1"</text>
+    <text x="907" y="371" text-anchor="middle" fill="#555">behind plug: stripe→tip,</text>
+    <text x="907" y="386" text-anchor="middle" fill="#555">anode→sleeve</text>
+    <path d="M798,346 h32" stroke="#e0b020" stroke-width="4"/>
+    <path d="M798,358 h32" stroke="#555" stroke-width="4"/>
+
+    <rect x="830" y="470" width="155" height="115" rx="6" fill="#eef4ee" stroke="#4a8a5a" stroke-width="2"/>
+    <text x="907" y="492" text-anchor="middle" font-weight="bold" font-size="12" fill="#333">inD aF4 feeder</text>
+    <text x="907" y="509" text-anchor="middle" fill="#555">0-10V port: ≥9 V for &gt;6 s</text>
+    <text x="907" y="525" text-anchor="middle" fill="#555">re-arm: &gt;60 s at 0 V</text>
+    <text x="907" y="541" text-anchor="middle" fill="#555">≥5 min between feeds</text>
+    <text x="907" y="557" text-anchor="middle" fill="#555">link icon = mechanical</text>
+    <text x="907" y="573" text-anchor="middle" fill="#555">jack-detect switch</text>
+    <line x1="907" y1="395" x2="907" y2="470" stroke="#b8912f" stroke-width="4"/>
+    <text x="915" y="437" fill="#777">into 0-10V port</text>
+  </g>
+
+  <!-- ================== legend ================== -->
+  <g font-size="11" fill="#333">
+    <rect x="40" y="290" width="150" height="150" rx="6" fill="#f6f4ef" stroke="#ddd"/>
+    <text x="52" y="310" font-weight="bold" font-size="12">Legend</text>
+    <line x1="52" y1="326" x2="78" y2="326" stroke="#5a7ca6" stroke-width="4"/><text x="84" y="330">Ethernet/PoE</text>
+    <line x1="52" y1="346" x2="78" y2="346" stroke="#e67e22" stroke-width="4"/><text x="84" y="350">3.3 V control</text>
+    <line x1="52" y1="366" x2="78" y2="366" stroke="#a33" stroke-width="4"/><text x="84" y="370">12 V raw</text>
+    <line x1="52" y1="386" x2="78" y2="386" stroke="#d64541" stroke-width="4"/><text x="84" y="390">10.4 V regulated</text>
+    <line x1="52" y1="406" x2="78" y2="406" stroke="#e0b020" stroke-width="4"/><text x="84" y="410">switched trigger</text>
+    <line x1="52" y1="426" x2="78" y2="426" stroke="#555" stroke-width="4"/><text x="84" y="430">returns/grounds</text>
+  </g>
+</svg>
