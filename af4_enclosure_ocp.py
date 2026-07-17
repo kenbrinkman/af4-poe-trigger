@@ -244,6 +244,11 @@ LIP_L, LIP_T, LIP_H, CLR = 30.0, 1.2, 2.0, 0.25
 ymid = (IY0 + IY1) / 2
 for lx0 in (IX0 + CLR, IX1 - CLR - LIP_T):
     lid = fuse(lid, box(lx0, ymid - LIP_L / 2, IZ1 - LIP_H, lx0 + LIP_T, ymid + LIP_L / 2, IZ1))
+# short-side lips: 26mm (not 30) so the ends clear the O9 corner lid bosses by ~1.4mm
+LIP_L2 = 26.0
+xmid = (IX0 + IX1) / 2
+for ly0 in (IY0 + CLR, IY1 - CLR - LIP_T):
+    lid = fuse(lid, box(xmid - LIP_L2 / 2, ly0, IZ1 - LIP_H, xmid + LIP_L2 / 2, ly0 + LIP_T, IZ1))
 for bx, by, zb in LID_BOSSES:
     lid = cut(lid, cyl_z(bx, by, IZ1 - 0.01, LID_T + 0.02, 3.4))
     lid = cut(lid, cone_z(bx, by, IZ1 + LID_T + 0.01, 6.8 / 2 + 0.01, 3.4 / 2, 1.71))
