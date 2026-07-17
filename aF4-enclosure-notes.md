@@ -4,13 +4,13 @@ Case for the ESP32-POE-ISO + AQY212 protoboard. Designed against the measured `E
 
 ## Files
 
-- `aF4-trigger-case.stl` / `.step` — case body, 51.7 × 155 × 38.9 mm. Widened 4 mm on the gland side (PG7 locknut clears the wall and RJ45 light-pipe wings by ~3 mm) and lengthened 14 mm at the output end (9 mm clear between the output gland's locknut and the protoboard, plus cable slack to the tip/sleeve pads).
+- `aF4-trigger-case.stl` / `.step` — case body, 51.7 × 159 × 38.9 mm. Widened 4 mm on the gland side (PG7 locknut clears the wall and RJ45 light-pipe wings by ~3 mm) and lengthened 14 mm at the output end (9 mm clear between the output gland's locknut and the protoboard, plus cable slack to the tip/sleeve pads). **v3:** input end lengthened 4 mm after physical fit check — the input gland's thread stub + locknut protrude 5.0 mm past the inner wall, but the old wall-to-board gap was only 4.85 mm, so the board rode the nut and couldn't seat. Nut now clears the board edge by 3.85 mm.
 - `aF4-trigger-lid.stl` / `.step` — lid, exported print-side down (flat top on bed)
 - `af4_enclosure_ocp.py` — parametric source (Python/OpenCascade); every dimension is a named constant
 
 ## Layout
 
-- **Input wall:** RJ45 flush cutout (jack face sits in the outer wall plane) + PG7 gland for the 12V splitter cable, left of the jack. Inner-face relief pockets clear the jack's latch wings and top shield bump.
+- **Input wall:** RJ45 tunnel cutout — the jack face now sits 4 mm behind the outer wall plane (1 mm inside the inner face); the ethernet plug reaches it through the wall opening, which was enlarged (z −1.5…16.5) to pass snagless boots. The jack's latch wings and top shield bump sit fully inside the cavity, so the old inner-face relief pockets are gone. PG7 gland for the 12V splitter cable, left of the jack.
 - **Output wall:** PG7 gland centered, for the 3.5mm cable. A 13.5 mm deep clearance zone sits between this wall and the protoboard — the locknut/thread stub use ~4.5 mm of it, leaving 9 mm for the cable to drop to the protoboard's tip/sleeve pads. Solder those wires on the board edge facing this gland (as drawn in `aF4-protoboard-layout.svg`).
 - **Board:** three Ø6 standoffs matching the board's 2.2 mm holes, board bottom sits 9.5 mm above floor (header pins protrude 8.6 mm below board). **M2 self-tapping screws**, 1.7 mm pilot holes, ≥8 mm thread.
 - **Protoboard bay:** past the antenna end, four Ø6 × 6 mm bosses spaced 6 perfboard grid pitches apart (15.24 × 15.24 mm) so the mounting holes land on existing grid holes — just drill 4 grid holes out to Ø2.2 mm. M2 self-tappers (two diagonal bosses is enough). See `aF4-protoboard-layout.svg` for component placement and wiring.
@@ -20,7 +20,7 @@ Case for the ESP32-POE-ISO + AQY212 protoboard. Designed against the measured `E
 
 ## Print settings (PETG, P1S)
 
-- Case upright (as exported), lid as exported (top face down). No supports needed — gland holes have truncated-teardrop roofs (45° sides, ~4 mm flat bridge at the crown, sized to hide completely under the PG7 hex body and locknut), RJ45 opening bridges 16.9 mm (fine in PETG).
+- Case upright (as exported), lid as exported (top face down). No supports needed — gland holes have truncated-teardrop roofs (45° sides, ~4 mm flat bridge at the crown, sized to hide completely under the PG7 hex body and locknut), RJ45 opening bridges 16.9 mm at z 16.5 (fine in PETG).
 - 3 walls / 4 top-bottom layers, 15–25% infill, 0.2 mm layers.
 - If self-tapping feels tight in PETG, run the M3s in slowly (low friction heat) or pre-thread with a screw before final assembly.
 

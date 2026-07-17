@@ -34,15 +34,22 @@ from OCP.BRepGProp import BRepGProp
 # ---------------- parameters ----------------
 WALL, FLOOR, LID_T = 3.0, 2.4, 3.0
 IX0, IX1 = 74.5, 120.2   # left wall pushed out 4mm for PG7 locknut clearance
-IY0, IY1 = -193.0, -44.0  # output wall pushed out 14mm: gland nut + cable zone in front of protoboard
+IY0, IY1 = -197.0, -44.0  # input wall pushed out 4mm (v2 fit check: gland nut+stub protrude
+                          # 5.0mm past inner face; old 4.85mm wall-to-board gap => board rode
+                          # the nut. Now nut face y=-192.0, board edge -188.15: 3.85mm clear.
+                          # RJ45 jack face (y=-196) recesses 1mm behind inner face — plug
+                          # reaches it through the wall tunnel).
+                          # output wall pushed out 14mm: gland nut + cable zone in front of protoboard
 IZ0, IZ1 = -9.5, 27.0
 OX0, OX1 = IX0 - WALL, IX1 + WALL
-OY0, OY1 = IY0 - WALL, IY1 + WALL          # OY0=-196.0 RJ45 flush plane
+OY0, OY1 = IY0 - WALL, IY1 + WALL          # OY0=-200.0; RJ45 face (y=-196) recessed 4mm
 OZ0 = IZ0 - FLOOR
 FILLET_R = 3.0
 
-RJX0, RJX1, RJZ0, RJZ1 = 100.76, 117.64, 0.26, 15.0
-WGX0, WGX1, WGZ0, WGZ1, WG_D = 98.4, 119.9, 3.5, 11.8, 1.5
+# RJ45 tunnel: jack face is now 4mm behind the outer plane, so the opening is a
+# through-tunnel the plug body/boot must pass. Width 16.88 clears any snagless
+# boot (~13.5); z opened up to -1.5..16.5 for boot + latch clearance.
+RJX0, RJX1, RJZ0, RJZ1 = 100.76, 117.64, -1.5, 16.5
 
 GLAND_D = 12.6
 G1X, G1Z = 86.0, 4.0     # nut edge (r~10.5) : 11.0 to left wall, 2.6 to RJ45 wing (x=99.06)
@@ -160,11 +167,9 @@ outer = box(OX0, OY0, OZ0, OX1, OY1, IZ1)
 outer = fillet_vertical_edges(outer, FILLET_R)
 case = cut(outer, box(IX0, IY0, IZ0, IX1, IY1, IZ1 + 1))
 
-# RJ45 flush opening + wing relief
+# RJ45 tunnel (jack recessed; wings at y>=-194.0 and the top shield bump now sit
+# fully inside the cavity — the old inner-face relief pockets are no longer needed)
 case = cut(case, box(RJX0, OY0 - 1, RJZ0, RJX1, IY0 + 0.01, RJZ1))
-case = cut(case, box(WGX0, IY0 - WG_D, WGZ0, WGX1, IY0 + 0.01, WGZ1))
-# top shield-bump relief (jack top rear reaches y=-194.0, z to ~16.0)
-case = cut(case, box(104.5, IY0 - WG_D, 14.8, 113.9, IY0 + 0.01, 17.0))
 
 # gland holes
 case = cut(case, teardrop_y(G1X, G1Z, OY0 - 1, IY0 + 1, GLAND_D))
@@ -205,12 +210,27 @@ for sgn in (-1, 1):
     fy = BUCK_CY + sgn * (MOD_HALF + 0.4)
     fy2 = fy + sgn * 2.4
     case = fuse(case, box(IX0, min(fy, fy2), IZ0, COMP_FRONT + 0.8, max(fy, fy2), 8.0))
-# front snap post: inner face 0.5 clear of tallest component, 6 wide, nub on top
-POST_X0 = COMP_FRONT + 0.5     # 79.9
-case = fuse(case, box(POST_X0, BUCK_CY - 3.0, IZ0, POST_X0 + 2.2, BUCK_CY + 3.0, MOD_TOP + 1.0))
-# stepped nub (points toward wall, above module top-front corner; steps = insert lead-in)
-case = fuse(case, box(POST_X0 - 0.3, BUCK_CY - 3.0, MOD_TOP + 0.2, POST_X0, BUCK_CY + 3.0, MOD_TOP + 0.9))
-case = fuse(case, box(POST_X0 - 0.6, BUCK_CY - 3.0, MOD_TOP + 0.2, POST_X0, BUCK_CY + 3.0, MOD_TOP + 0.5))
+# front snap post: moved 1.2 inboard after v1 fit check (was COMP_FRONT+0.5 —
+# nub tip barely reached the component plane, no real engagement). Inner face
+# now 0.7 PAST the tallest-component plane: light press contact, real retention.
+POST_INSET = 1.2
+POST_T = 2.0                   # thinned from 2.2: needs ~1.5mm flex on insert
+POST_X0 = COMP_FRONT + 0.5 - POST_INSET   # 78.7
+case = fuse(case, box(POST_X0, BUCK_CY - 3.0, IZ0, POST_X0 + POST_T, BUCK_CY + 3.0, MOD_TOP + 1.8))
+# stepped nub (points toward wall, hooks over top-front components; 1.2 deep,
+# 1.4 tall lip, 3-step staircase = insert lead-in)
+case = fuse(case, box(POST_X0 - 0.4, BUCK_CY - 3.0, MOD_TOP + 0.2, POST_X0, BUCK_CY + 3.0, MOD_TOP + 1.6))
+case = fuse(case, box(POST_X0 - 0.8, BUCK_CY - 3.0, MOD_TOP + 0.2, POST_X0, BUCK_CY + 3.0, MOD_TOP + 1.1))
+case = fuse(case, box(POST_X0 - 1.2, BUCK_CY - 3.0, MOD_TOP + 0.2, POST_X0, BUCK_CY + 3.0, MOD_TOP + 0.6))
+
+# wall-mount tabs: one per long side, centered along Y, flush with case bottom
+TAB_W, TAB_L, TAB_T = 16.0, 12.0, 4.0   # width along wall, protrusion, thickness
+TAB_HOLE = 4.5                           # #8 / M4 clearance
+TYM = (OY0 + OY1) / 2
+for wx, sgn in ((OX0, -1), (OX1, 1)):
+    tx0, tx1 = sorted((wx, wx + sgn * TAB_L))
+    case = fuse(case, box(tx0, TYM - TAB_W / 2, OZ0, tx1, TYM + TAB_W / 2, OZ0 + TAB_T))
+    case = cut(case, cyl_z(wx + sgn * (TAB_L - 5.5), TYM, OZ0 - 0.01, TAB_T + 0.02, TAB_HOLE))
 
 # lid bosses, pilot open at bottom
 for bx, by, zb in LID_BOSSES:
