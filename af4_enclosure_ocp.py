@@ -33,30 +33,25 @@ from OCP.BRepGProp import BRepGProp
 
 # ---------------- parameters ----------------
 WALL, FLOOR, LID_T = 3.0, 2.4, 3.0
-IX0, IX1 = 74.5, 120.2   # left wall pushed out 4mm for PG7 locknut clearance
-IY0, IY1 = -197.0, -44.0  # input wall pushed out 4mm (v2 fit check: gland nut+stub protrude
-                          # 5.0mm past inner face; old 4.85mm wall-to-board gap => board rode
-                          # the nut. Now nut face y=-192.0, board edge -188.15: 3.85mm clear.
-                          # RJ45 jack face (y=-196) recesses 1mm behind inner face — plug
-                          # reaches it through the wall tunnel).
+IX0, IX1 = 66.5, 120.2   # v5: left wall pushed out another 8mm (12 total) — gland-nut
+                          # clearance now comes from case WIDTH, not length: the nut sits
+                          # fully left of the board footprint (see G1X)
+IY0, IY1 = -193.0, -44.0  # v5: input wall back at the v1 position, RJ45 face flush with
+                          # the outer plane.
                           # output wall pushed out 14mm: gland nut + cable zone in front of protoboard
 IZ0, IZ1 = -9.5, 27.0
 OX0, OX1 = IX0 - WALL, IX1 + WALL
-OY0, OY1 = IY0 - WALL, IY1 + WALL          # OY0=-200.0; RJ45 face (y=-196) recessed 4mm
+OY0, OY1 = IY0 - WALL, IY1 + WALL          # OY0=-196.0 RJ45 flush plane
 OZ0 = IZ0 - FLOOR
 FILLET_R = 3.0
 
-# RJ45 snout (v4): v3's plain tunnel left the jack recessed behind a tall loose
-# opening. Fix: fuse a 1mm pad on the wall's inner face around the jack so
-# material reaches to 0.1mm off the jack face (y=-196), then cut the tight v1
-# window through it (0.5mm reveal around the shield). Latch faces DOWN on this
-# jack, so a narrow notch below the aperture gives the latch tail flex/press room.
 RJX0, RJX1, RJZ0, RJZ1 = 100.76, 117.64, 0.26, 15.0
-SNOUT_X0, SNOUT_Y1, SNOUT_Z1 = 98.2, -196.1, 18.0  # x0 leaves 1.7mm to gland nut (max x 96.5)
-LATCH_X0, LATCH_X1, LATCH_Z0 = 103.2, 115.2, -1.5
+WGX0, WGX1, WGZ0, WGZ1, WG_D = 98.4, 119.9, 3.5, 11.8, 1.5
 
 GLAND_D = 12.6
-G1X, G1Z = 86.0, 4.0     # nut edge (r~10.5) : 11.0 to left wall, 2.6 to RJ45 wing (x=99.06)
+G1X, G1Z = 77.5, 4.0     # v5: nut (r~10.5) spans x 67..88 — fully left of the board edge
+                         # (x=90.15, 2.1 clear) and 0.5 off the left wall, so its 5mm
+                         # protrusion past the inner face never meets the board
 CX = (IX0 + IX1) / 2
 G2X, G2Z = CX, 4.0
 
@@ -171,12 +166,11 @@ outer = box(OX0, OY0, OZ0, OX1, OY1, IZ1)
 outer = fillet_vertical_edges(outer, FILLET_R)
 case = cut(outer, box(IX0, IY0, IZ0, IX1, IY1, IZ1 + 1))
 
-# RJ45 snout + tight window (wings at y>=-194.0 and the top shield bump sit in
-# open air behind the snout face — no relief pockets needed)
-case = fuse(case, box(SNOUT_X0, IY0 - 0.5, IZ0, IX1, SNOUT_Y1, SNOUT_Z1))
-case = cut(case, box(RJX0, OY0 - 1, RJZ0, RJX1, SNOUT_Y1 + 0.5, RJZ1))
-# latch-relief notch under the aperture
-case = cut(case, box(LATCH_X0, OY0 - 1, LATCH_Z0, LATCH_X1, SNOUT_Y1 + 0.5, RJZ0 + 1))
+# RJ45 flush opening + wing relief (v1 style: jack face in the outer wall plane)
+case = cut(case, box(RJX0, OY0 - 1, RJZ0, RJX1, IY0 + 0.01, RJZ1))
+case = cut(case, box(WGX0, IY0 - WG_D, WGZ0, WGX1, IY0 + 0.01, WGZ1))
+# top shield-bump relief (jack top rear reaches y=-194.0, z to ~16.0)
+case = cut(case, box(104.5, IY0 - WG_D, 14.8, 113.9, IY0 + 0.01, 17.0))
 
 # gland holes
 case = cut(case, teardrop_y(G1X, G1Z, OY0 - 1, IY0 + 1, GLAND_D))
