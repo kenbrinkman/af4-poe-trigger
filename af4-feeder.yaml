@@ -1,0 +1,116 @@
+---
+# aF4 Frozen Feeder — PoE trigger
+# Olimex ESP32-POE-ISO. GPIO13 -> 220R -> AQY212GH PhotoMOS -> 10.4V onto the 3.5mm tip.
+#
+# All feeder timing rules are enforced ON-DEVICE. Home Assistant is scheduler only:
+# it presses button.af4_feed and nothing else. Per inD 0-10V spec:
+#   - trigger = >=9V held >6s      -> 10s pulse
+#   - port needs ~0V for >60s      -> covered by the lockout tail
+#   - feeds must be >=5 min apart  -> 10s + 290s = 300s, script mode: single
+#
+# See aF4-reference.md and aF4-assembly-guide.md in this folder.
+
+substitutions:
+  device_name: af4-feeder
+  friendly_name: aF4 Feeder
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+  comment: "aF4 frozen feeder 0-10V trigger (PoE)"
+
+esp32:
+  board: esp32-poe-iso
+  framework:
+    type: esp-idf
+
+# Olimex ESP32-POE-ISO. NOTE: no wifi: block — ethernet and wifi are mutually
+# exclusive here, and this board lives on PoE.
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO17_OUT
+  phy_addr: 0
+  power_pin: GPIO12
+
+logger:
+  level: INFO
+
+api:
+  encryption:
+    key: "6PvkLXgW+QwIAjDaOCeVU60Yun2J1+B5A9/VsL1YMHI="
+
+ota:
+  - platform: esphome
+    password: "GZY7CtoC7VMT9fvbAWTc2isS"
+
+# Local control page for commissioning (assembly guide step 7.2) and manual feeds.
+web_server:
+  port: 80
+
+# ---------------------------------------------------------------------------
+# Raw output — internal so Home Assistant can never touch the line directly.
+# restore_mode ALWAYS_OFF is the software half of the boot-safety pair;
+# R2 (10k GPIO13->GND pulldown) is the hardware half.
+# ---------------------------------------------------------------------------
+switch:
+  - platform: gpio
+    pin: GPIO13
+    id: feed_ssr
+    restore_mode: ALWAYS_OFF
+    internal: true
+
+script:
+  - id: do_feed
+    mode: single          # re-entrant presses are DROPPED, not queued
+    then:
+      - logger.log: "aF4: feed pulse start"
+      - switch.turn_on: feed_ssr
+      - delay: 10s        # spec: >=9V for >6s
+      - switch.turn_off: feed_ssr
+      - logger.log: "aF4: pulse done, 290s lockout"
+      - delay: 290s       # enforces 5-min spacing + >60s 0V re-arm
+      - logger.log: "aF4: lockout cleared"
+
+# ---------------------------------------------------------------------------
+# The ONLY exposed control.
+# ---------------------------------------------------------------------------
+button:
+  - platform: template
+    name: "Feed"
+    id: af4_feed
+    icon: mdi:fish
+    on_press:
+      - script.execute: do_feed
+
+  - platform: restart
+    name: "Restart"
+    entity_category: diagnostic
+
+binary_sensor:
+  - platform: template
+    name: "Feed Lockout"
+    id: af4_lockout
+    icon: mdi:lock-clock
+    lambda: 'return id(do_feed).is_running();'
+
+  - platform: status
+    name: "Status"
+
+# Feed counting lives in Home Assistant (counter.reef_af4_feeds_today), not
+# here — it survives device reboots and is already reset nightly by
+# automation.reef_tank_reset_ato_counter_daily.
+sensor:
+  - platform: uptime
+    name: "Uptime"
+    entity_category: diagnostic
+
+text_sensor:
+  - platform: ethernet_info
+    ip_address:
+      name: "IP Address"
+      entity_category: diagnostic
+  - platform: version
+    name: "ESPHome Version"
+    entity_category: diagnostic

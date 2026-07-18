@@ -76,8 +76,42 @@ Note: this bleed is on the **buck output (regulation)**, a different point from 
 
 ## Home Assistant notes
 
-- Schedule via time-trigger automations calling the feed button
-- Consider a `counter` for daily feed count and a notification on trigger
+Device adopted 2026-07-18. Config in `af4-feeder.yaml`; built on the ESPHome
+container on the Unraid server (port 6052), not an HA add-on.
+
+**Entities (ESPHome):** `button.af4_feeder_feed` (sole control),
+`binary_sensor.af4_feeder_feed_lockout`, `binary_sensor.af4_feeder_status`
+(connectivity, for the Reef Command dashboard), `sensor.af4_feeder_ip_address`,
+`sensor.af4_feeder_uptime`, `button.af4_feeder_restart`.
+
+Build/flash workflow: `af4-feeder.yaml` in this folder is the **source of
+truth**. The ESPHome Device Builder (Docker on the Unraid server, port 6052)
+holds its own copy — paste changes there manually, then Install → Wirelessly.
+First flash was USB via web.esphome.io (factory .bin); everything since is OTA
+(enclosure has no USB cutout). IP 192.168.1.55 reserved in OPNsense dnsmasq
+against Ethernet MAC `20:E7:C8:74:A6:D7`.
+
+**Helpers + automation (HA):**
+
+| Entity | Role |
+|---|---|
+| `input_boolean.reef_af4_schedule_enabled` | Master kill switch for scheduled feeds |
+| `input_datetime.reef_af4_feed_time_1` / `_2` | Feed times (default 09:00 / 17:00) |
+| `counter.reef_af4_feeds_today` | Daily count; reset by `automation.reef_tank_reset_ato_counter_daily` |
+| `sensor.reef_af4_next_feed` | Template; reads `unknown` while the schedule toggle is off (expected) |
+| `automation.reef_tank_af4_scheduled_feed` | Presses the button at each feed time |
+
+Feed counting is deliberately in HA, not on-device: the counter survives ESP32
+reboots and reuses the existing nightly reset. The automation's lockout
+condition does double duty — `off` means the device is reachable *and* outside
+its 5-minute lockout, so an offline ESP32 skips the feed instead of firing a
+press into the void.
+
+Networking: the board pulled a new DHCP lease after flashing (.230 → .55),
+which broke HA's cached discovery with `Errno 113`. Fixed 2026-07-18: Ethernet
+MAC `20:E7:C8:74:A6:D7` reserved at 192.168.1.55 in OPNsense dnsmasq (host
+override `af4-feeder`, no client identifier — MAC match only).
+
 - Feeder has no feedback channel — the 0-10V port is input-only. Confirmation of an actual dispense isn't available electrically; a power-monitoring smart plug on the 12V supply could infer feed motor activity if desired
 
 ## Sources

@@ -10,6 +10,7 @@ ESP32-POE-ISO → GPIO13 → 220Ω → AQY212GH PhotoMOS → switches the feeder
 
 | File | Purpose |
 |---|---|
+| `af4-feeder.yaml` | ESPHome device config (as flashed) |
 | `aF4-reference.md` | Technical reference: trigger port spec, measurements, design rationale |
 | `aF4-esp32-trigger-BOM.md` | Parts list + full ESPHome YAML |
 | `aF4-assembly-guide.md` | Build sequence: print, solder, wire, flash, commission |
