@@ -46,10 +46,14 @@ OY0, OY1 = IY0 - WALL, IY1 + WALL          # OY0=-200.0; RJ45 face (y=-196) rece
 OZ0 = IZ0 - FLOOR
 FILLET_R = 3.0
 
-# RJ45 tunnel: jack face is now 4mm behind the outer plane, so the opening is a
-# through-tunnel the plug body/boot must pass. Width 16.88 clears any snagless
-# boot (~13.5); z opened up to -1.5..16.5 for boot + latch clearance.
-RJX0, RJX1, RJZ0, RJZ1 = 100.76, 117.64, -1.5, 16.5
+# RJ45 snout (v4): v3's plain tunnel left the jack recessed behind a tall loose
+# opening. Fix: fuse a 1mm pad on the wall's inner face around the jack so
+# material reaches to 0.1mm off the jack face (y=-196), then cut the tight v1
+# window through it (0.5mm reveal around the shield). Latch faces DOWN on this
+# jack, so a narrow notch below the aperture gives the latch tail flex/press room.
+RJX0, RJX1, RJZ0, RJZ1 = 100.76, 117.64, 0.26, 15.0
+SNOUT_X0, SNOUT_Y1, SNOUT_Z1 = 98.2, -196.1, 18.0  # x0 leaves 1.7mm to gland nut (max x 96.5)
+LATCH_X0, LATCH_X1, LATCH_Z0 = 103.2, 115.2, -1.5
 
 GLAND_D = 12.6
 G1X, G1Z = 86.0, 4.0     # nut edge (r~10.5) : 11.0 to left wall, 2.6 to RJ45 wing (x=99.06)
@@ -167,9 +171,12 @@ outer = box(OX0, OY0, OZ0, OX1, OY1, IZ1)
 outer = fillet_vertical_edges(outer, FILLET_R)
 case = cut(outer, box(IX0, IY0, IZ0, IX1, IY1, IZ1 + 1))
 
-# RJ45 tunnel (jack recessed; wings at y>=-194.0 and the top shield bump now sit
-# fully inside the cavity — the old inner-face relief pockets are no longer needed)
-case = cut(case, box(RJX0, OY0 - 1, RJZ0, RJX1, IY0 + 0.01, RJZ1))
+# RJ45 snout + tight window (wings at y>=-194.0 and the top shield bump sit in
+# open air behind the snout face — no relief pockets needed)
+case = fuse(case, box(SNOUT_X0, IY0 - 0.5, IZ0, IX1, SNOUT_Y1, SNOUT_Z1))
+case = cut(case, box(RJX0, OY0 - 1, RJZ0, RJX1, SNOUT_Y1 + 0.5, RJZ1))
+# latch-relief notch under the aperture
+case = cut(case, box(LATCH_X0, OY0 - 1, LATCH_Z0, LATCH_X1, SNOUT_Y1 + 0.5, RJZ0 + 1))
 
 # gland holes
 case = cut(case, teardrop_y(G1X, G1Z, OY0 - 1, IY0 + 1, GLAND_D))
