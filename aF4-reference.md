@@ -62,7 +62,7 @@ Regulates the feeder's 12V tap down to ~10.4V (matching measured OEM trigger) fo
 
 **Light-load caveat (matters here).** The aF4 0-10V input is high-impedance (trigger draws well under 1mA), so the module runs at a few mW — far below the "don't run under ~10% load / no load" warning on these buck boards. At near-zero load, cheap bucks regulate poorly and the output can creep above setpoint. Two fixes (either works):
 1. Set 10.4V **with the real load (or a stand-in) connected**, not on an unloaded bench — measure what it actually outputs in service.
-2. Add a small permanent **bleed/preload resistor across the buck output** (~2–2.2kΩ, ≈5mA / ~50mW) so the setpoint holds and it can't overshoot. Implemented as R3 = five 10 kΩ in parallel (2 kΩ, ≈5.2 mA, ~11 mW each) to use on-hand stock.
+2. Add a small permanent **bleed/preload resistor across the buck output** (~2.2kΩ, ≈5mA / ~50mW) so the setpoint holds and it can't overshoot.
 
 Note: this bleed is on the **buck output (regulation)**, a different point from the trigger line — the trigger line needs no bleed (rest voltage confirmed 0V, link-detect is mechanical; see verification checklist). For a threshold trigger a little upward drift is harmless (needs only ≥9V), so this is about setpoint repeatability, not a dealbreaker.
 
@@ -71,7 +71,7 @@ Note: this bleed is on the **buck output (regulation)**, a different point from 
 - `ESP32-PoE-ISO_Rev_N.step` / `.stl` — full Olimex ESP32-POE-ISO board model (Rev.N, latest), extracted from the [Olimex KiCad hardware files](https://github.com/OLIMEX/ESP32-POE-ISO): board solid + 124 component models, all through-holes. Board ~28 × 98 mm plus antenna and RJ45 overhang; overall envelope ~29.4 × 112.5 × 25.3 mm. Hole positions verified against factory drill files. Not included: RM1–RM3 resistor arrays (no STEP source). STEP for enclosure CAD, STL for printing/viewing.
 - `PAN_AQY21-DIP4_PAN.step` — Panasonic AQY212GH PhotoMOS, DIP-4 package.
 - `aF4-trigger-case.stl/.step` + `aF4-trigger-lid.stl/.step` — printed enclosure (PETG, 59.7 × 155 × 38.9 mm): flush RJ45 + DC-099 panel-mount 12V jack (5.5×2.5, takes the splitter's tap plug directly) on the input wall, centered PG7 gland on the output wall, drop-in wall pocket for the MP1584EN buck module (snap post, all pads exposed, pot faces the room), M3×12 self-tapped lid, M2 board/protoboard mounts. Details in `aF4-enclosure-notes.md`; parametric source `af4_enclosure_ocp.py`.
-- `aF4-protoboard-layout.svg` — SSR + R1 (220Ω LED), R2 (10kΩ GPIO pulldown), R3 (5×10kΩ in parallel = 2kΩ buck preload) placement and wiring on the 25×25 mm protoboard; off-board polyfuse/buck/TVS chain noted in the rev B panel. Two detail panels below the board drawing show the splices: **①** the 500 mA polyfuse inline on the +12 V lead, **②** the P6KE12CA TVS (bidirectional) across tip/sleeve ~1" behind the 3.5 mm plug. Step-by-step in `aF4-assembly-guide.md` §3–4.
+- `aF4-protoboard-layout.svg` — SSR + R1 (220Ω LED), R2 (10kΩ GPIO pulldown), R3 (2.2kΩ buck preload) placement and wiring on the 25×25 mm protoboard; off-board polyfuse/buck/TVS chain noted in the rev B panel. Two detail panels below the board drawing show the splices: **①** the 500 mA polyfuse inline on the +12 V lead, **②** the P6KE12CA TVS (bidirectional) across tip/sleeve ~1" behind the 3.5 mm plug. Step-by-step in `aF4-assembly-guide.md` §3–4.
 - `aF4-assembly-guide.md` — full build sequence: print, protoboard build, buck setup, wiring, flash, commissioning checks.
 
 ## Home Assistant notes

@@ -21,17 +21,15 @@ Populate per `aF4-protoboard-layout.svg` (component side view, bridges on solder
 | U1 | AQY212GH (DIP-4 socket optional) | straddles the isolation boundary, notch/pin-1 dot toward R1 |
 | R1 | 220 Ω | GPIO13 pad → SSR pin 1 (LED+) |
 | R2 | 10 kΩ | GPIO13 net → ESP-GND net (pulldown) |
-| R3 | 5 × 10 kΩ in parallel (= 2 kΩ) | 10.4 V column → 12 V− column (buck preload); rows per layout — see mounting note below |
+| R3 | 2.2 kΩ | 10.4 V column → 12 V− column (buck preload) |
 
 Wire pads: GPIO13 and ESP-GND on the 3.3 V side; 10.4 V-in and 12 V− on the power side; TIP and SLEEVE exit the edge that will face the output gland. **SLEEVE ties only to the 12 V− strip — never to ESP32 GND.** That gap through the middle of the SSR is the whole isolation design.
 
 **Mounting the resistors.** The layout spaces R1/R2 on ideal pitch, but a ¼ W axial body plus bend radius wants 3–4 hole pitches (7.6–10 mm) — more room than the drawing allows on a 9×9 board. Stand them vertically instead: bend one lead 180° at the body shoulder (not at the glass seal — bending too close cracks the end cap) so the footprint drops to a single pitch. Sleeve the bent-back lead so it can't short to the adjacent row, and orient the bands so band 1 reads from the top.
 
-**Mounting the R3 bank.** The five 10 k's lie flat — the 10.4 V → 12 V− span is 3 pitches (7.62 mm), fine for a ¼ W body. Only three free rows exist that don't cross the M2 mounting screws (the two screw rows must stay clear for driver access), so: three resistors flat on the free rows, and the remaining two **piggybacked** on top of two of them — lay the second body on the first and solder lead-to-lead topside. Positions in `aF4-protoboard-layout.svg`. Verify the bank before power: meter across it and expect **2.0 kΩ** (all five in circuit; ~2.5 k means one is open/unsoldered).
-
 R1 and R2 share the GPIO13 node, so their upper leads tie together. Land that junction **in a board hole**, not as a mid-air splice — the pad gives the joint mechanical support and becomes the landing point for the GPIO13 wire. A dab of hot glue at the resistor bases once the circuit tests good keeps the bends from fatiguing.
 
-Meter each resistor before soldering. R2 and the R3 bank are all the same 10 kΩ part (brown-black-orange), which removes the old 220/2.2 k band-color trap — but 220 Ω (red-red-brown) still opens with a red/brown band that's easy to misread under warm light. A stray 220 Ω in the R3 bank pulls ~47 mA off the buck instead of ~1 mA for its slot; a 10 k in the R1 slot starves the SSR LED.
+Meter each resistor before soldering. 220 Ω is red-red-**brown** and 2.2 kΩ is red-red-**red** — one band apart, and brown vs. red is the hardest pair to call under warm light. 2.2 k in the R1 slot starves the SSR LED; 220 Ω in the R3 slot pulls ~47 mA off the buck instead of ~5 mA.
 
 Check that the tallest standing part clears the lid before committing — board height is fixed by the mounting bosses.
 
@@ -39,7 +37,7 @@ Check that the tallest standing part clears the lid before committing — board 
 
 1. Solder four wires to the MP1584EN corners: IN+ , IN−, OUT+, OUT−. Keep IN leads long enough to reach the input jack's pigtails (~120 mm), OUT leads ~80 mm.
 2. Splice the 500 mA polyfuse inline into the IN+ lead, heatshrunk — see **detail ①** in `aF4-protoboard-layout.svg`. Cut IN+ only; the return lead runs straight through. The PTC has no polarity, but a radial disc has both legs on one edge, so bend one 180° to exit the far side before splicing. Slide the heatshrink onto the wire *before* soldering, shrink each joint, then run a larger sleeve over the whole body. The fuse sits upstream of the buck so it protects the entire chain.
-3. Power IN+ / IN− from 12 V (bench supply, or the feeder splitter via the DC-099 jack later), clip a ~2 kΩ load across OUT (five 10 kΩ in parallel — same recipe as R3, or any 2–2.2 k), and set the pot to **10.40 V** (clockwise = down). The preload matters — unloaded, these modules read high. Multi-turn pots need many revolutions; go slow near target. Once set, lock the pot with a dab of nail polish or hot glue — vibration and thermal cycling walk them.
+3. Power IN+ / IN− from 12 V (bench supply, or the feeder splitter via the DC-099 jack later), clip a spare ~2.2 kΩ across OUT, and set the pot to **10.40 V** (clockwise = down). The preload matters — unloaded, these modules read high. Multi-turn pots need many revolutions; go slow near target. Once set, lock the pot with a dab of nail polish or hot glue — vibration and thermal cycling walk them.
 4. Drop the module into the wall pocket, flat back against the wall, **components/pot facing the room** — push down until the front post's nub snaps over the top. Wires can be soldered at all four corner pads before or after; every pad stays accessible in the pocket.
 
 ## 4. Wall penetrations & cables
@@ -66,7 +64,7 @@ Before it goes in the case (no USB cutout — OTA afterwards). Flash the ESPHome
 
 ## 7. Commissioning checks
 
-1. **Continuity before power.** With nothing energised, meter tip↔sleeve with the SSR off: expect open (or ~2.0 kΩ if you're reading across the buck side — the R3 bank). A short here means a damaged TVS or a solder bridge at the splice — find it now, not at power-up.
+1. **Continuity before power.** With nothing energised, meter tip↔sleeve with the SSR off: expect open (or ~2.2 kΩ if you're reading across the buck side). A short here means a damaged TVS or a solder bridge at the splice — find it now, not at power-up.
 2. **Meter first, feeder later.** With the 3.5 mm plug NOT in the feeder: plug in the splitter, meter tip↔sleeve. Expect 0 V at rest.
 3. Press "aF4 Feed" in HA (or the ESPHome web UI): expect **~10.4 V for 10 s, then 0 V**. Confirm the lockout binary_sensor holds for ~5 min.
 4. Power-cycle the ESP32 mid-check once: tip must stay at 0 V through boot (R2 + `ALWAYS_OFF` doing their jobs).
