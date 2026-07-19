@@ -48,10 +48,15 @@ FILLET_R = 3.0
 RJX0, RJX1, RJZ0, RJZ1 = 100.76, 117.64, 0.26, 15.0
 WGX0, WGX1, WGZ0, WGZ1, WG_D = 98.4, 119.9, 3.5, 11.8, 1.5
 
-GLAND_D = 12.6
-G1X, G1Z = 77.5, 4.0     # v5: nut (r~10.5) spans x 67..88 — fully left of the board edge
-                         # (x=90.15, 2.1 clear) and 0.5 off the left wall, so its 5mm
-                         # protrusion past the inner face never meets the board
+GLAND_D = 12.6            # output wall: PG7 gland (12.5 thread)
+JACK_D = 12.2             # v6 input wall: DC-099 panel-mount barrel jack (12.0 thread,
+                          # 12mm nominal mounting hole; +0.2 for print shrink). Replaces
+                          # the input PG7 gland — the inD splitter's 5.5x2.5 male tap
+                          # lead plugs straight in; jack's 18AWG pigtails go to polyfuse/buck.
+G1X, G1Z = 77.5, 4.0     # position unchanged from v5. DC-099 locknut (~16 OD) is smaller
+                         # than the PG7 nut it replaces, so the left-of-board clearance
+                         # argument still holds (board edge x=90.15). Body runs ~17mm past
+                         # the inner face (y -193..-176) — open air there.
 CX = (IX0 + IX1) / 2
 G2X, G2Z = CX, 4.0
 
@@ -94,17 +99,19 @@ def cut(a, b):
 
 TD_CAP = 6.8  # truncated-teardrop crown height above hole center: stays under the
               # PG7 hex body (~7.5mm across flats) and locknut (~9.5mm), flat bridge ~4.2mm
+TD_CAP_JACK = 6.5  # DC-099 front flange is only ~14-15mm OD (r~7) — lower crown so the
+                   # flange fully hides it; flat bridge ~4.3mm, same as the PG7 crown
 
-def teardrop_y(cx, cz, y0, y1, d):
+def teardrop_y(cx, cz, y0, y1, d, cap=TD_CAP):
     """hole along +Y with truncated 45deg roof (support-free, fully covered by gland)"""
     ln = y1 - y0
     s = cyl_y(cx, cz, y0, ln, d)
     r = d / 2
     k = r * math.sin(math.radians(45))
     apex = r / math.cos(math.radians(45))
-    w = apex - TD_CAP  # half-width of flat crown
+    w = apex - cap  # half-width of flat crown
     pts = [gp_Pnt(cx - k, y0, cz + k), gp_Pnt(cx + k, y0, cz + k),
-           gp_Pnt(cx + w, y0, cz + TD_CAP), gp_Pnt(cx - w, y0, cz + TD_CAP)]
+           gp_Pnt(cx + w, y0, cz + cap), gp_Pnt(cx - w, y0, cz + cap)]
     mw = BRepBuilderAPI_MakeWire()
     for i in range(4):
         mw.Add(BRepBuilderAPI_MakeEdge(pts[i], pts[(i + 1) % 4]).Edge())
@@ -172,8 +179,8 @@ case = cut(case, box(WGX0, IY0 - WG_D, WGZ0, WGX1, IY0 + 0.01, WGZ1))
 # top shield-bump relief (jack top rear reaches y=-194.0, z to ~16.0)
 case = cut(case, box(104.5, IY0 - WG_D, 14.8, 113.9, IY0 + 0.01, 17.0))
 
-# gland holes
-case = cut(case, teardrop_y(G1X, G1Z, OY0 - 1, IY0 + 1, GLAND_D))
+# wall penetrations: DC-099 12V jack (input wall), PG7 gland (output wall)
+case = cut(case, teardrop_y(G1X, G1Z, OY0 - 1, IY0 + 1, JACK_D, TD_CAP_JACK))
 case = cut(case, teardrop_y(G2X, G2Z, IY1 - 1, OY1 + 1, GLAND_D))
 
 # board standoffs (top z=0), M2 pilots

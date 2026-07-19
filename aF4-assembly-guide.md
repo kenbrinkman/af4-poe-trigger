@@ -8,7 +8,7 @@ Everything from the BOM, plus: soldering iron, 22 AWG wire, heatshrink, multimet
 
 ## 1. Print the enclosure
 
-Print `aF4-trigger-case.stl` and `aF4-trigger-lid.stl` in PETG, orientations as exported, no supports. 3 walls, 15–25% infill, 0.2 mm layers. Check that a PG7 gland passes both wall holes and the buck module slides into the wall slot before proceeding (a light filing of the slot groove is fine).
+Print `aF4-trigger-case.stl` and `aF4-trigger-lid.stl` in PETG, orientations as exported, no supports. 3 walls, 15–25% infill, 0.2 mm layers. Check that the PG7 gland passes the output-wall hole, the DC-099 jack threads into the input-wall hole (12.2 mm — a light chase with a round file if tight), and the buck module slides into the wall slot before proceeding.
 
 ## 2. Build the protoboard
 
@@ -35,16 +35,16 @@ Check that the tallest standing part clears the lid before committing — board 
 
 ## 3. Prepare the buck module
 
-1. Solder four wires to the MP1584EN corners: IN+ , IN−, OUT+, OUT−. Keep IN leads long enough to reach the input gland area (~120 mm), OUT leads ~80 mm.
+1. Solder four wires to the MP1584EN corners: IN+ , IN−, OUT+, OUT−. Keep IN leads long enough to reach the input jack's pigtails (~120 mm), OUT leads ~80 mm.
 2. Splice the 500 mA polyfuse inline into the IN+ lead, heatshrunk — see **detail ①** in `aF4-protoboard-layout.svg`. Cut IN+ only; the return lead runs straight through. The PTC has no polarity, but a radial disc has both legs on one edge, so bend one 180° to exit the far side before splicing. Slide the heatshrink onto the wire *before* soldering, shrink each joint, then run a larger sleeve over the whole body. The fuse sits upstream of the buck so it protects the entire chain.
-3. Power IN+ / IN− from 12 V (bench supply, or the feeder splitter later), clip a spare ~2.2 kΩ across OUT, and set the pot to **10.40 V** (clockwise = down). The preload matters — unloaded, these modules read high. Multi-turn pots need many revolutions; go slow near target. Once set, lock the pot with a dab of nail polish or hot glue — vibration and thermal cycling walk them.
+3. Power IN+ / IN− from 12 V (bench supply, or the feeder splitter via the DC-099 jack later), clip a spare ~2.2 kΩ across OUT, and set the pot to **10.40 V** (clockwise = down). The preload matters — unloaded, these modules read high. Multi-turn pots need many revolutions; go slow near target. Once set, lock the pot with a dab of nail polish or hot glue — vibration and thermal cycling walk them.
 4. Drop the module into the wall pocket, flat back against the wall, **components/pot facing the room** — push down until the front post's nub snaps over the top. Wires can be soldered at all four corner pads before or after; every pad stays accessible in the pocket.
 
-## 4. Cables through glands
+## 4. Wall penetrations & cables
 
-Thread both PG7 glands into the walls, locknuts inside. Feed the bare ends through **before** terminating:
+Mount the DC-099 jack in the input wall and the PG7 gland in the output wall, locknuts inside. Feed the 3.5 mm cable's bare end through the gland **before** terminating:
 
-- **Input gland:** the 12 V splitter tap cable (5.5×2.5 mm center-positive Y-splitter). Inside: + → polyfuse → buck IN+; − → buck IN−.
+- **Input jack (DC-099):** no feed-through — the splitter's 5.5×2.5 male tap plug connects from outside. Inside, the jack's pre-soldered 18AWG pigtails: red (+, center pin) → polyfuse → buck IN+; black (−) → buck IN−. **Meter once before wiring:** plug the splitter in and confirm red = +12 V (center-positive).
 - **Output gland:** the 3.5 mm cable. Inside: conductors to the protoboard TIP and SLEEVE pads. Outside: solder the MP3-3501 mono plug (tip = signal, sleeve = ground) and splice the P6KE12CA TVS ~1" behind the plug under heatshrink — one leg to each conductor, either way round (bidirectional, no polarity). See **detail ②** in `aF4-protoboard-layout.svg`.
 
   Strip a window in each conductor rather than cutting through, wrap a leg around each, solder, then heatshrink each junction separately before sleeving both together. Its 10.2 V standoff sits nominally under the 10.4 V line — the resulting µA-scale leakage is harmless into the high-impedance trigger port, and breakdown from ~11.4 V clamps spikes close to the line.
@@ -60,7 +60,7 @@ Before it goes in the case (no USB cutout — OTA afterwards). Flash the ESPHome
 1. Mount the protoboard on its bosses (2 diagonal M2 screws is enough).
 2. Drop the ESP32 onto its three standoffs, RJ45 nose into the wall opening; 3× M2 screws.
 3. Dupont jumpers from the protoboard's GPIO13/GND wires to the EXT header pins (check the Olimex silkscreen for GPIO13 and GND).
-4. Tighten both gland caps on the cables.
+4. Tighten the output gland cap on the 3.5 mm cable.
 
 ## 7. Commissioning checks
 
