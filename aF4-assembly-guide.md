@@ -45,11 +45,9 @@ Check that the tallest standing part clears the lid before committing — board 
 Thread both PG7 glands into the walls, locknuts inside. Feed the bare ends through **before** terminating:
 
 - **Input gland:** the 12 V splitter tap cable (5.5×2.5 mm center-positive Y-splitter). Inside: + → polyfuse → buck IN+; − → buck IN−.
-- **Output gland:** the 3.5 mm cable. Inside: conductors to the protoboard TIP and SLEEVE pads. Outside: solder the MP3-3501 mono plug (tip = signal, sleeve = ground) and splice the SMAJ12A TVS ~1" behind the plug under heatshrink — cathode (stripe) → tip conductor, anode → sleeve. See **detail ②** in `aF4-protoboard-layout.svg`.
+- **Output gland:** the 3.5 mm cable. Inside: conductors to the protoboard TIP and SLEEVE pads. Outside: solder the MP3-3501 mono plug (tip = signal, sleeve = ground) and splice the P6KE12CA TVS ~1" behind the plug under heatshrink — one leg to each conductor, either way round (bidirectional, no polarity). See **detail ②** in `aF4-protoboard-layout.svg`.
 
-  Orientation is real: the SMAJ12**A** is unidirectional, so reversing it puts a forward-biased diode straight across the buck output. (The SMAJ12**CA** is the bidirectional variant — if that's what arrived, orientation is free.) Strip a window in each conductor rather than cutting through, solder, then heatshrink each junction separately before sleeving both together.
-
-  Note the package: SMAJ is an SMA (DO-214AC) chip with flat end-caps and nothing to wrap wire around. Tin the caps and the wire ends separately, then reflow them together holding the wire with tweezers. A through-hole **P6KE12A** or **1.5KE12A** is electrically equivalent here and far easier to splice if you'd rather not fight it.
+  Strip a window in each conductor rather than cutting through, wrap a leg around each, solder, then heatshrink each junction separately before sleeving both together. Its 10.2 V standoff sits nominally under the 10.4 V line — the resulting µA-scale leakage is harmless into the high-impedance trigger port, and breakdown from ~11.4 V clamps spikes close to the line.
 
 Then: buck OUT+ → protoboard "10.4V in" pad, buck OUT− → protoboard "12V−" pad.
 
@@ -66,7 +64,7 @@ Before it goes in the case (no USB cutout — OTA afterwards). Flash the ESPHome
 
 ## 7. Commissioning checks
 
-1. **Continuity before power.** With nothing energised, meter tip↔sleeve with the SSR off: expect open (or ~2.2 kΩ if you're reading across the buck side). A short here means the TVS went in backwards or is damaged — find it now, not at power-up.
+1. **Continuity before power.** With nothing energised, meter tip↔sleeve with the SSR off: expect open (or ~2.2 kΩ if you're reading across the buck side). A short here means a damaged TVS or a solder bridge at the splice — find it now, not at power-up.
 2. **Meter first, feeder later.** With the 3.5 mm plug NOT in the feeder: plug in the splitter, meter tip↔sleeve. Expect 0 V at rest.
 3. Press "aF4 Feed" in HA (or the ESPHome web UI): expect **~10.4 V for 10 s, then 0 V**. Confirm the lockout binary_sensor holds for ~5 min.
 4. Power-cycle the ESP32 mid-check once: tip must stay at 0 V through boot (R2 + `ALWAYS_OFF` doing their jobs).

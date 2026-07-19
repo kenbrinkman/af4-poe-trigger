@@ -126,9 +126,9 @@
     <rect x="830" y="300" width="155" height="95" rx="6" fill="#fbf6e8" stroke="#b8912f" stroke-width="1.5"/>
     <text x="907" y="322" text-anchor="middle" font-weight="bold" font-size="12" fill="#333">3.5 mm TS plug</text>
     <text x="907" y="339" text-anchor="middle" fill="#555">MP3-3501, tip = signal</text>
-    <text x="907" y="355" text-anchor="middle" fill="#555">SMAJ12A TVS spliced ~1"</text>
-    <text x="907" y="371" text-anchor="middle" fill="#555">behind plug: stripe→tip,</text>
-    <text x="907" y="386" text-anchor="middle" fill="#555">anode→sleeve</text>
+    <text x="907" y="355" text-anchor="middle" fill="#555">P6KE12CA TVS spliced ~1"</text>
+    <text x="907" y="371" text-anchor="middle" fill="#555">behind plug: bidirectional,</text>
+    <text x="907" y="386" text-anchor="middle" fill="#555">no polarity</text>
     <path d="M798,346 h32" stroke="#e0b020" stroke-width="4"/>
     <path d="M798,358 h32" stroke="#555" stroke-width="4"/>
 

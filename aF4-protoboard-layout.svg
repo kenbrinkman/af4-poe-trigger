@@ -1,6 +1,6 @@
 <svg viewBox="0 0 900 1180" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
   <title>aF4 trigger protoboard layout</title>
-  <desc>25x25mm perfboard, component side: AQY212GH PhotoMOS SSR, 220 ohm resistor, 10k GPIO pulldown, control wires from ESP32 on the left, 12V/output side on the right. Polyfuse and 10.4V buck sit inline on the +12V lead off-board; SMAJ12A TVS inside the 3.5mm plug. Detail panels below show the polyfuse splice and the TVS splice at the plug.</desc>
+  <desc>25x25mm perfboard, component side: AQY212GH PhotoMOS SSR, 220 ohm resistor, 10k GPIO pulldown, control wires from ESP32 on the left, 12V/output side on the right. Polyfuse and 10.4V buck sit inline on the +12V lead off-board; P6KE12CA bidirectional TVS spliced behind the 3.5mm plug. Detail panels below show the polyfuse splice and the TVS splice at the plug.</desc>
 
   <text x="70" y="28" font-size="19" font-weight="bold" fill="#333">aF4 trigger — protoboard layout (component side)</text>
 
@@ -24,7 +24,7 @@
     <text x="518" y="552" font-weight="bold" font-size="13">Off-board protection (rev B)</text>
     <text x="518" y="572">① +12V lead, inline: splitter → 500 mA polyfuse →</text>
     <text x="530" y="588">buck module set to 10.4 V → board pad</text>
-    <text x="518" y="606">② SMAJ12A TVS spliced ~1" behind plug: cathode→tip, anode→sleeve</text>
+    <text x="518" y="606">② P6KE12CA TVS spliced ~1" behind plug: tip↔sleeve, no polarity</text>
     <text x="518" y="626">R3 preloads the buck (~5 mA) so its light-load setpoint holds</text>
   </g>
 
@@ -179,7 +179,7 @@
 
   <!-- detail ② : TVS at the plug -->
   <rect x="22" y="930" width="856" height="230" rx="8" fill="#f6f4ef" stroke="#ddd"/>
-  <text x="44" y="960" font-size="14" font-weight="bold" fill="#333">② SMAJ12A TVS, spliced ~1" behind the 3.5 mm plug</text>
+  <text x="44" y="960" font-size="14" font-weight="bold" fill="#333">② P6KE12CA TVS (bidirectional), spliced ~1" behind the 3.5 mm plug</text>
 
   <!-- dimension line -->
   <line x1="352" y1="992" x2="636" y2="992" stroke="#aaa" stroke-width="1.5"/>
@@ -195,17 +195,16 @@
   <text x="158" y="1116" font-size="13" font-weight="bold" fill="#333" text-anchor="end">SLEEVE</text>
 
   <!-- TVS legs + joints -->
-  <line x1="352" y1="1024" x2="352" y2="1044" stroke="#888" stroke-width="3.5" stroke-linecap="round"/>
-  <line x1="352" y1="1092" x2="352" y2="1112" stroke="#888" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="352" y1="1024" x2="352" y2="1048" stroke="#888" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="352" y1="1088" x2="352" y2="1112" stroke="#888" stroke-width="3.5" stroke-linecap="round"/>
   <circle cx="352" cy="1024" r="5.5" fill="#333"/>
   <circle cx="352" cy="1112" r="5.5" fill="#333"/>
 
-  <!-- TVS body, band toward TIP -->
-  <rect x="326" y="1044" width="52" height="48" rx="5" fill="#24262a" stroke="#000" stroke-width="1.5"/>
-  <rect x="326" y="1044" width="52" height="9" rx="3" fill="#e8e4da"/>
-  <text x="398" y="1058" font-size="12" font-weight="bold" fill="#333">band = cathode → TIP</text>
-  <text x="398" y="1076" font-size="11" fill="#777">reversed = dead short across the buck</text>
-  <text x="398" y="1094" font-size="11" fill="#777">SMAJ12CA is bidirectional — orientation free</text>
+  <!-- TVS body, DO-15 axial, no polarity -->
+  <rect x="330" y="1048" width="44" height="40" rx="5" fill="#24262a" stroke="#000" stroke-width="1.5"/>
+  <text x="398" y="1058" font-size="12" font-weight="bold" fill="#333">either leg either way — no polarity</text>
+  <text x="398" y="1076" font-size="11" fill="#777">DO-15 axial: wrap a leg around each conductor</text>
+  <text x="398" y="1094" font-size="11" fill="#777">clamps from ~11.4 V, both directions</text>
 
   <!-- 3.5mm plug -->
   <rect x="644" y="1042" width="82" height="52" rx="9" fill="#9aa0a6" stroke="#666" stroke-width="1.5"/>
@@ -218,5 +217,5 @@
   <line x1="788" y1="1080" x2="788" y2="1100" stroke="#aaa" stroke-width="1.2"/>
   <text x="788" y="1114" font-size="11" fill="#777" text-anchor="middle">tip</text>
 
-  <text x="44" y="1146" font-size="11" fill="#777">SLEEVE ties to the 12V− strip only — never to ESP32 GND. SMAJ is an SMA chip with flat end-caps; P6KE12A / 1.5KE12A are through-hole equivalents that splice more easily.</text>
+  <text x="44" y="1146" font-size="11" fill="#777">SLEEVE ties to the 12V− strip only — never to ESP32 GND. 10.2 V standoff sits just under the 10.4 V line; the µA of leakage is harmless into the high-impedance port.</text>
 </svg>

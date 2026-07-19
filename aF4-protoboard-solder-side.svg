@@ -115,7 +115,7 @@
     <rect x="500" y="532" width="378" height="104" rx="8" fill="#f6f4ef" stroke="#ddd"/>
     <text x="518" y="552" font-weight="bold" font-size="13">Off-board (rev B) — unchanged</text>
     <text x="518" y="572">① splitter → 500 mA polyfuse → buck @10.4 V → board</text>
-    <text x="518" y="592">② SMAJ12A TVS spliced ~1" behind plug: cathode→tip, anode→sleeve</text>
+    <text x="518" y="592">② P6KE12CA TVS spliced ~1" behind plug: tip↔sleeve, no polarity</text>
     <text x="518" y="612">R3 (2.2 kΩ on board) preloads the buck so its setpoint holds</text>
   </g>
 </svg>
