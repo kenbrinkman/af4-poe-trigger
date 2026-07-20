@@ -50,7 +50,7 @@ Record results here:
 
 Olimex ESP32-POE-ISO → GPIO13 → 220Ω → **AQY212GH PhotoMOS** (pin 1 LED+, pin 2 LED− to GND) → output pins 3/4 switch the feeder's own 12V (via barrel splitter) onto the 3.5mm tip; sleeve to supply GND. ESP32 fully isolated behind the PhotoMOS; PoE isolated from Ethernet (3000V). HA automations press an ESPHome template button (ON 10s → OFF). See `aF4-wiring-diagram.svg`.
 
-ESPHome guardrails (all baked on-device — HA is scheduler only): `restore_mode: ALWAYS_OFF` + `internal: true` on the GPIO switch (HA cannot touch the raw line), `mode: single` feed script with 10s pulse + 290s lockout tail (enforces 5-min spacing and >60s 0V re-arm; re-entrant requests dropped), template button as the sole exposed control, lockout state exposed as a binary_sensor for dashboard/notify. Full YAML in `aF4-esp32-trigger-BOM.md`.
+ESPHome guardrails (all baked on-device — HA is scheduler only): `restore_mode: ALWAYS_OFF` + `internal: true` on the GPIO switch (HA cannot touch the raw line), `mode: single` feed script with 10s pulse + 290s lockout tail (enforces 5-min spacing and >60s 0V re-arm; re-entrant requests dropped), template button as the sole exposed control, lockout state exposed as a binary_sensor for dashboard/notify. As-flashed YAML: `af4-feeder.yaml` (source of truth); concept sketch in `aF4-esp32-trigger-BOM.md`.
 
 ## 10.4V buck regulator selection
 

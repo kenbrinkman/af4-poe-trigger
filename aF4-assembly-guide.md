@@ -53,7 +53,7 @@ Then: buck OUT+ → protoboard "10.4V in" pad, buck OUT− → protoboard "12V�
 
 ## 5. Flash the ESP32
 
-Before it goes in the case (no USB cutout — OTA afterwards). Flash the ESPHome config from `aF4-esp32-trigger-BOM.md`: GPIO13 switch is `internal` with `restore_mode: ALWAYS_OFF`, the `do_feed` script enforces the 10 s pulse + 290 s lockout, and the only exposed control is the "aF4 Feed" button. Verify it comes up on Ethernet before assembly.
+**Done 2026-07-18** — flashed via web.esphome.io (USB), then adopted into the ESPHome Device Builder on the Unraid server; updates are OTA (no USB cutout). Config is `af4-feeder.yaml` (source of truth): GPIO13 switch is `internal` with `restore_mode: ALWAYS_OFF`, the `do_feed` script enforces the 10 s pulse + 290 s lockout, and the only exposed control is the "aF4 Feed" button. Verify it comes up on Ethernet before assembly.
 
 ## 6. Final assembly
 
@@ -73,7 +73,7 @@ Before it goes in the case (no USB cutout — OTA afterwards). Flash the ESPHome
 
 ## 8. Home Assistant
 
-Time-trigger automations press `button.af4_feed`. Never schedule feeds <5 min apart (the device blocks them anyway). Optional: counter for daily feeds, notification on trigger, and a power-monitoring plug on the feeder supply to infer motor activity — the 0-10V port gives no dispense feedback.
+Already set up (see `aF4-reference.md` → Home Assistant notes): `automation.reef_tank_af4_scheduled_feed` presses `button.af4_feeder_feed` at the helper-set feed times, gated by `input_boolean.reef_af4_schedule_enabled` (leave **off** until step 7 passes) and the lockout sensor. `counter.reef_af4_feeds_today` tracks daily feeds. Never schedule feeds <5 min apart (the device blocks them anyway). Optional: a power-monitoring plug on the feeder supply to infer motor activity — the 0-10V port gives no dispense feedback.
 
 Reminder from the feeder docs: the aF4's internal 24 h timer keeps its own schedule from power-on time; note it or plan around it (open question in `aF4-reference.md`).
 

@@ -82,4 +82,4 @@ binary_sensor:
     lambda: 'return id(do_feed).is_running();'
 ```
 
-Feeder timing rules (10s pulse, 5-min spacing, 0V re-arm) are enforced on-device — HA is scheduler only. Schedule with time-trigger automations pressing `button.af4_feed`; no HA bug, double-click, or API call can violate the feeder spec.
+Feeder timing rules (10s pulse, 5-min spacing, 0V re-arm) are enforced on-device — HA is scheduler only. Schedule with time-trigger automations pressing `button.af4_feeder_feed`; no HA bug, double-click, or API call can violate the feeder spec. (Concept sketch above — the as-flashed config is `af4-feeder.yaml`, the source of truth.)

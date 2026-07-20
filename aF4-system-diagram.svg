@@ -107,9 +107,9 @@
   <!-- splitter to feeder (bottom route) -->
   <path d="M250,511 v154 h610 v-45" stroke="#a33" stroke-width="5" fill="none"/>
   <text x="480" y="658" font-size="11" fill="#a33" font-weight="bold">12 V to feeder (uninterrupted — never power-cycle the fridge)</text>
-  <!-- splitter tap into enclosure -->
+  <!-- splitter tap plugs into DC-099 panel jack (v6: replaced input PG7 gland) -->
   <rect x="374" y="525" width="16" height="40" fill="#c9c9c9" stroke="#666"/>
-  <text x="330" y="588" font-size="11" fill="#666">PG7 gland</text>
+  <text x="304" y="588" font-size="11" fill="#666">DC-099 12 V jack</text>
   <path d="M256,505 h54 v40 h64" stroke="#a33" stroke-width="4" fill="none"/>
   <!-- polyfuse -->
   <rect x="394" y="497" width="14" height="30" rx="3" fill="#e8e8e8" stroke="#666"/>
