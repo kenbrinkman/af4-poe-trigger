@@ -1,6 +1,6 @@
 <svg viewBox="0 0 900 645" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
   <title>aF4 trigger protoboard — solder side (mirrored)</title>
-  <desc>Mirror image of the component-side layout: the board as seen flipped left-right with the iron in hand. Bridges shown are the actual solder-side runs. Components appear as ghost outlines on the far side.</desc>
+  <desc>Mirror image of the component-side layout: the board as seen flipped left-right with the iron in hand. Bridges shown are the actual solder-side runs. Components appear as ghost outlines on the far side — R1 and R2 stand vertically, drawn as bodies seen end-on with their bent leads landing together in the GPIO13 junction hole; R3 lies flat across three pitches.</desc>
 
   <text x="70" y="28" font-size="19" font-weight="bold" fill="#333">aF4 trigger — SOLDER SIDE (mirrored view)</text>
 
@@ -20,7 +20,7 @@
 
   <!-- board -->
   <rect x="70" y="120" width="400" height="400" rx="8" fill="#3a5f43" stroke="#22392a" stroke-width="2"/>
-  <text x="450" y="140" font-size="11" fill="#cfe3d5" text-anchor="end">copper side up — mirror of component view</text>
+  <text x="462" y="540" font-size="11" fill="#777" text-anchor="end">copper side up — mirror of component view</text>
 
   <!-- grid holes 9x9 (symmetric, same positions) -->
   <g fill="#f2ead8" stroke="#c9a227" stroke-width="1.5">
@@ -44,14 +44,18 @@
   <!-- ghost component outlines (they sit on the FAR side) -->
   <g fill="none" stroke="#cfe3d5" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.7">
     <rect x="243" y="255" width="94" height="89" rx="6"/>
-    <rect x="340" y="204" width="23" height="29" rx="5"/>
-    <rect x="318" y="189" width="27" height="18" rx="4"/>
     <rect x="138" y="229.7" width="62" height="18" rx="4"/>
+    <!-- R1/R2 stand vertically: bodies seen end-on, one-pitch footprint -->
+    <circle cx="351.3" cy="238.7" r="12"/>
+    <circle cx="310.7" cy="198.1" r="12"/>
+    <!-- their bent leads, arcing to the shared GPIO13 junction hole -->
+    <path d="M351.3,238.7 C335,234 335,203 351.3,198.1"/>
+    <path d="M310.7,198.1 C316,184 346,184 351.3,198.1"/>
   </g>
-  <text x="290" y="300" font-size="12" font-weight="bold" fill="#cfe3d5" opacity="0.9" text-anchor="middle">SSR (ghost)</text>
-  <text x="368" y="224" font-size="10" fill="#cfe3d5" opacity="0.9">R1 (ghost)</text>
-  <text x="318" y="184" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="end">R2 (ghost)</text>
-  <text x="169" y="225" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="middle">R3 (ghost)</text>
+  <text x="306" y="300" font-size="12" font-weight="bold" fill="#cfe3d5" opacity="0.9" text-anchor="middle">SSR (ghost)</text>
+  <text x="368" y="243" font-size="10" fill="#cfe3d5" opacity="0.9">R1 (ghost)</text>
+  <text x="292" y="176" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="end">R2 (ghost)</text>
+  <text x="169" y="225" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="middle">R3 (ghost, flat)</text>
 
   <!-- SOLDER-SIDE BRIDGES: the runs you actually make, drawn bold -->
   <g stroke="#9fb7cc" stroke-width="8" stroke-linecap="round" fill="none">
@@ -76,6 +80,8 @@
     <circle cx="351.3" cy="279.4" r="6.5"/><circle cx="351.3" cy="320" r="6.5"/>
     <circle cx="229.4" cy="279.4" r="6.5"/><circle cx="229.4" cy="320" r="6.5"/>
     <circle cx="229.4" cy="238.7" r="6.5"/><circle cx="107.5" cy="238.7" r="6.5"/>
+    <circle cx="351.3" cy="238.7" r="6.5"/><circle cx="310.7" cy="198.1" r="6.5"/>
+    <circle cx="351.3" cy="198.1" r="7.5" stroke-width="2.5"/>
   </g>
 
   <!-- pin labels: MIRRORED positions -->
@@ -84,37 +90,45 @@
   <text x="218" y="274" font-size="12" font-weight="bold" fill="#fff" text-anchor="end">4 · OUT</text>
   <text x="218" y="336" font-size="12" font-weight="bold" fill="#fff" text-anchor="end">3 · OUT</text>
 
-  <!-- R1/R2 pad callouts -->
-  <text x="362" y="202" font-size="10" fill="#cfe3d5">R1/R2 pads</text>
+  <!-- GPIO13 junction hole: both bent leads land here -->
+  <line x1="408" y1="152" x2="359" y2="192" stroke="#cfe3d5" stroke-width="1.2"/>
+  <text x="458" y="148" font-size="10" fill="#cfe3d5" text-anchor="end">GPIO13 junction hole</text>
 
   <!-- legend / notes -->
   <g font-size="13" fill="#333">
     <rect x="500" y="120" width="378" height="400" rx="8" fill="#f6f4ef" stroke="#ddd"/>
-    <text x="518" y="148" font-weight="bold" font-size="14">How to use this view</text>
-    <text x="518" y="172">· This is the board FLIPPED LEFT–RIGHT —</text>
-    <text x="528" y="190">exactly what you see soldering, copper up.</text>
-    <text x="518" y="214">· Thick blue runs = the 6 solder bridges you</text>
-    <text x="528" y="232">form on THIS side (wire leg or drag solder).</text>
-    <text x="518" y="256">· Ghost outlines = components on the far side.</text>
-    <text x="518" y="280">· Pin 1 dot is now TOP-RIGHT (mirror!).</text>
-    <text x="518" y="304">· 12V side is now on the LEFT, 3.3V on the</text>
-    <text x="528" y="322">RIGHT — opposite of the component view.</text>
-    <text x="518" y="346" font-weight="bold">Bridge checklist (top to bottom):</text>
-    <text x="518" y="368">1. GPIO pad → R1/R2 junction (1 pitch)</text>
-    <text x="518" y="388">2. R1 bottom → SSR pin 1</text>
-    <text x="518" y="408">3. GND pad ↓ then over → SSR pin 2</text>
-    <text x="518" y="428">4. 10.4V pad ↓ → SSR pin 4</text>
-    <text x="518" y="448">5. SSR pin 3 ↓ → TIP pad</text>
-    <text x="518" y="468">6. 12V− pad ↓ full run → SLEEVE pad</text>
-    <text x="518" y="488">R3's legs solder into runs 4 &amp; 6 (row 2) — no new bridge.</text>
-    <text x="518" y="510" font-weight="bold" fill="#c0392b">Never bridge SSR pin 3 to pin 4.</text>
+    <text x="518" y="146" font-weight="bold" font-size="14">How to use this view</text>
+    <g font-size="12">
+      <text x="518" y="168">· Board FLIPPED LEFT–RIGHT — exactly what you</text>
+      <text x="528" y="184">see soldering, copper up.</text>
+      <text x="518" y="204">· Thick blue runs = the 6 solder bridges you form</text>
+      <text x="528" y="220">on THIS side (wire leg or drag solder).</text>
+      <text x="518" y="240">· Ghost outlines = components on the far side.</text>
+      <text x="528" y="256">R1/R2 stand vertically — their circles are the</text>
+      <text x="528" y="272">bodies seen end-on, and the bent lead of each</text>
+      <text x="528" y="288">lands in the GPIO13 junction hole. R3 lies flat.</text>
+      <text x="518" y="308">· Pin 1 dot is now TOP-RIGHT (mirror!).</text>
+      <text x="518" y="328">· 12V side is now on the LEFT, 3.3V on the RIGHT</text>
+      <text x="528" y="344">— opposite of the component view.</text>
+    </g>
+    <text x="518" y="368" font-weight="bold">Bridge checklist (top to bottom):</text>
+    <g font-size="12">
+      <text x="518" y="388">1. GPIO pad ↓ → R1/R2 junction hole (1 pitch)</text>
+      <text x="518" y="406">2. R1 bottom → SSR pin 1</text>
+      <text x="518" y="424">3. GND pad ↓ then over → SSR pin 2 (R2 lands here)</text>
+      <text x="518" y="442">4. 10.4V pad ↓ → SSR pin 4</text>
+      <text x="518" y="460">5. SSR pin 3 ↓ → TIP pad</text>
+      <text x="518" y="478">6. 12V− pad ↓ full run → SLEEVE pad</text>
+      <text x="518" y="496">R3's legs solder into runs 4 &amp; 6 (row 2) — no new bridge.</text>
+      <text x="518" y="516" font-weight="bold" font-size="13" fill="#c0392b">Never bridge SSR pin 3 to pin 4.</text>
+    </g>
   </g>
 
   <!-- off-board reminder -->
   <g font-size="12" fill="#333">
     <rect x="500" y="532" width="378" height="104" rx="8" fill="#f6f4ef" stroke="#ddd"/>
-    <text x="518" y="552" font-weight="bold" font-size="13">Off-board (rev B) — unchanged</text>
-    <text x="518" y="572">① splitter → 500 mA polyfuse → buck @10.4 V → board</text>
+    <text x="518" y="552" font-weight="bold" font-size="13">Off-board (rev B)</text>
+    <text x="518" y="572">① splitter → DC-099 panel jack → 500 mA polyfuse → buck @10.4 V</text>
     <text x="518" y="592">② P6KE12CA TVS spliced ~1" behind plug: tip↔sleeve, no polarity</text>
     <text x="518" y="612">R3 (2.2 kΩ on board) preloads the buck so its setpoint holds</text>
   </g>
