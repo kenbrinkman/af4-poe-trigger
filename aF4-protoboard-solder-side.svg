@@ -1,6 +1,6 @@
-<svg viewBox="0 0 900 645" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+<svg viewBox="0 0 900 700" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
   <title>aF4 trigger protoboard — solder side (mirrored)</title>
-  <desc>Mirror image of the rev C component-side layout: the board as seen flipped left-right with the iron in hand. Bridges shown are the actual solder-side runs. Components appear as ghost outlines on the far side — R1 and R2 stand vertically, drawn as bodies seen end-on with their bent leads landing together in the GPIO13 junction hole; the LM1117T-ADJ regulator block (U2 + R4/R5 divider + C1/C2 caps) sits on the 12V side, which is on the LEFT in this mirrored view.</desc>
+  <desc>Mirror image of the rev C component-side layout: the board as seen flipped left-right with the iron in hand. Bridges shown are the actual solder-side runs. Components appear as ghost outlines on the far side — R1 and R2 stand vertically, drawn as bodies seen end-on with their bent leads landing together in the GPIO13 junction hole; the LM1117T-ADJ regulator block (U2 + R4/R5 divider + C1/C2 caps) sits on the 12V side, which is on the LEFT in this mirrored view. C1 and C2 are the same 10uF 50V aluminium electrolytic and are polarized: their negative legs land in bridge run 7 (the 12V- run) and the positive legs point RIGHT in this mirrored view, which is leftward on the real board.</desc>
 
   <text x="70" y="28" font-size="19" font-weight="bold" fill="#333">aF4 trigger — SOLDER SIDE (mirrored view, rev C)</text>
 
@@ -56,7 +56,7 @@
     <path d="M188.7,279.4 C168,286 168,313 188.7,320"/>
     <!-- R5 flat body (ADJ to GND) -->
     <rect x="128" y="270.4" width="32" height="18" rx="4"/>
-    <!-- C1 (IN to GND), C2 tantalum (OUT to GND) -->
+    <!-- C1 (IN to GND), C2 (OUT to GND) — same 10uF 50V electrolytic, + leg points RIGHT in this mirrored view -->
     <circle cx="134" cy="238.7" r="12"/>
     <circle cx="134" cy="345" r="12"/>
   </g>
@@ -68,6 +68,9 @@
   <text x="144" y="283" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="middle">R5</text>
   <text x="134" y="222" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="middle">C1</text>
   <text x="134" y="332" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="middle">C2</text>
+  <!-- cap polarity in the mirrored view: + leg points RIGHT, toward the IN/OUT column -->
+  <text x="141" y="242.7" font-size="11" font-weight="bold" fill="#cfe3d5" opacity="0.9" text-anchor="middle">+</text>
+  <text x="141" y="349" font-size="11" font-weight="bold" fill="#cfe3d5" opacity="0.9" text-anchor="middle">+</text>
 
   <!-- SOLDER-SIDE BRIDGES: the runs you actually make, drawn bold -->
   <g stroke="#9fb7cc" stroke-width="8" stroke-linecap="round" fill="none">
@@ -115,7 +118,7 @@
 
   <!-- legend / notes -->
   <g font-size="13" fill="#333">
-    <rect x="500" y="120" width="378" height="400" rx="8" fill="#f6f4ef" stroke="#ddd"/>
+    <rect x="500" y="120" width="378" height="460" rx="8" fill="#f6f4ef" stroke="#ddd"/>
     <text x="518" y="146" font-weight="bold" font-size="14">How to use this view</text>
     <g font-size="12">
       <text x="518" y="168">· Board FLIPPED LEFT–RIGHT — exactly what you</text>
@@ -141,15 +144,17 @@
       <text x="518" y="496">7. 12V− pad ↓ full run → SLEEVE pad</text>
       <text x="518" y="514">R5, C1, C2 ground legs land in run 7; R4 spans U2's</text>
       <text x="518" y="530">OUT↔ADJ pads — no extra bridges for the divider.</text>
+      <text x="518" y="552" fill="#c0392b">Caps are polarized: the run-7 leg is the − leg. In this</text>
+      <text x="518" y="568" fill="#c0392b">mirrored view + points RIGHT (left on the real board).</text>
     </g>
   </g>
 
   <!-- off-board reminder -->
   <g font-size="12" fill="#333">
-    <rect x="500" y="532" width="378" height="104" rx="8" fill="#f6f4ef" stroke="#ddd"/>
-    <text x="518" y="552" font-weight="bold" font-size="13">Off-board (rev C)</text>
-    <text x="518" y="572">① splitter → DC-099 panel jack → 100 mA polyfuse → board 12V+</text>
-    <text x="518" y="592">② P6KE15CA TVS spliced ~1" behind plug: tip↔sleeve, no polarity</text>
-    <text x="518" y="612" font-weight="bold" fill="#c0392b">Never bridge SSR pin 3 to pin 4.</text>
+    <rect x="500" y="592" width="378" height="104" rx="8" fill="#f6f4ef" stroke="#ddd"/>
+    <text x="518" y="612" font-weight="bold" font-size="13">Off-board (rev C)</text>
+    <text x="518" y="632">① splitter → DC-099 panel jack → 100 mA polyfuse → board 12V+</text>
+    <text x="518" y="652">② P6KE15CA TVS spliced ~1" behind plug: tip↔sleeve, no polarity</text>
+    <text x="518" y="672" font-weight="bold" fill="#c0392b">Never bridge SSR pin 3 to pin 4.</text>
   </g>
 </svg>
