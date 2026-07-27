@@ -1,6 +1,6 @@
 <svg viewBox="0 0 860 480" xmlns="http://www.w3.org/2000/svg" role="img" font-family="sans-serif">
   <title>aF4 feed trigger wiring with AQY212GH PhotoMOS</title>
-  <desc>PoE switch powers an Olimex ESP32-POE-ISO. GPIO13 drives the AQY212GH LED through a 220 ohm resistor. The PhotoMOS output switches 12V tapped from the feeder's power splitter onto the 3.5mm tip of the aF4's 0-10V trigger port.</desc>
+  <desc>PoE switch powers an Olimex ESP32-POE-ISO. GPIO13 drives the AQY212GH LED through a 220 ohm resistor. The PhotoMOS output switches 10.4V — made on the protoboard by an LM1117-ADJ linear regulator from the feeder's 12V splitter tap — onto the 3.5mm tip of the aF4's 0-10V trigger port.</desc>
   <rect x="0" y="0" width="860" height="480" fill="#ffffff"/>
 
   <!-- isolation boundary -->
@@ -67,15 +67,15 @@
   <text x="798" y="270" font-size="10" fill="#888">12V to</text>
   <text x="798" y="283" font-size="10" fill="#888">feeder</text>
 
-  <!-- splitter leg to fuse to buck to photomos -->
+  <!-- splitter leg to fuse to on-board regulator to photomos -->
   <path d="M 715 168 L 668 168" fill="none" stroke="#222" stroke-width="1.5"/>
   <rect x="624" y="160" width="44" height="16" rx="3" fill="none" stroke="#222" stroke-width="1.5"/>
-  <text x="646" y="154" text-anchor="middle" font-size="9" font-family="monospace" fill="#666">500mA PTC</text>
+  <text x="646" y="154" text-anchor="middle" font-size="9" font-family="monospace" fill="#666">100mA PTC</text>
   <path d="M 624 168 L 560 168 L 560 192" fill="none" stroke="#222" stroke-width="1.5"/>
   <text x="572" y="186" font-size="10" font-family="monospace" fill="#666">+12V tap</text>
-  <rect x="528" y="192" width="64" height="34" rx="5" fill="#f5f5f5" stroke="#999" stroke-width="1.2"/>
-  <text x="560" y="206" text-anchor="middle" font-size="9" font-weight="600" fill="#222">buck reg</text>
-  <text x="560" y="219" text-anchor="middle" font-size="9" font-family="monospace" fill="#666">→10.4V</text>
+  <rect x="514" y="192" width="92" height="34" rx="5" fill="#f5f5f5" stroke="#999" stroke-width="1.2"/>
+  <text x="560" y="206" text-anchor="middle" font-size="9" font-weight="600" fill="#222">LM1117-ADJ</text>
+  <text x="560" y="219" text-anchor="middle" font-size="9" font-family="monospace" fill="#666">R4/R5 →10.4V</text>
   <path d="M 560 226 L 560 248 L 500 248" fill="none" stroke="#222" stroke-width="1.5"/>
 
   <!-- OUT4 to tip -->
@@ -105,5 +105,5 @@
   <!-- timing note -->
   <rect x="30" y="410" width="800" height="46" rx="8" fill="none" stroke="#ccc"/>
   <text x="50" y="430" font-size="11" font-family="monospace" fill="#222">feed = GPIO13 high 10s (spec: ≥9V for &gt;6s) → low ≥60s to re-arm → next feed ≥5 min later</text>
-  <text x="50" y="446" font-size="10" fill="#888">Fully isolated LED/output sides. Rev B: 500mA polyfuse before buck · P6KE12CA TVS behind plug (bidirectional, no polarity) · 10kΩ GPIO13 pulldown on protoboard.</text>
+  <text x="50" y="446" font-size="10" fill="#888">Fully isolated LED/output sides. Rev C: 100mA polyfuse (MF-R010) on the tap · LM1117-ADJ + 121Ω/887Ω divider on protoboard (no buck module) · P6KE15CA TVS behind plug (bidirectional) · 10kΩ GPIO13 pulldown.</text>
 </svg>

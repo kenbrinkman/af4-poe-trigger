@@ -1,31 +1,31 @@
 <svg viewBox="0 0 900 1180" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
   <title>aF4 trigger protoboard layout</title>
-  <desc>Perfboard cut to ~30x33mm (25x25mm 9x9 grid minimum), component side: AQY212GH PhotoMOS SSR, 220 ohm resistor, 10k GPIO pulldown, control wires from ESP32 on the left, 12V/output side on the right. R1 and R2 stand vertically on a one-pitch footprint with their bent leads landing together in the GPIO13 junction hole; R3 lies flat across three pitches. Splitter feeds the DC-099 panel jack, whose pigtails run through the polyfuse to the 10.4V buck off-board; P6KE12CA bidirectional TVS spliced behind the 3.5mm plug. Detail panels below show the polyfuse splice and the TVS splice at the plug.</desc>
+  <desc>Perfboard cut to ~30x33mm (25x25mm 9x9 grid minimum), component side: AQY212GH PhotoMOS SSR on the isolation boundary, 220 ohm LED resistor and 10k GPIO pulldown standing vertically on the 3.3V side, and the rev C regulator block on the 12V side: LM1117T-ADJ (TO-220, lying flat tab-up) with R4 121R (OUT to ADJ) / R5 887R (ADJ to GND) setting 10.41V, C1 10uF input cap, C2 10uF tantalum output cap. Raw fused 12V enters the board; 10.4V is made on-board. Splitter feeds the DC-099 panel jack, whose pigtails run through the 100mA polyfuse to the board; P6KE15CA bidirectional TVS spliced behind the 3.5mm plug. Detail panels below show the polyfuse splice and the TVS splice at the plug.</desc>
 
-  <text x="70" y="28" font-size="19" font-weight="bold" fill="#333">aF4 trigger — protoboard layout (component side)</text>
+  <text x="70" y="28" font-size="19" font-weight="bold" fill="#333">aF4 trigger — protoboard layout (component side, rev C)</text>
 
   <!-- external wires (behind board edge) -->
   <path d="M188.7,157.4 C180,110 130,72 102,56" stroke="#e67e22" stroke-width="5" fill="none"/>
   <path d="M229.3,157.4 C229,108 205,75 188,58" stroke="#555" stroke-width="5" fill="none"/>
-  <path d="M310.6,157.4 C310,108 332,72 348,56" stroke="#d64541" stroke-width="5" fill="none"/>
+  <path d="M351.2,157.4 C351,108 368,72 378,56" stroke="#d64541" stroke-width="5" fill="none"/>
   <path d="M432.5,157.4 C433,108 448,72 456,56" stroke="#555" stroke-width="5" fill="none"/>
   <path d="M310.6,482.5 C310,520 300,545 294,560" stroke="#e0b020" stroke-width="5" fill="none"/>
   <path d="M432.5,482.5 C433,520 440,545 444,560" stroke="#555" stroke-width="5" fill="none"/>
   <text x="60" y="46" font-size="13" font-weight="bold" fill="#e67e22">GPIO13 (ESP32)</text>
   <text x="168" y="40" font-size="13" font-weight="bold" fill="#555">GND (ESP32)</text>
-  <text x="322" y="46" font-size="13" font-weight="bold" fill="#d64541">10.4V in (see ①)</text>
-  <text x="440" y="46" font-size="13" font-weight="bold" fill="#555">12V− (buck OUT−)</text>
+  <text x="342" y="46" font-size="13" font-weight="bold" fill="#d64541">+12V in (see ①)</text>
+  <text x="446" y="46" font-size="13" font-weight="bold" fill="#555">12V− (DC-099 black)</text>
   <text x="216" y="584" font-size="13" font-weight="bold" fill="#b28c00">TIP → 3.5mm plug (see ②)</text>
   <text x="416" y="584" font-size="13" font-weight="bold" fill="#555">SLEEVE → 3.5mm plug</text>
 
-  <!-- rev B: off-board protection parts -->
+  <!-- rev C: off-board parts -->
   <g font-size="12" fill="#333">
     <rect x="500" y="532" width="378" height="104" rx="8" fill="#f6f4ef" stroke="#ddd"/>
-    <text x="518" y="552" font-weight="bold" font-size="13">Off-board protection (rev B)</text>
-    <text x="518" y="570">① +12V: splitter → DC-099 panel jack → 500 mA</text>
-    <text x="530" y="586">polyfuse → buck module set to 10.4 V → board pad</text>
-    <text x="518" y="604">② P6KE12CA TVS spliced ~1" behind plug: tip↔sleeve, no polarity</text>
-    <text x="518" y="622">R3 preloads the buck (~5 mA) so its light-load setpoint holds</text>
+    <text x="518" y="552" font-weight="bold" font-size="13">Off-board parts (rev C)</text>
+    <text x="518" y="570">① +12V: splitter → DC-099 panel jack → 100 mA</text>
+    <text x="530" y="586">polyfuse (MF-R010) → board 12V+ pad</text>
+    <text x="518" y="604">② P6KE15CA TVS spliced ~1" behind plug: tip↔sleeve, no polarity</text>
+    <text x="518" y="622">Regulator is ON the board — no buck module, nothing to pre-set</text>
   </g>
 
   <!-- board -->
@@ -50,7 +50,8 @@
     <line x1="188.7" y1="157.4" x2="188.7" y2="198.1"/>
     <line x1="188.7" y1="238.7" x2="188.7" y2="279.4"/>
     <polyline points="229.3,157.4 229.3,320 188.7,320"/>
-    <line x1="310.6" y1="157.4" x2="310.6" y2="279.4"/>
+    <line x1="351.2" y1="157.4" x2="351.2" y2="238.7"/>
+    <line x1="351.2" y1="320" x2="310.6" y2="279.4"/>
     <line x1="310.6" y1="320" x2="310.6" y2="482.5"/>
     <line x1="432.5" y1="157.4" x2="432.5" y2="482.5"/>
   </g>
@@ -73,13 +74,6 @@
   <circle cx="229.3" cy="198.1" r="4.5" fill="#2b4470"/>
   <text x="232" y="172" font-size="11" font-weight="bold" fill="#ffffff" text-anchor="middle">R2 10kΩ</text>
 
-  <!-- resistor R3 (2.2k bleed/preload across buck output: 10.4V col <-> 12V- col) -->
-  <line x1="310.6" y1="238.7" x2="340" y2="238.7" stroke="#888" stroke-width="3"/>
-  <line x1="402" y1="238.7" x2="432.5" y2="238.7" stroke="#888" stroke-width="3"/>
-  <rect x="340" y="229.7" width="62" height="18" rx="4" fill="#c48fd4" stroke="#7a4a8c" stroke-width="1.5"/>
-  <text x="371" y="225" font-size="12" font-weight="bold" fill="#ffffff" text-anchor="middle">R3 2.2kΩ (buck preload)</text>
-  <text x="371" y="262" font-size="10" fill="#cfe3d5" text-anchor="middle">lies flat, 3 pitches — red-red-red</text>
-
   <!-- resistor R1 (220Ω) — STANDS VERTICALLY: straight lead in the SSR pin-1 net,
        bent lead sleeved and landed in the GPIO13 junction hole (one-pitch footprint) -->
   <path d="M188.7,238.7 C205,234 205,203 188.7,198.1" stroke="#888" stroke-width="3.5" fill="none"/>
@@ -87,7 +81,61 @@
   <circle cx="188.7" cy="238.7" r="12" fill="#d9a441" stroke="#8c6a1d" stroke-width="2"/>
   <circle cx="188.7" cy="238.7" r="4.5" fill="#7a5b16"/>
   <text x="168" y="238" font-size="13" font-weight="bold" fill="#ffffff" text-anchor="end">R1 220Ω</text>
-  <text x="168" y="252" font-size="10" fill="#cfe3d5" text-anchor="end">red-red-brown</text>
+
+  <!-- ================= rev C regulator block (12V side) =================
+       Pads in column 351.2: IN=238.7 (top), ADJ=279.4 (mid), OUT=320 (bottom).
+       U2 body lies flat below (tab up); leads bend up to the pads:
+       left pin 1 ADJ, middle pin 2 OUT, right pin 3 IN — drawn crossing-free.
+       OUT reaches SSR pin 4 via the diagonal solder-side bridge. -->
+
+  <!-- U2 pads -->
+  <g fill="#e8c25a" stroke="#8c6a1d" stroke-width="1.5">
+    <circle cx="351.2" cy="238.7" r="6.5"/><circle cx="351.2" cy="279.4" r="6.5"/><circle cx="351.2" cy="320" r="6.5"/>
+  </g>
+  <text x="361" y="233" font-size="10" font-weight="bold" fill="#cfe3d5">IN</text>
+
+  <!-- U2 leads: ADJ (left pin) curves up past OUT pad; OUT (middle) straight; IN (right) curves highest -->
+  <path d="M336,368 C336,330 344,290 351.2,279.4" stroke="#999" stroke-width="3" fill="none"/>
+  <line x1="351.2" y1="326.5" x2="351.2" y2="368" stroke="#999" stroke-width="4"/>
+  <path d="M366,368 C366,320 358,255 351.2,238.7" stroke="#999" stroke-width="3" fill="none"/>
+  <text x="336" y="364" font-size="8" fill="#cfe3d5" text-anchor="middle">1</text>
+  <text x="356" y="364" font-size="8" fill="#cfe3d5" text-anchor="middle">2</text>
+  <text x="371" y="364" font-size="8" fill="#cfe3d5" text-anchor="middle">3</text>
+
+  <!-- U2 body: TO-220 flat, tab up -->
+  <rect x="322" y="368" width="110" height="10" rx="3" fill="#5a6068"/>
+  <circle cx="377" cy="373" r="3.2" fill="#2f7d52"/>
+  <rect x="322" y="378" width="110" height="42" rx="5" fill="#24262a" stroke="#000" stroke-width="1.5"/>
+  <text x="377" y="396" font-size="12" font-weight="bold" fill="#fff" text-anchor="middle">U2 LM1117T-ADJ</text>
+  <text x="377" y="410" font-size="9" fill="#bbb" text-anchor="middle">TO-220 flat, tab up · 24 mW · no heatsink</text>
+
+  <!-- R4 121Ω: OUT → ADJ (stands beside the column, bent-lead loop like R1/R2) -->
+  <path d="M351.2,279.4 C372,286 372,313 351.2,320" stroke="#888" stroke-width="3" fill="none"/>
+  <rect x="362" y="291" width="9" height="18" rx="4.5" fill="#7db8a0" stroke="#3a6a56" stroke-width="1.2"/>
+  <text x="378" y="303" font-size="10" font-weight="bold" fill="#ffffff">R4 121Ω 1%</text>
+
+  <!-- R5 887Ω: ADJ → GND (flat across to the 12V− column) -->
+  <line x1="351.2" y1="279.4" x2="380" y2="279.4" stroke="#888" stroke-width="3"/>
+  <line x1="412" y1="279.4" x2="432.5" y2="279.4" stroke="#888" stroke-width="3"/>
+  <rect x="380" y="270.4" width="32" height="18" rx="4" fill="#7db8a0" stroke="#3a6a56" stroke-width="1.5"/>
+  <text x="396" y="265" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">R5 887Ω 1%</text>
+  <circle cx="432.5" cy="279.4" r="5.5" fill="#e8c25a" stroke="#8c6a1d" stroke-width="1.5"/>
+
+  <!-- C1 10µF: IN → GND -->
+  <line x1="351.2" y1="238.7" x2="394" y2="238.7" stroke="#888" stroke-width="3"/>
+  <circle cx="406" cy="238.7" r="12" fill="#4a6fa5" stroke="#2b4470" stroke-width="2"/>
+  <line x1="418" y1="238.7" x2="432.5" y2="238.7" stroke="#888" stroke-width="3"/>
+  <circle cx="432.5" cy="238.7" r="5.5" fill="#e8c25a" stroke="#8c6a1d" stroke-width="1.5"/>
+  <text x="424" y="224" font-size="10" font-weight="bold" fill="#ffffff">C1 10µF</text>
+
+  <!-- C2 10µF tantalum (+ to 10.4V rail): OUT → GND, tapped off the OUT column below the pad -->
+  <line x1="351.2" y1="326.5" x2="351.2" y2="345" stroke="#888" stroke-width="3"/>
+  <line x1="351.2" y1="345" x2="394" y2="345" stroke="#888" stroke-width="3"/>
+  <circle cx="406" cy="345" r="12" fill="#c9773a" stroke="#7a4520" stroke-width="2"/>
+  <text x="406" y="349" font-size="11" font-weight="bold" fill="#fff" text-anchor="middle">+</text>
+  <line x1="418" y1="345" x2="432.5" y2="345" stroke="#888" stroke-width="3"/>
+  <circle cx="432.5" cy="345" r="5.5" fill="#e8c25a" stroke="#8c6a1d" stroke-width="1.5"/>
+  <text x="422" y="367" font-size="10" font-weight="bold" fill="#ffffff">C2</text>
 
   <!-- SSR pads -->
   <g fill="#e8c25a" stroke="#8c6a1d" stroke-width="1.5">
@@ -113,7 +161,7 @@
   <!-- wire attach pads -->
   <g fill="#e8c25a" stroke="#8c6a1d" stroke-width="1.5">
     <circle cx="188.7" cy="157.4" r="6.5"/><circle cx="229.3" cy="157.4" r="6.5"/>
-    <circle cx="310.6" cy="157.4" r="6.5"/><circle cx="432.5" cy="157.4" r="6.5"/>
+    <circle cx="351.2" cy="157.4" r="6.5"/><circle cx="432.5" cy="157.4" r="6.5"/>
     <circle cx="310.6" cy="482.5" r="6.5"/><circle cx="432.5" cy="482.5" r="6.5"/>
   </g>
 
@@ -123,7 +171,7 @@
     <text x="518" y="148" font-weight="bold" font-size="14">Wires</text>
     <line x1="518" y1="164" x2="548" y2="164" stroke="#e67e22" stroke-width="5"/><text x="556" y="168">GPIO13 — 3.3V control</text>
     <line x1="518" y1="186" x2="548" y2="186" stroke="#555" stroke-width="5"/><text x="556" y="190">grounds / returns</text>
-    <line x1="518" y1="208" x2="548" y2="208" stroke="#d64541" stroke-width="5"/><text x="556" y="212">10.4V in (splitter → fuse → buck, ①)</text>
+    <line x1="518" y1="208" x2="548" y2="208" stroke="#d64541" stroke-width="5"/><text x="556" y="212">raw +12V in (splitter → ① fuse)</text>
     <line x1="518" y1="230" x2="548" y2="230" stroke="#e0b020" stroke-width="5"/><text x="556" y="234">switched 10.4V → jack tip</text>
     <line x1="518" y1="252" x2="548" y2="252" stroke="#9fb7cc" stroke-width="7" opacity="0.8"/><text x="556" y="256">solder-side bridge (wire leg or solder)</text>
     <text x="518" y="286" font-weight="bold" font-size="14">Notes</text>
@@ -132,25 +180,24 @@
       <text x="518" y="326">· Mount: drill the 4 dashed holes to Ø2.2 mm — they</text>
       <text x="528" y="342">are 6 pitches (15.24 mm) apart, matching the case</text>
       <text x="528" y="358">bosses. M2 screws.</text>
-      <text x="518" y="378">· R1/R2 stand vertically: bend one lead 180° at the</text>
-      <text x="528" y="394">body shoulder (not the glass seal), sleeve it, and</text>
-      <text x="528" y="410">land both bent leads in the GPIO13 junction hole —</text>
-      <text x="528" y="426">a pad, not a mid-air splice. R3 lies flat (3 pitches).</text>
-      <text x="518" y="446">· Meter before soldering: R1 220 Ω = red-red-brown,</text>
-      <text x="528" y="462">R3 2.2 kΩ = red-red-red. One band apart.</text>
-      <text x="518" y="482">· SSR notch / pin-1 dot faces R1.</text>
-      <text x="518" y="502">· SLEEVE ties to the 12V− strip only — never to</text>
-      <text x="528" y="518">ESP32 GND. Pins 3/4 have no polarity.</text>
+      <text x="518" y="378">· R1/R2 stand vertically (bend at the shoulder, sleeve</text>
+      <text x="528" y="394">the bent lead, land both in the GPIO13 hole). R4</text>
+      <text x="528" y="410">stands the same way; R5 lies flat or stands.</text>
+      <text x="518" y="430">· Meter R4/R5 before soldering — swapped, the rail</text>
+      <text x="528" y="446">reads ~1.4 V and the feed never triggers.</text>
+      <text x="518" y="466">· C2 (10µF tantalum): + leg to the 10.4V (OUT) rail.</text>
+      <text x="518" y="486">· U2 pads top→bottom: IN, ADJ, OUT (pin 2 = OUT = tab).</text>
+      <text x="518" y="506">· SSR notch faces R1 · SLEEVE to 12V− only, never ESP32 GND.</text>
     </g>
   </g>
 
-  <!-- off-board detail panels (rev B) -->
+  <!-- off-board detail panels (rev C) -->
   <line x1="22" y1="680" x2="878" y2="680" stroke="#ddd" stroke-width="2"/>
-  <text x="22" y="668" font-size="15" font-weight="bold" fill="#333">Off-board detail (rev B) — build these and set the buck before wiring to the board</text>
+  <text x="22" y="668" font-size="15" font-weight="bold" fill="#333">Off-board detail (rev C) — splice these, then wire to the board (nothing to pre-set)</text>
 
   <!-- detail ① : polyfuse inline -->
   <rect x="22" y="700" width="856" height="210" rx="8" fill="#f6f4ef" stroke="#ddd"/>
-  <text x="44" y="730" font-size="14" font-weight="bold" fill="#333">① 500 mA polyfuse, inline on the DC-099 jack's +12V pigtail</text>
+  <text x="44" y="730" font-size="14" font-weight="bold" fill="#333">① 100 mA polyfuse (MF-R010), inline on the DC-099 jack's +12V pigtail</text>
 
   <!-- outer heatshrink over whole body -->
   <rect x="336" y="772" width="176" height="72" rx="12" fill="none" stroke="#aaa" stroke-width="1.5" stroke-dasharray="6 5"/>
@@ -173,7 +220,7 @@
 
   <!-- polyfuse disc -->
   <ellipse cx="424" cy="808" rx="30" ry="28" fill="#d9a441" stroke="#8c6a1d" stroke-width="2"/>
-  <text x="424" y="805" font-size="12" font-weight="bold" fill="#4a3a10" text-anchor="middle">500</text>
+  <text x="424" y="805" font-size="12" font-weight="bold" fill="#4a3a10" text-anchor="middle">100</text>
   <text x="424" y="820" font-size="10" fill="#4a3a10" text-anchor="middle">mA PTC</text>
 
   <!-- return run, uncut -->
@@ -184,15 +231,15 @@
   <text x="158" y="806" font-size="13" font-weight="bold" fill="#333" text-anchor="end">DC-099 red (+)</text>
   <text x="158" y="822" font-size="11" fill="#777" text-anchor="end">centre pin — meter it</text>
   <text x="158" y="870" font-size="13" font-weight="bold" fill="#333" text-anchor="end">DC-099 black (−)</text>
-  <text x="732" y="805" font-size="13" font-weight="bold" fill="#333">buck IN+</text>
-  <text x="732" y="821" font-size="11" fill="#777">set OUT to 10.4 V</text>
-  <text x="732" y="870" font-size="13" font-weight="bold" fill="#333">buck IN−</text>
+  <text x="732" y="805" font-size="13" font-weight="bold" fill="#333">board 12V+ pad</text>
+  <text x="732" y="821" font-size="11" fill="#777">regulator is on the board</text>
+  <text x="732" y="870" font-size="13" font-weight="bold" fill="#333">board 12V− pad</text>
 
-  <text x="44" y="750" font-size="10" fill="#777">Splitter's male plug clicks into the jack from outside — nothing gets cut. PTC has no polarity; radial discs have both legs on one edge, so bend one 180° to exit the far side.</text>
+  <text x="44" y="750" font-size="10" fill="#777">Splitter's male plug clicks into the jack from outside — nothing gets cut. PTC has no polarity; radial discs have both legs on one edge, so bend one 180° to exit the far side. Steady draw ~15 mA, so the 100 mA hold gives real fault margin.</text>
 
   <!-- detail ② : TVS at the plug -->
   <rect x="22" y="930" width="856" height="230" rx="8" fill="#f6f4ef" stroke="#ddd"/>
-  <text x="44" y="960" font-size="14" font-weight="bold" fill="#333">② P6KE12CA TVS (bidirectional), spliced ~1" behind the 3.5 mm plug</text>
+  <text x="44" y="960" font-size="14" font-weight="bold" fill="#333">② P6KE15CA TVS (bidirectional), spliced ~1" behind the 3.5 mm plug</text>
 
   <!-- dimension line -->
   <line x1="352" y1="992" x2="636" y2="992" stroke="#aaa" stroke-width="1.5"/>
@@ -217,7 +264,7 @@
   <rect x="330" y="1048" width="44" height="40" rx="5" fill="#24262a" stroke="#000" stroke-width="1.5"/>
   <text x="398" y="1058" font-size="12" font-weight="bold" fill="#333">either leg either way — no polarity</text>
   <text x="398" y="1076" font-size="11" fill="#777">DO-15 axial: wrap a leg around each conductor</text>
-  <text x="398" y="1094" font-size="11" fill="#777">clamps from ~11.4 V, both directions</text>
+  <text x="398" y="1094" font-size="11" fill="#777">clamps from ~14.3 V, both directions</text>
 
   <!-- 3.5mm plug -->
   <rect x="644" y="1042" width="82" height="52" rx="9" fill="#9aa0a6" stroke="#666" stroke-width="1.5"/>
@@ -230,5 +277,5 @@
   <line x1="788" y1="1080" x2="788" y2="1100" stroke="#aaa" stroke-width="1.2"/>
   <text x="788" y="1114" font-size="11" fill="#777" text-anchor="middle">tip</text>
 
-  <text x="44" y="1146" font-size="11" fill="#777">SLEEVE ties to the 12V− strip only — never to ESP32 GND. 10.2 V standoff sits just under the 10.4 V line; the µA of leakage is harmless into the high-impedance port.</text>
+  <text x="44" y="1146" font-size="11" fill="#777">SLEEVE ties to the 12V− strip only — never to ESP32 GND. 12.8 V standoff sits above the 10.4 V line — zero standing leakage into the port.</text>
 </svg>

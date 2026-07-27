@@ -10,11 +10,11 @@ Case for the ESP32-POE-ISO + AQY212 protoboard. Designed against the measured `E
 
 ## Layout
 
-- **Input wall:** RJ45 flush cutout (jack face sits in the outer wall plane, tight 0.5 mm reveal) + **DC-099 panel-mount 12V jack** (12.2 mm hole), left of the RJ45 and fully clear of the board footprint. The splitter's 5.5×2.5 male tap plug connects from outside (waterproof cap covers it when unplugged); the jack's red/black 18AWG pigtails run inside to the polyfuse → buck. Inner-face relief pockets clear the RJ45's latch wings and top shield bump; the springy wing tips compress slightly against the pocket floor (same as the proven v1 fit).
+- **Input wall:** RJ45 flush cutout (jack face sits in the outer wall plane, tight 0.5 mm reveal) + **DC-099 panel-mount 12V jack** (12.2 mm hole), left of the RJ45 and fully clear of the board footprint. The splitter's 5.5×2.5 male tap plug connects from outside (waterproof cap covers it when unplugged); the jack's red/black 18AWG pigtails run inside to the polyfuse → protoboard 12V pads. Inner-face relief pockets clear the RJ45's latch wings and top shield bump; the springy wing tips compress slightly against the pocket floor (same as the proven v1 fit).
 - **Output wall:** PG7 gland centered, for the 3.5mm cable. A 13.5 mm deep clearance zone sits between this wall and the protoboard — the locknut/thread stub use ~4.5 mm of it, leaving 9 mm for the cable to drop to the protoboard's tip/sleeve pads. Solder those wires on the board edge facing this gland (as drawn in `aF4-protoboard-layout.svg`).
 - **Board:** three Ø6 standoffs matching the board's 2.2 mm holes, board bottom sits 9.5 mm above floor (header pins protrude 8.6 mm below board). **M2 self-tapping screws**, 1.7 mm pilot holes, ≥8 mm thread.
 - **Protoboard bay:** past the antenna end, four Ø6 × 6 mm bosses spaced 6 perfboard grid pitches apart (15.24 × 15.24 mm) so the mounting holes land on existing grid holes — just drill 4 grid holes out to Ø2.2 mm. M2 self-tappers (two diagonal bosses is enough). See `aF4-protoboard-layout.svg` for component placement and wiring.
-- **Buck pocket:** drop-in pocket on the left wall, mid-channel — designed against the actual MP1584EN module STEP (22.4 × 17.1, components verified). Nothing touches any edge or pad: the module's **flat back** sits 0.3 mm off the wall, its bottom PCB edge rests on a shelf that stops before the component zone, side fences stand 0.4 mm beyond the board ends, and a flexible front post with a stepped nub snaps over the top-front as it drops in. All four corner pads, the mid-edge caps, and the pot stay in open air; pot faces the room for adjustment. Solder wires first, then drop in. Optional: a small foam pad on the lid underside above the module stops any rattle (15 mm gap).
+- **Buck pocket (vestigial as of rev C, 2026-07-26):** drop-in pocket on the left wall, mid-channel, designed for the rev B MP1584EN buck module. The regulator moved onto the protoboard (LM1117T-ADJ + fixed divider), so the pocket is now unused — it costs nothing, needs no reprint, and stays in `af4_enclosure_ocp.py` for geometry stability. Handy as a tie-down point for cable slack if wanted. Original design notes retained in git history.
 - **Lid:** 4× **M3 × 12 coarse self-tapping** screws into Ø9 corner bosses (2.5 mm pilots, open-bottomed so screws can't bottom out). Countersunk holes in lid. Registration lips on all four sides (30 mm on the long sides, 26 mm on the short sides to clear the corner bosses).
 - Headroom above board: 26 mm — clears Dupont jumpers on the EXT headers.
 
@@ -38,8 +38,8 @@ Case for the ESP32-POE-ISO + AQY212 protoboard. Designed against the measured `E
 
 1. Thread the output PG7 gland and the input DC-099 jack into their walls (locknuts inside). Meter the jack's pigtails against a plugged-in supply once: red should be center pin = +12V.
 2. Feed the 3.5 mm cable through the output gland **before** soldering plug/protoboard. (12V side needs no feed-through — the splitter's tap plug connects to the jack externally.)
-3. Solder the buck module's four corner wires (12V+/− in via polyfuse; 10.4V/− out) and **set it to 10.4 V on the bench with the R3 preload equivalent (~2.2 kΩ) loaded** — then slide it into the wall slot, pot facing inward.
-4. Mount protoboard (SSR + R1/R2/R3), wire per `aF4-protoboard-layout.svg`.
+3. Splice the 100 mA polyfuse into the jack's red pigtail (heatshrunk); run both pigtails to the protoboard's 12V+ / 12V− pads. (No buck module — the LM1117 regulator is on the protoboard; nothing to pre-set.)
+4. Mount protoboard (SSR + LM1117 + R1/R2/R4/R5 + C1/C2), wire per `aF4-protoboard-layout.svg`.
 5. Flash the ESP32 over USB first — there's no USB cutout (OTA afterwards).
 6. Drop board onto standoffs, RJ45 into wall opening, 3× M2.
 7. Dupont jumpers to GPIO13/GND, tighten glands, screw lid.

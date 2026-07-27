@@ -31,7 +31,7 @@ Assumed pinout (verify): tip = signal (+9-12V), sleeve = ground. Mono/TS suffici
 ## Verification checklist (voltmeter, OEM dongle)
 
 - [x] 3.5mm tip↔sleeve at rest: **0V confirmed**
-- [x] During eWeLink-triggered feed: **10.37V** (dongle regulates below 12V — replicate with buck at ~10.4V)
+- [x] During eWeLink-triggered feed: **10.37V** (dongle regulates below 12V — replicate at ~10.4V; the real requirement is the ≥9V threshold, so anything in roughly 9.5–11V works)
 - [x] Link-detect mechanism: **CONFIRMED mechanical (2026-07-10)** — bare plug with nothing attached lights the link icon. Jack insertion switch; no electrical sensing. No bleed resistor needed on the PhotoMOS output (rest voltage confirmed 0V).
 - [x] Splitter cable: **5.5×2.5mm barrel, center-positive, confirmed 2026-07-10**
 - [ ] Confirm internal 24h schedule behavior while dongle connected
@@ -52,27 +52,36 @@ Olimex ESP32-POE-ISO → GPIO13 → 220Ω → **AQY212GH PhotoMOS** (pin 1 LED+,
 
 ESPHome guardrails (all baked on-device — HA is scheduler only): `restore_mode: ALWAYS_OFF` + `internal: true` on the GPIO switch (HA cannot touch the raw line), `mode: single` feed script with 10s pulse + 290s lockout tail (enforces 5-min spacing and >60s 0V re-arm; re-entrant requests dropped), template button as the sole exposed control, lockout state exposed as a binary_sensor for dashboard/notify. As-flashed YAML: `af4-feeder.yaml` (source of truth); concept sketch in `aF4-esp32-trigger-BOM.md`.
 
-## 10.4V buck regulator selection
+## 10.4V regulator selection
 
-Regulates the feeder's 12V tap down to ~10.4V (matching measured OEM trigger) for the PhotoMOS output. Not a DigiKey part — source from Amazon/AliExpress.
+Regulates the feeder's 12V tap down to ~10.4V (matching measured OEM trigger) for the PhotoMOS output.
 
-- **Pick: genuine adjustable MP1584EN mini module** (e.g. EBOOT MP1584EN, 4.4★/1.3K reviews). Continuously adjustable, spec **0.8–20V out** — 10.4V is mid-range. The listing titles ("24V to 12V 9V 5V 3V") just list example outputs; it is NOT stepped. ~22×17mm, fits the case better than an LM2596 board (~43×21mm).
-- **Avoid** the fixed-output MP1584EN "5V" boards (can't be set to 10.4V), and no-name **Mini-360** clones (heavily counterfeited MP2307, poor/ drifting regulation).
-- LM2596-with-voltmeter-display is a valid alternative — lets you dial 10.4V by eye without a meter — but is physically bigger.
+**Design (rev C, 2026-07-26): LM1117T-ADJ linear regulator, on the protoboard.** DigiKey part, TO-220.
 
-**Light-load caveat (matters here).** The aF4 0-10V input is high-impedance (trigger draws well under 1mA), so the module runs at a few mW — far below the "don't run under ~10% load / no load" warning on these buck boards. At near-zero load, cheap bucks regulate poorly and the output can creep above setpoint. Two fixes (either works):
-1. Set 10.4V **with the real load (or a stand-in) connected**, not on an unloaded bench — measure what it actually outputs in service.
-2. Add a small permanent **bleed/preload resistor across the buck output** (~2.2kΩ, ≈5mA / ~50mW) so the setpoint holds and it can't overshoot.
+- Vout = 1.25 × (1 + R5/R4) with R4 121Ω 1% (OUT→ADJ) and R5 887Ω 1% (ADJ→GND) = **10.41V**. Fixed resistors — no pot, no bench pre-set, nothing to drift or seal.
+- The divider draws 10.3mA, which alone satisfies the LM1117's worst-case 10mA minimum-load spec — the old R3 preload resistor is deleted.
+- Dissipation: (12 − 10.4V) × ~15mA ≈ **24mW**. No heatsink. Dropout at 15mA is well under the 1.6V headroom.
+- Caps: C1 10µF at IN, C2 10µF **tantalum or aluminum electrolytic** at OUT (the LM1117 wants some output-cap ESR for stability — don't substitute a lone low-ESR ceramic).
+- Isolation: the regulator, divider, and caps all live on the **power side** of the protoboard's isolation gap. Nothing crosses the gap except the SSR.
+- Bonus: removes a switching converter from the enclosure entirely (it sat centimeters from the LAN8720 PHY and magnetics).
 
-Note: this bleed is on the **buck output (regulation)**, a different point from the trigger line — the trigger line needs no bleed (rest voltage confirmed 0V, link-detect is mechanical; see verification checklist). For a threshold trigger a little upward drift is harmless (needs only ≥9V), so this is about setpoint repeatability, not a dealbreaker.
+Key insight: the requirement is a *window*, not a setpoint — the port triggers at **≥9V** and 10.37V is just what the OEM dongle happens to output. Anything ~9.5–11V is correct, which is exactly what a fixed divider delivers forever.
+
+### History: why not a buck module (rev B, abandoned 2026-07-26)
+
+Rev B spec'd an adjustable MP1584EN mini buck module (with Mini-360 clones and fixed-5V boards called out as traps, and an LM2596 board as the bigger alternative). Three Amazon-sourced modules failed in sequence: #1 buzzed (audible pulse-skipping at light load) and died after torque seal was applied to the pot — solvent wicked into the trimmer element; #2 shipped with no adjustment screw; #3's output collapsed to 3.5V as the pot approached 10V (open wiper → FB high → controller folds back).
+
+The underlying problems were structural, not just QC: (a) the load is ~5mA/50mW, far below the "don't run under ~10% load" floor where cheap bucks regulate poorly and drift above setpoint — hence the R3 preload workaround; (b) a multi-turn trimmer is the dominant field-failure part, and it existed only to hit a precision target the port doesn't require. Lesson recorded: **for a fixed-output permanent install, buy the IC and set it with fixed resistors — don't buy a module with a trimpot.** Dropping 1.6V at 5–15mA is a linear regulator's job; a buck's efficiency advantage is irrelevant at 24mW.
+
+(The rev B light-load bleed note remains true in general: any bleed/preload discussion was about the **regulator output**, not the trigger line — the trigger line needs no bleed; rest voltage confirmed 0V, link-detect mechanical.)
 
 ## CAD / 3D models (in this folder)
 
 - `ESP32-PoE-ISO_Rev_N.step` / `.stl` — full Olimex ESP32-POE-ISO board model (Rev.N, latest), extracted from the [Olimex KiCad hardware files](https://github.com/OLIMEX/ESP32-POE-ISO): board solid + 124 component models, all through-holes. Board ~28 × 98 mm plus antenna and RJ45 overhang; overall envelope ~29.4 × 112.5 × 25.3 mm. Hole positions verified against factory drill files. Not included: RM1–RM3 resistor arrays (no STEP source). STEP for enclosure CAD, STL for printing/viewing.
 - `PAN_AQY21-DIP4_PAN.step` — Panasonic AQY212GH PhotoMOS, DIP-4 package.
-- `aF4-trigger-case.stl/.step` + `aF4-trigger-lid.stl/.step` — printed enclosure (PETG, 59.7 × 155 × 38.9 mm): flush RJ45 + DC-099 panel-mount 12V jack (5.5×2.5, takes the splitter's tap plug directly) on the input wall, centered PG7 gland on the output wall, drop-in wall pocket for the MP1584EN buck module (snap post, all pads exposed, pot faces the room), M3×12 self-tapped lid, M2 board/protoboard mounts. Details in `aF4-enclosure-notes.md`; parametric source `af4_enclosure_ocp.py`.
-- `aF4-protoboard-layout.svg` — SSR + R1 (220Ω LED), R2 (10kΩ GPIO pulldown), R3 (2.2kΩ buck preload) placement and wiring on the 25×25 mm protoboard; off-board polyfuse/buck/TVS chain noted in the rev B panel. Two detail panels below the board drawing show the splices: **①** the 500 mA polyfuse inline on the +12 V lead, **②** the P6KE12CA TVS (bidirectional) across tip/sleeve ~1" behind the 3.5 mm plug. Step-by-step in `aF4-assembly-guide.md` §3–4.
-- `aF4-assembly-guide.md` — full build sequence: print, protoboard build, buck setup, wiring, flash, commissioning checks.
+- `aF4-trigger-case.stl/.step` + `aF4-trigger-lid.stl/.step` — printed enclosure (PETG, 59.7 × 155 × 38.9 mm): flush RJ45 + DC-099 panel-mount 12V jack (5.5×2.5, takes the splitter's tap plug directly) on the input wall, centered PG7 gland on the output wall, drop-in wall pocket for the MP1584EN buck module (snap post, all pads exposed, pot faces the room), M3×12 self-tapped lid, M2 board/protoboard mounts. Details in `aF4-enclosure-notes.md`; parametric source `af4_enclosure_ocp.py`. (The wall pocket was sized for the rev B MP1584EN buck module — now unused/vestigial; no reprint needed.)
+- `aF4-protoboard-layout.svg` — SSR + R1 (220Ω LED), R2 (10kΩ GPIO pulldown), and the rev C regulator block — LM1117T-ADJ (TO-220) + R4/R5 divider + C1/C2 — placement and wiring on the protoboard. Two detail panels below the board drawing show the splices: **①** the 100 mA polyfuse (MF-R010) inline on the +12 V lead, **②** the P6KE15CA TVS (bidirectional) across tip/sleeve ~1" behind the 3.5 mm plug. Step-by-step in `aF4-assembly-guide.md` §2–4.
+- `aF4-assembly-guide.md` — full build sequence: print, protoboard build (incl. on-board regulator), wiring, flash, commissioning checks.
 
 ## Home Assistant notes
 

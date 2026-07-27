@@ -1,20 +1,20 @@
 <svg viewBox="0 0 900 645" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
   <title>aF4 trigger protoboard — solder side (mirrored)</title>
-  <desc>Mirror image of the component-side layout: the board as seen flipped left-right with the iron in hand. Bridges shown are the actual solder-side runs. Components appear as ghost outlines on the far side — R1 and R2 stand vertically, drawn as bodies seen end-on with their bent leads landing together in the GPIO13 junction hole; R3 lies flat across three pitches.</desc>
+  <desc>Mirror image of the rev C component-side layout: the board as seen flipped left-right with the iron in hand. Bridges shown are the actual solder-side runs. Components appear as ghost outlines on the far side — R1 and R2 stand vertically, drawn as bodies seen end-on with their bent leads landing together in the GPIO13 junction hole; the LM1117T-ADJ regulator block (U2 + R4/R5 divider + C1/C2 caps) sits on the 12V side, which is on the LEFT in this mirrored view.</desc>
 
-  <text x="70" y="28" font-size="19" font-weight="bold" fill="#333">aF4 trigger — SOLDER SIDE (mirrored view)</text>
+  <text x="70" y="28" font-size="19" font-weight="bold" fill="#333">aF4 trigger — SOLDER SIDE (mirrored view, rev C)</text>
 
   <!-- external wires (behind board edge), mirrored -->
   <path d="M351.3,157.4 C360,110 410,72 438,56" stroke="#e67e22" stroke-width="5" fill="none"/>
   <path d="M310.7,157.4 C311,108 335,75 352,58" stroke="#555" stroke-width="5" fill="none"/>
-  <path d="M229.4,157.4 C230,108 208,72 192,56" stroke="#d64541" stroke-width="5" fill="none"/>
+  <path d="M188.7,157.4 C188,108 172,72 164,56" stroke="#d64541" stroke-width="5" fill="none"/>
   <path d="M107.5,157.4 C107,108 92,72 84,56" stroke="#555" stroke-width="5" fill="none"/>
   <path d="M229.4,482.5 C230,520 240,545 246,560" stroke="#e0b020" stroke-width="5" fill="none"/>
   <path d="M107.5,482.5 C107,520 100,545 96,560" stroke="#555" stroke-width="5" fill="none"/>
   <text x="380" y="46" font-size="13" font-weight="bold" fill="#e67e22">GPIO13 (ESP32)</text>
   <text x="300" y="40" font-size="13" font-weight="bold" fill="#555">GND (ESP32)</text>
-  <text x="120" y="46" font-size="13" font-weight="bold" fill="#d64541">10.4V in (see ①)</text>
-  <text x="14" y="70" font-size="13" font-weight="bold" fill="#555">12V− (buck OUT−)</text>
+  <text x="120" y="46" font-size="13" font-weight="bold" fill="#d64541">+12V in (see ①)</text>
+  <text x="14" y="70" font-size="13" font-weight="bold" fill="#555">12V− (DC-099 black)</text>
   <text x="180" y="584" font-size="13" font-weight="bold" fill="#b28c00">TIP → 3.5mm plug (see ②)</text>
   <text x="30" y="584" font-size="13" font-weight="bold" fill="#555">SLEEVE → 3.5mm</text>
 
@@ -44,25 +44,38 @@
   <!-- ghost component outlines (they sit on the FAR side) -->
   <g fill="none" stroke="#cfe3d5" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.7">
     <rect x="243" y="255" width="94" height="89" rx="6"/>
-    <rect x="138" y="229.7" width="62" height="18" rx="4"/>
     <!-- R1/R2 stand vertically: bodies seen end-on, one-pitch footprint -->
     <circle cx="351.3" cy="238.7" r="12"/>
     <circle cx="310.7" cy="198.1" r="12"/>
     <!-- their bent leads, arcing to the shared GPIO13 junction hole -->
     <path d="M351.3,238.7 C335,234 335,203 351.3,198.1"/>
     <path d="M310.7,198.1 C316,184 346,184 351.3,198.1"/>
+    <!-- U2 LM1117 body (flat, tab up) + tab -->
+    <rect x="108" y="368" width="110" height="52" rx="5"/>
+    <!-- R4 stand-up loop (OUT to ADJ) -->
+    <path d="M188.7,279.4 C168,286 168,313 188.7,320"/>
+    <!-- R5 flat body (ADJ to GND) -->
+    <rect x="128" y="270.4" width="32" height="18" rx="4"/>
+    <!-- C1 (IN to GND), C2 tantalum (OUT to GND) -->
+    <circle cx="134" cy="238.7" r="12"/>
+    <circle cx="134" cy="345" r="12"/>
   </g>
   <text x="306" y="300" font-size="12" font-weight="bold" fill="#cfe3d5" opacity="0.9" text-anchor="middle">SSR (ghost)</text>
   <text x="368" y="243" font-size="10" fill="#cfe3d5" opacity="0.9">R1 (ghost)</text>
   <text x="292" y="176" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="end">R2 (ghost)</text>
-  <text x="169" y="225" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="middle">R3 (ghost, flat)</text>
+  <text x="163" y="398" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="middle">U2 LM1117 (ghost)</text>
+  <text x="160" y="304" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="end">R4</text>
+  <text x="144" y="283" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="middle">R5</text>
+  <text x="134" y="222" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="middle">C1</text>
+  <text x="134" y="332" font-size="10" fill="#cfe3d5" opacity="0.9" text-anchor="middle">C2</text>
 
   <!-- SOLDER-SIDE BRIDGES: the runs you actually make, drawn bold -->
   <g stroke="#9fb7cc" stroke-width="8" stroke-linecap="round" fill="none">
     <line x1="351.3" y1="157.4" x2="351.3" y2="198.1"/>
     <line x1="351.3" y1="238.7" x2="351.3" y2="279.4"/>
     <polyline points="310.7,157.4 310.7,320 351.3,320"/>
-    <line x1="229.4" y1="157.4" x2="229.4" y2="279.4"/>
+    <line x1="188.7" y1="157.4" x2="188.7" y2="238.7"/>
+    <line x1="188.7" y1="320" x2="229.4" y2="279.4"/>
     <line x1="229.4" y1="320" x2="229.4" y2="482.5"/>
     <line x1="107.5" y1="157.4" x2="107.5" y2="482.5"/>
   </g>
@@ -75,14 +88,20 @@
   <!-- pads -->
   <g fill="#e8c25a" stroke="#8c6a1d" stroke-width="1.5">
     <circle cx="351.3" cy="157.4" r="6.5"/><circle cx="310.7" cy="157.4" r="6.5"/>
-    <circle cx="229.4" cy="157.4" r="6.5"/><circle cx="107.5" cy="157.4" r="6.5"/>
+    <circle cx="188.7" cy="157.4" r="6.5"/><circle cx="107.5" cy="157.4" r="6.5"/>
     <circle cx="229.4" cy="482.5" r="6.5"/><circle cx="107.5" cy="482.5" r="6.5"/>
     <circle cx="351.3" cy="279.4" r="6.5"/><circle cx="351.3" cy="320" r="6.5"/>
     <circle cx="229.4" cy="279.4" r="6.5"/><circle cx="229.4" cy="320" r="6.5"/>
-    <circle cx="229.4" cy="238.7" r="6.5"/><circle cx="107.5" cy="238.7" r="6.5"/>
+    <circle cx="188.7" cy="238.7" r="6.5"/><circle cx="188.7" cy="279.4" r="6.5"/><circle cx="188.7" cy="320" r="6.5"/>
+    <circle cx="107.5" cy="238.7" r="5.5"/><circle cx="107.5" cy="279.4" r="5.5"/><circle cx="107.5" cy="345" r="5.5"/>
     <circle cx="351.3" cy="238.7" r="6.5"/><circle cx="310.7" cy="198.1" r="6.5"/>
     <circle cx="351.3" cy="198.1" r="7.5" stroke-width="2.5"/>
   </g>
+
+  <!-- U2 pad labels (mirror: 12V side left) -->
+  <text x="197" y="233" font-size="10" fill="#cfe3d5">U2 IN</text>
+  <text x="182" y="269" font-size="10" fill="#cfe3d5" text-anchor="end">U2 ADJ</text>
+  <text x="182" y="324" font-size="10" fill="#cfe3d5" text-anchor="end">U2 OUT</text>
 
   <!-- pin labels: MIRRORED positions -->
   <text x="362" y="274" font-size="12" font-weight="bold" fill="#fff">1 · LED+</text>
@@ -101,12 +120,12 @@
     <g font-size="12">
       <text x="518" y="168">· Board FLIPPED LEFT–RIGHT — exactly what you</text>
       <text x="528" y="184">see soldering, copper up.</text>
-      <text x="518" y="204">· Thick blue runs = the 6 solder bridges you form</text>
+      <text x="518" y="204">· Thick blue runs = the 7 solder bridges you form</text>
       <text x="528" y="220">on THIS side (wire leg or drag solder).</text>
       <text x="518" y="240">· Ghost outlines = components on the far side.</text>
-      <text x="528" y="256">R1/R2 stand vertically — their circles are the</text>
-      <text x="528" y="272">bodies seen end-on, and the bent lead of each</text>
-      <text x="528" y="288">lands in the GPIO13 junction hole. R3 lies flat.</text>
+      <text x="528" y="256">R1/R2 stand vertically — circles are bodies seen</text>
+      <text x="528" y="272">end-on. U2 + divider + caps are the on-board</text>
+      <text x="528" y="288">regulator (rev C — no buck module).</text>
       <text x="518" y="308">· Pin 1 dot is now TOP-RIGHT (mirror!).</text>
       <text x="518" y="328">· 12V side is now on the LEFT, 3.3V on the RIGHT</text>
       <text x="528" y="344">— opposite of the component view.</text>
@@ -116,20 +135,21 @@
       <text x="518" y="388">1. GPIO pad ↓ → R1/R2 junction hole (1 pitch)</text>
       <text x="518" y="406">2. R1 bottom → SSR pin 1</text>
       <text x="518" y="424">3. GND pad ↓ then over → SSR pin 2 (R2 lands here)</text>
-      <text x="518" y="442">4. 10.4V pad ↓ → SSR pin 4</text>
-      <text x="518" y="460">5. SSR pin 3 ↓ → TIP pad</text>
-      <text x="518" y="478">6. 12V− pad ↓ full run → SLEEVE pad</text>
-      <text x="518" y="496">R3's legs solder into runs 4 &amp; 6 (row 2) — no new bridge.</text>
-      <text x="518" y="516" font-weight="bold" font-size="13" fill="#c0392b">Never bridge SSR pin 3 to pin 4.</text>
+      <text x="518" y="442">4. +12V pad ↓ → U2 IN (2 pitches)</text>
+      <text x="518" y="460">5. U2 OUT ↗ diagonal → SSR pin 4</text>
+      <text x="518" y="478">6. SSR pin 3 ↓ → TIP pad</text>
+      <text x="518" y="496">7. 12V− pad ↓ full run → SLEEVE pad</text>
+      <text x="518" y="514">R5, C1, C2 ground legs land in run 7; R4 spans U2's</text>
+      <text x="518" y="530">OUT↔ADJ pads — no extra bridges for the divider.</text>
     </g>
   </g>
 
   <!-- off-board reminder -->
   <g font-size="12" fill="#333">
     <rect x="500" y="532" width="378" height="104" rx="8" fill="#f6f4ef" stroke="#ddd"/>
-    <text x="518" y="552" font-weight="bold" font-size="13">Off-board (rev B)</text>
-    <text x="518" y="572">① splitter → DC-099 panel jack → 500 mA polyfuse → buck @10.4 V</text>
-    <text x="518" y="592">② P6KE12CA TVS spliced ~1" behind plug: tip↔sleeve, no polarity</text>
-    <text x="518" y="612">R3 (2.2 kΩ on board) preloads the buck so its setpoint holds</text>
+    <text x="518" y="552" font-weight="bold" font-size="13">Off-board (rev C)</text>
+    <text x="518" y="572">① splitter → DC-099 panel jack → 100 mA polyfuse → board 12V+</text>
+    <text x="518" y="592">② P6KE15CA TVS spliced ~1" behind plug: tip↔sleeve, no polarity</text>
+    <text x="518" y="612" font-weight="bold" fill="#c0392b">Never bridge SSR pin 3 to pin 4.</text>
   </g>
 </svg>
