@@ -37,6 +37,12 @@ Wire pads: GPIO13 and ESP-GND on the 3.3 V side; **12 V+ and 12 V− in** on the
 
 R1 and R2 share the GPIO13 node, so their upper leads tie together. Land that junction **in a board hole**, not as a mid-air splice — the pad gives the joint mechanical support and becomes the landing point for the GPIO13 wire. A dab of hot glue at the resistor bases once the circuit tests good keeps the bends from fatiguing.
 
+**Mounting U2 — read this before you bend anything.** The TO-220's three leads leave the package in a straight row, but the three board holes they land in are stacked **vertically in one column**. Per the TI datasheet the pins are **1 = ADJ, 2 = OUT (and tab), 3 = IN**, and the pads run top→bottom **IN, ADJ, OUT** — so pin 3 goes to the top hole, pin 1 to the middle hole, and pin 2 to the bottom hole. Getting there means pin 1 has to reach *past* pin 2's hole, so **pin 1 and pin 2 cross each other.**
+
+Sleeve pin 1's lead over the crossing, the same way you sleeve the bent-back leads on R1/R2. A bare crossing shorts ADJ to OUT, which starves the feedback divider and drives the rail to nearly full input voltage — the tip would see ~12 V instead of 10.4 V, which is exactly the raw-12 V condition this whole design exists to avoid. It would still trigger a feed, so it is **not** something the §7 feed test catches on its own; the 10.3–10.5 V rail check is what catches it.
+
+If the crossing bothers you, the alternative is rotating U2 90° so its leads land in a horizontal row of three adjacent holes — no crossing, no sleeving, at the cost of redrawing the bridge runs.
+
 Meter each resistor before soldering anyway — but note the old brown/red trap is gone with R3: 220 Ω, 10 kΩ, 121 Ω, and 887 Ω are all comfortably distinct on a meter, and R4/R5 are 1% parts (blue body, 5-band). Swapping R4 and R5 gives ~1.42 V out (feed never triggers) — worth the 10-second meter check.
 
 Check that the tallest standing part clears the lid before committing — board height is fixed by the mounting bosses.
@@ -85,7 +91,7 @@ Reminder from the feeder docs: the aF4's internal 24 h timer keeps its own sched
 ## Troubleshooting
 
 - **No trigger:** meter the tip during a button press. 0 V → check SSR orientation (notch toward R1), R1 continuity, GPIO13 jumper on the right header pin. ~10.4 V but no feed → hold time or port re-arm: port needs >60 s at 0 V before it accepts the next trigger, and feeds must be ≥5 min apart.
-- **Tip voltage wrong (not ~10.4 V):** the LM1117 can't drift — a wrong reading is a build error. ~1.4 V → R4/R5 swapped. ~12 V → ADJ open (cold joint at the divider junction). 0 V on the rail → polyfuse tripped or C2 reversed/shorted. Oscillation/instability → C2 is a low-ESR ceramic; use tantalum/electrolytic.
+- **Tip voltage wrong (not ~10.4 V):** the LM1117 can't drift — a wrong reading is a build error. ~1.4 V → R4/R5 swapped. ~12 V → ADJ is not doing its job: either open (cold joint at the divider junction) or **shorted to OUT by U2's pin 1 / pin 2 leads touching where they cross** — check that crossing first, it's the easier mistake to make. 0 V on the rail → polyfuse tripped or C2 reversed/shorted. Oscillation/instability → C2 is a low-ESR ceramic; use tantalum/electrolytic.
 - **Voltage sags below 9 V during trigger:** cracked joint on the 10.4 V run, or the polyfuse tripped (check for shorts, let it cool).
 - **Link icon dark:** plug not fully seated; the jack's detect switch is mechanical.
 - **ESP32 unreachable:** it's PoE — check the switch port budget (802.3af) and that you're on the ISO board's LAN, then OTA via ESPHome dashboard.

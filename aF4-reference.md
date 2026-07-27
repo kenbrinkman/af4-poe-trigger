@@ -58,9 +58,10 @@ Regulates the feeder's 12V tap down to ~10.4V (matching measured OEM trigger) fo
 
 **Design (rev C, 2026-07-26): LM1117T-ADJ linear regulator, on the protoboard.** DigiKey part, TO-220.
 
-- Vout = 1.25 × (1 + R5/R4) with R4 121Ω 1% (OUT→ADJ) and R5 887Ω 1% (ADJ→GND) = **10.41V**. Fixed resistors — no pot, no bench pre-set, nothing to drift or seal.
-- The divider draws 10.3mA, which alone satisfies the LM1117's worst-case 10mA minimum-load spec — the old R3 preload resistor is deleted.
-- Dissipation: (12 − 10.4V) × ~15mA ≈ **24mW**. No heatsink. Dropout at 15mA is well under the 1.6V headroom.
+- Vout = 1.25 × (1 + R5/R4) with R4 121Ω 1% (OUT→ADJ) and R5 887Ω 1% (ADJ→GND) = 10.41V, plus I_ADJ × R5 (60µA × 887Ω ≈ 53mV) = **~10.46V measured**. Fixed resistors — no pot, no bench pre-set, nothing to drift or seal.
+- The divider draws 10.3mA, comfortably above the LM1117-ADJ's **5mA worst-case minimum load** (TI SNOS412Q: 1.7mA typ at 25°C, 5mA over 0–125°C) — the old R3 preload resistor is deleted.
+- Dissipation: (12 − 10.46V) × 10.3mA + 12V × 60µA ≈ **17mW**. No heatsink. Note the -ADJ part has no ground pin, so there is no separate quiescent-current loss term — the only current leaving besides the load is I_ADJ. (DigiKey's parametric "Iq 5mA" is the *fixed*-output versions' ground-pin current and does not apply here.) Dropout at ~10mA is well under the 1.6V headroom.
+- Pinout (TO-220, TI SNOS412Q Table 6-1): **1 = ADJ, 2 = VOUT and TAB, 3 = VIN.** The protoboard pads run top→bottom IN, ADJ, OUT, so the leads fan out of line and **pin 1 crosses pin 2** — sleeve pin 1. A bare crossing shorts ADJ to OUT and pushes the rail to ~12V. See `aF4-assembly-guide.md` §2.
 - Caps: C1 10µF at IN, C2 10µF **tantalum or aluminum electrolytic** at OUT (the LM1117 wants some output-cap ESR for stability — don't substitute a lone low-ESR ceramic). Both positions are filled by one part in practice: a 10µF 50V aluminum electrolytic clears C1's voltage requirement and gives C2 the ESR it needs.
 - Sourcing (2026-07-26): R4's usual Yageo 121Ω (`121XBK-ND`) is at zero stock / 18-week lead; the KOA MF1/4DCT52R1210F is the drop-in equal (121Ω ±1%, 0.25W, axial metal film, ±100ppm/°C, AEC-Q200). Exact DigiKey part numbers for the whole rev C delta are tabulated in `aF4-esp32-trigger-BOM.md` → "DigiKey ordering".
 - Isolation: the regulator, divider, and caps all live on the **power side** of the protoboard's isolation gap. Nothing crosses the gap except the SSR.
