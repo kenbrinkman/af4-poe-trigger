@@ -5,6 +5,9 @@ PAN_AQY21-DIP4_PAN.step
 aF4 Automated Aquarium Feeder - Smart Fish Feeding System – inD aquatics.pdf
 inD connect.pdf
 
+# Generated/local exports — regenerate from the Markdown sources
+aF4-project-overview.pdf
+
 # OS cruft
 .DS_Store
 Thumbs.db
