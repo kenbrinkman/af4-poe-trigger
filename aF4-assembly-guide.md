@@ -24,10 +24,12 @@ Populate per `aF4-protoboard-layout.svg` (component side view, bridges on solder
 | R2 | 10 kΩ | GPIO13 net → ESP-GND net (pulldown) |
 | R4 | 121 Ω 1% | U2 OUT → U2 ADJ |
 | R5 | 887 Ω 1% | U2 ADJ → 12 V− column |
-| C1 | 10 µF ≥25 V | U2 IN → 12 V− |
+| C1 | 10 µF ≥25 V (**polarized**, + to 12 V+) | U2 IN → 12 V− |
 | C2 | 10 µF tantalum/electrolytic ≥16 V (**polarized**, + to rail) | U2 OUT (10.4 V rail) → 12 V− |
 
 (R3, the old 2.2 kΩ buck preload, is deleted — the R4/R5 divider is the regulator's minimum load.)
+
+C1 and C2 are the **same physical part** as ordered — Panasonic ECA-1HM100I, 10 µF 50 V aluminum electrolytic. Nothing to sort at the bench; just get the polarity right in both positions. R4 ships as a KOA MF1/4DCT52R1210F rather than the Yageo the BOM originally implied — same 121 Ω 1% axial metal film, same blue 5-band body as R5.
 
 Wire pads: GPIO13 and ESP-GND on the 3.3 V side; **12 V+ and 12 V− in** on the power side (the regulator now lives on-board, so raw fused 12 V arrives here and 10.4 V is made in place); TIP and SLEEVE exit the edge that will face the output gland. **SLEEVE ties only to the 12 V− strip — never to ESP32 GND.** That gap through the middle of the SSR is the whole isolation design — U2, R4/R5, and C1/C2 all stay on the power side of it.
 
