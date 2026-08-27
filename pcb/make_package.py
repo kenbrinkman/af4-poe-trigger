@@ -146,7 +146,8 @@ BOARD
 ASSEMBLY
   Quantity          5
   Sides populated   top only
-  SMD placements    20
+  Unique part nos.  %d
+  SMD placements    %d
   Through-hole      4 parts / 44 joints:
                       J1  DC jack        3 terminals + 2 shield tabs
                       J2  3.5 mm jack    3 terminals
@@ -172,7 +173,7 @@ CRITICAL NOTES
      side of the circuit.
   5. J3 and J4 must be seated flush and square - they mate with a header
      on another board and any tilt will prevent assembly.
-""" % (W, H))
+""" % (W, H, len(rows), n))
 
 # ------------------------------------------------------------------- zip
 with zipfile.ZipFile("af4-trigger-hat-rev-D-PCBWay.zip", "w",

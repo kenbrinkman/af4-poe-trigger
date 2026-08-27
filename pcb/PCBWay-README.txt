@@ -21,7 +21,8 @@ BOARD
 ASSEMBLY
   Quantity          5
   Sides populated   top only
-  SMD placements    20
+  Unique part nos.  18
+  SMD placements    17
   Through-hole      4 parts / 44 joints:
                       J1  DC jack        3 terminals + 2 shield tabs
                       J2  3.5 mm jack    3 terminals
