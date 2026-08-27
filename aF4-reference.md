@@ -2,6 +2,8 @@
 
 Project: replace the inD connect WiFi dongle with a PoE ESP32 (ESPHome) triggering feeds via the aF4's 0-10V port, scheduled in Home Assistant. See `aF4-esp32-trigger-BOM.md` for parts.
 
+> **Rev D (2026-08-27).** The hand-wired protoboard is retired. The trigger circuit is now a 57 x 50 mm PCB "hat" that plugs onto the ESP32's EXT1/EXT2 headers and carries both panel connectors, assembled by PCBWay. Two things changed that matter beyond packaging: the trigger moved from **GPIO13 to GPIO32** (the Olimex board has a factory 2.2 k pull-up on GPIO13 that can partially turn the PhotoMOS on during boot), and the input gained **reverse-polarity protection**, which rev C did not have. Design decisions, the part-by-part equivalence review and the PCBWay procedure live in `aF4-rev-D-pcb-notes.md`. Everything below about the *feeder* — port spec, measured values, the regulator maths — is unchanged and still governs.
+
 ## System components
 
 **aF4 feeder** ($549.99) — refrigerated frozen-food feeder. 200mL / ~50 cube capacity, operating temp -1C to 5C, max ambient 29C/85F. Rinses feed tubes between feeds. Powered by **12V 12.5A** external supply. Stays powered continuously (it's a fridge — do not power cycle for scheduling).
@@ -48,7 +50,7 @@ Record results here:
 
 ## Replacement design (summary)
 
-Olimex ESP32-POE-ISO → GPIO13 → 220Ω → **AQY212GH PhotoMOS** (pin 1 LED+, pin 2 LED− to GND) → output pins 3/4 switch the feeder's own 12V (via barrel splitter) onto the 3.5mm tip; sleeve to supply GND. ESP32 fully isolated behind the PhotoMOS; PoE isolated from Ethernet (3000V). HA automations press an ESPHome template button (ON 10s → OFF). See `aF4-wiring-diagram.svg`.
+Olimex ESP32-POE-ISO → GPIO32 → 220Ω → **AQY212GS PhotoMOS** (pin 1 LED+, pin 2 LED− to GND) → output pins 3/4 switch the feeder's own 12V (via barrel splitter) onto the 3.5mm tip; sleeve to supply GND. (Rev C used GPIO13 and the DIP AQY212GH; see the rev D note above.) ESP32 fully isolated behind the PhotoMOS; PoE isolated from Ethernet (3000V). HA automations press an ESPHome template button (ON 10s → OFF). See `aF4-wiring-diagram.svg`.
 
 ESPHome guardrails (all baked on-device — HA is scheduler only): `restore_mode: ALWAYS_OFF` + `internal: true` on the GPIO switch (HA cannot touch the raw line), `mode: single` feed script with 10s pulse + 290s lockout tail (enforces 5-min spacing and >60s 0V re-arm; re-entrant requests dropped), template button as the sole exposed control, lockout state exposed as a binary_sensor for dashboard/notify. As-flashed YAML: `af4-feeder.yaml` (source of truth); concept sketch in `aF4-esp32-trigger-BOM.md`.
 
@@ -56,7 +58,7 @@ ESPHome guardrails (all baked on-device — HA is scheduler only): `restore_mode
 
 Regulates the feeder's 12V tap down to ~10.4V (matching measured OEM trigger) for the PhotoMOS output.
 
-**Design (rev C, 2026-07-26): LM1117T-ADJ linear regulator, on the protoboard.** DigiKey part, TO-220.
+**Design: LM1117-ADJ linear regulator, on the trigger board.** Rev C used the TO-220 `LM1117T-ADJ`; rev D uses the SOT-223 `LM1117MPX-ADJ/NOPB` — same die, same datasheet, and the pin-crossing problem below disappears because the SMD footprint puts ADJ where ADJ goes. The divider maths is identical.
 
 - Vout = 1.25 × (1 + R5/R4) with R4 121Ω 1% (OUT→ADJ) and R5 887Ω 1% (ADJ→GND) = 10.41V, plus I_ADJ × R5 (60µA × 887Ω ≈ 53mV) = **~10.46V measured**. Fixed resistors — no pot, no bench pre-set, nothing to drift or seal.
 - The divider draws 10.3mA, comfortably above the LM1117-ADJ's **5mA worst-case minimum load** (TI SNOS412Q: 1.7mA typ at 25°C, 5mA over 0–125°C) — the old R3 preload resistor is deleted.
@@ -81,8 +83,9 @@ The underlying problems were structural, not just QC: (a) the load is ~5mA/50mW,
 
 - `ESP32-PoE-ISO_Rev_N.step` / `.stl` — full Olimex ESP32-POE-ISO board model (Rev.N, latest), extracted from the [Olimex KiCad hardware files](https://github.com/OLIMEX/ESP32-POE-ISO): board solid + 124 component models, all through-holes. Board ~28 × 98 mm plus antenna and RJ45 overhang; overall envelope ~29.4 × 112.5 × 25.3 mm. Hole positions verified against factory drill files. Not included: RM1–RM3 resistor arrays (no STEP source). STEP for enclosure CAD, STL for printing/viewing.
 - `PAN_AQY21-DIP4_PAN.step` — Panasonic AQY212GH PhotoMOS, DIP-4 package.
-- `aF4-trigger-case.stl/.step` + `aF4-trigger-lid.stl/.step` — printed enclosure (PETG, 59.7 × 155 × 38.9 mm): flush RJ45 + DC-099 panel-mount 12V jack (5.5×2.5, takes the splitter's tap plug directly) on the input wall, centered PG7 gland on the output wall, drop-in wall pocket for the MP1584EN buck module (snap post, all pads exposed, pot faces the room), M3×12 self-tapped lid, M2 board/protoboard mounts. Details in `aF4-enclosure-notes.md`; parametric source `af4_enclosure_ocp.py`. (The wall pocket was sized for the rev B MP1584EN buck module — now unused/vestigial; no reprint needed.)
-- `aF4-protoboard-layout.svg` — SSR + R1 (220Ω LED), R2 (10kΩ GPIO pulldown), and the rev C regulator block — LM1117T-ADJ (TO-220) + R4/R5 divider + C1/C2 — placement and wiring on the protoboard. Two detail panels below the board drawing show the splices: **①** the 100 mA polyfuse (MF-R010) inline on the +12 V lead, **②** the P6KE15CA TVS (bidirectional) across tip/sleeve ~1" behind the 3.5 mm plug. Step-by-step in `aF4-assembly-guide.md` §2–4.
+- `aF4-trigger-case.stl/.step` + `aF4-trigger-lid.stl/.step` — printed enclosure, **rev D** (PETG, 65.2 x 117.0 x 38.4 mm): flush RJ45 on the input wall; the trigger hat's barrel jack and 3.5 mm jack exit one long wall; two tall standoffs carry the hat; two LED sight holes in the lid. The rev C protoboard bay, buck pocket, DC-099 hole and PG7 gland are all gone. Details in `aF4-enclosure-notes.md`; parametric source `af4_enclosure_ocp.py`, which asserts its own fit checks before exporting.
+- `aF4-protoboard-layout.svg`, `aF4-protoboard-solder-side.svg` — **rev C history.** They describe the hand-wired protoboard, which rev D replaces with a PCB. Kept for the record; do not build from them.
+- `pcb/` — rev D KiCad project, the generator script that produces it, and the PCBWay upload package. See `aF4-rev-D-pcb-notes.md`.
 - `aF4-assembly-guide.md` — full build sequence: print, protoboard build (incl. on-board regulator), wiring, flash, commissioning checks.
 
 ## Home Assistant notes

@@ -1,6 +1,14 @@
 ---
 # aF4 Frozen Feeder — PoE trigger
-# Olimex ESP32-POE-ISO. GPIO13 -> 220R -> AQY212GH PhotoMOS -> 10.4V onto the 3.5mm tip.
+# Olimex ESP32-POE-ISO. GPIO32 -> 220R -> AQY212GS PhotoMOS -> 10.4V onto the 3.5mm tip.
+#
+# PIN CHOICE MATTERS. GPIO32 is used instead of GPIO13 because the Olimex board
+# carries a factory 2.2k pull-up to 3.3V on GPIO13 (R35, the I2C SDA pull-up).
+# While the ESP32 is in reset that pull-up feeds the PhotoMOS LED through R1 with
+# only R2 opposing it — roughly 0.6-0.7 mA into a part whose operate current is
+# ~1.1 mA typical, i.e. close enough to risk a feed before the firmware runs.
+# GPIO32 touches only the ESP32 module and EXT2 pin 6: no pull-up, no strapping
+# role, not shared with UEXT. Do not move this back to GPIO13.
 #
 # All feeder timing rules are enforced ON-DEVICE. Home Assistant is scheduler only:
 # it presses button.af4_feed and nothing else. Per inD 0-10V spec:
@@ -8,7 +16,7 @@
 #   - port needs ~0V for >60s      -> covered by the lockout tail
 #   - feeds must be >=5 min apart  -> 10s + 290s = 300s, script mode: single
 #
-# See aF4-reference.md and aF4-assembly-guide.md in this folder.
+# See aF4-reference.md, aF4-rev-D-pcb-notes.md and aF4-assembly-guide.md.
 
 substitutions:
   device_name: af4-feeder
@@ -45,18 +53,19 @@ ota:
   - platform: esphome
     password: "GZY7CtoC7VMT9fvbAWTc2isS"
 
-# Local control page for commissioning (assembly guide step 7.2) and manual feeds.
+# Local control page for commissioning (assembly guide step 7) and manual feeds.
 web_server:
   port: 80
 
 # ---------------------------------------------------------------------------
 # Raw output — internal so Home Assistant can never touch the line directly.
 # restore_mode ALWAYS_OFF is the software half of the boot-safety pair;
-# R2 (10k GPIO13->GND pulldown) is the hardware half.
+# R2 (10k GPIO32->GND pulldown on the hat) is the hardware half. On GPIO32 the
+# pulldown is unopposed, which is the point.
 # ---------------------------------------------------------------------------
 switch:
   - platform: gpio
-    pin: GPIO13
+    pin: GPIO32
     id: feed_ssr
     restore_mode: ALWAYS_OFF
     internal: true

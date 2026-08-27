@@ -1,46 +1,117 @@
-# aF4 Trigger Enclosure — Print & Assembly Notes
+# aF4 Trigger Enclosure — rev D print & assembly notes
 
-Case for the ESP32-POE-ISO + AQY212 protoboard. Designed against the measured `ESP32-PoE-ISO_Rev_N.step` model; fit verified digitally (zero interference).
+Case for the ESP32-POE-ISO plus the rev D trigger hat. Modelled against the
+measured `ESP32-PoE-ISO_Rev_N.step` and against the hat's own KiCad geometry;
+fit verified digitally (zero interference — the build script asserts it).
+
+**External: 65.2 × 117.0 × 38.4 mm** (rev C was 59.7 × 155 × 38.9). 38 mm shorter,
+5.5 mm wider, same height. Interior volume drops about 18 %, and everything that
+used to be hand-wired inside it is gone.
 
 ## Files
 
-- `aF4-trigger-case.stl` / `.step` — case body, 59.7 × 155 × 38.9 mm. Lengthened 14 mm at the output end (9 mm clear between the output gland's locknut and the protoboard, plus cable slack to the tip/sleeve pads). **v5:** RJ45 back flush in the outer wall (v1 style — v3/v4's lengthened input end left the jack recessed). Gland-nut clearance now comes from *width* instead: the left wall sits 12 mm out from the original design and the input gland moved left (x-center 21 mm from the inner left wall) so its locknut + thread stub (5 mm protrusion past the inner face) land entirely beside the board — 2.1 mm clear of the board edge — instead of under it. The board seats flush on its standoffs regardless of how far the gland protrudes. **v6:** input-wall PG7 gland replaced by a **DC-099 panel-mount barrel jack** (5.5×2.5, 12.2 mm hole) — the inD splitter's male tap plug connects from outside instead of feeding a cable through a gland. Same hole position; the DC-099 locknut (~16 mm) is smaller than the PG7's, so all v5 clearances still hold. Jack body runs ~17 mm past the inner face into open air.
+- `aF4-trigger-case.stl` / `.step` — case body
 - `aF4-trigger-lid.stl` / `.step` — lid, exported print-side down (flat top on bed)
-- `af4_enclosure_ocp.py` — parametric source (Python/OpenCascade); every dimension is a named constant
+- `af4_enclosure_ocp.py` — parametric source (Python/OpenCascade); every dimension
+  is a named constant and the script runs a geometry + solid-interference check
+  before it exports
+
+## What changed from rev C
+
+| Rev C feature | Rev D |
+|---|---|
+| Protoboard bay + 4 bosses past the antenna end | **Gone.** The case now stops 1.7 mm past the antenna tip |
+| MP1584EN buck pocket on the left wall | **Gone** (it was already vestigial) |
+| DC-099 barrel jack in the input wall | **Gone.** The barrel jack is on the hat |
+| PG7 gland in the output wall | **Gone.** The 3.5 mm jack is on the hat |
+| Both user connectors on opposite short walls | Both on **one long wall**, side by side |
+| — | **New:** two tall standoffs carrying the hat |
+| — | **New:** two LED sight holes in the lid |
 
 ## Layout
 
-- **Input wall:** RJ45 flush cutout (jack face sits in the outer wall plane, tight 0.5 mm reveal) + **DC-099 panel-mount 12V jack** (12.2 mm hole), left of the RJ45 and fully clear of the board footprint. The splitter's 5.5×2.5 male tap plug connects from outside (waterproof cap covers it when unplugged); the jack's red/black 18AWG pigtails run inside to the polyfuse → protoboard 12V pads. Inner-face relief pockets clear the RJ45's latch wings and top shield bump; the springy wing tips compress slightly against the pocket floor (same as the proven v1 fit).
-- **Output wall:** PG7 gland centered, for the 3.5mm cable. A 13.5 mm deep clearance zone sits between this wall and the protoboard — the locknut/thread stub use ~4.5 mm of it, leaving 9 mm for the cable to drop to the protoboard's tip/sleeve pads. Solder those wires on the board edge facing this gland (as drawn in `aF4-protoboard-layout.svg`).
-- **Board:** three Ø6 standoffs matching the board's 2.2 mm holes, board bottom sits 9.5 mm above floor (header pins protrude 8.6 mm below board). **M2 self-tapping screws**, 1.7 mm pilot holes, ≥8 mm thread.
-- **Protoboard bay:** past the antenna end, four Ø6 × 6 mm bosses spaced 6 perfboard grid pitches apart (15.24 × 15.24 mm) so the mounting holes land on existing grid holes — just drill 4 grid holes out to Ø2.2 mm. M2 self-tappers (two diagonal bosses is enough). See `aF4-protoboard-layout.svg` for component placement and wiring.
-- **Buck pocket (vestigial as of rev C, 2026-07-26):** drop-in pocket on the left wall, mid-channel, designed for the rev B MP1584EN buck module. The regulator moved onto the protoboard (LM1117T-ADJ + fixed divider), so the pocket is now unused — it costs nothing, needs no reprint, and stays in `af4_enclosure_ocp.py` for geometry stability. Handy as a tie-down point for cable slack if wanted. Original design notes retained in git history.
-- **Lid:** 4× **M3 × 12 coarse self-tapping** screws into Ø9 corner bosses (2.5 mm pilots, open-bottomed so screws can't bottom out). Countersunk holes in lid. Registration lips on all four sides (30 mm on the long sides, 26 mm on the short sides to clear the corner bosses).
-- Headroom above board: 26 mm — clears Dupont jumpers on the EXT headers.
+- **Input wall (−Y):** RJ45 flush cutout only, jack face in the outer wall plane
+  with a 0.5 mm reveal. Inner-face relief pockets clear the latch wings and the
+  top shield bump, exactly as in rev C — that fit is proven, so it was left alone.
+- **Long wall (+X):** the hat's two jacks. Barrel jack at y = −116.56, axis 17.82 mm
+  above the case floor datum; 3.5 mm jack at y = −148.50, axis 16.72 mm. Both holes
+  are truncated-teardrop so they bridge without support.
+  - The barrel hole is Ø7.4 with a **Ø13 × 1.8 mm counterbore on the outside**.
+    That thins the wall to 1.2 mm locally, which is what makes the plug seat: full
+    3 mm of wall would have eaten most of the jack's 9.5 mm insertion depth. As
+    built the plug engages **6.9 mm**.
+  - The 3.5 mm hole is Ø6.6 for the jack's 6.0 mm nose. The nose ends 1.2 mm inside
+    the outer face, so it is protected rather than proud.
+- **Output wall (+Y):** blank. Nothing exits that end any more.
+- **ESP32 board:** three Ø6 standoffs, tops at z = 0, M2 self-tappers into 1.7 mm
+  pilots — unchanged from rev C.
+- **Hat:** two Ø7 standoffs rising from the floor to z = 12.62 (the hat's underside),
+  M3 self-tappers into 2.5 mm pilots, each with a conical foot so a 22 mm post is
+  not a cantilever. They sit at (123.0, −118.0) and (123.5, −147.0) — the only X
+  that clears the ESP32's right edge below **and** the hat's parts column above.
+  Those two, plus twenty socket pins on the left and two jack noses captured in the
+  wall on the right, is what holds the hat.
+- **Lid:** 4 × M3 × 12 coarse self-tapping into Ø9 corner bosses (2.5 mm pilots,
+  open-bottomed). Registration lips on all four sides. Two **Ø3.5 LED sight holes**
+  chamfered on the outside, over D3 (rail live, green) and D5 (feed pulsing, yellow).
+- **Wall-mount tabs:** one per long side, mid-length, flush with the case bottom,
+  4.5 mm hole for #8 / M4.
+
+## The vertical stack
+
+This is the dimension that governs everything, so it is worth stating plainly:
+
+```
+  z = -11.90   case floor, outside
+  z =  -9.50   case floor, inside
+  z =   0.00   top of the three ESP32 standoffs
+  z =   1.58   ESP32 top face
+  z =   4.12   top of the male header plastic on EXT1/EXT2
+  z =   5.98   top of the UEXT box header  (the tallest thing under the hat)
+  z =   9.22   lowest point of the hat's through-hole pins   -> 3.24 mm clear
+  z =  12.62   hat underside  (= socket body height above the header plastic)
+  z =  14.22   hat top face
+  z =  16.72   3.5 mm jack axis
+  z =  17.82   barrel jack axis
+  z =  21.42   barrel jack crown  -> 2.08 mm clear of the lid
+  z =  23.50   lid underside
+```
+
+If you substitute a different 1 × 10 socket, its **body height is the parameter
+that moves the whole hat** — change `HAT_Z` in `af4_enclosure_ocp.py` and re-run;
+the script will tell you if anything now collides.
 
 ## Print settings (PETG, P1S)
 
-- Case upright (as exported), lid as exported (top face down). No supports needed — both wall holes have truncated-teardrop roofs (45° sides, ~4 mm flat bridge at the crown; output crown hides under the PG7 hex body/locknut, input crown is lowered to 6.5 mm to hide under the DC-099's ~14–15 mm front flange), RJ45 opening bridges 16.9 mm at z 16.5 (fine in PETG).
-- 3 walls / 4 top-bottom layers, 15–25% infill, 0.2 mm layers.
-- If self-tapping feels tight in PETG, run the M3s in slowly (low friction heat) or pre-thread with a screw before final assembly.
+- Case upright (as exported), lid as exported (top face down). **No supports.**
+  Both jack holes have truncated-teardrop roofs, and the RJ45 opening bridges
+  16.9 mm at z 16.5 — fine in PETG, proven on the rev C prints.
+- 3 walls / 4 top-bottom layers, 15–25 % infill, 0.2 mm layers.
+- The two hat standoffs are the tallest unsupported features. They print fine
+  upright with their conical feet, but do not drop infill below 15 %.
+- If self-tapping feels tight in PETG, run the screws in slowly or pre-thread.
 
 ## Hardware
 
 | Item | Qty | Spec |
 |---|---|---|
 | Lid screws | 4 | M3 × 12 coarse self-tapping (or plastite) |
-| Board screws | 3 | M2 × 6–8 self-tapping |
-| Protoboard screws | 2–4 | M2 × 8 self-tapping |
-| Gland | 1 | PG7 (12.5 mm hole), output wall — feed bare cable before terminating |
-| 12V jack | 1 | DC-099 panel-mount, 5.5×2.5 center-positive (12.2 mm hole, locknut inside) |
+| ESP32 board screws | 3 | M2 × 6–8 self-tapping |
+| Hat screws | 2 | M3 × 8–10 self-tapping |
+| Wall-mount screws | 2 | #8 or M4, into the tabs |
+
+No glands, no locknuts, no panel-mount jacks, no cable feed-throughs. The only
+things that pass through a wall are the RJ45 and the two jacks, and all three are
+soldered to a board.
 
 ## Assembly order
 
-1. Thread the output PG7 gland and the input DC-099 jack into their walls (locknuts inside). Meter the jack's pigtails against a plugged-in supply once: red should be center pin = +12V.
-2. Feed the 3.5 mm cable through the output gland **before** soldering plug/protoboard. (12V side needs no feed-through — the splitter's tap plug connects to the jack externally.)
-3. Splice the 100 mA polyfuse into the jack's red pigtail (heatshrunk); run both pigtails to the protoboard's 12V+ / 12V− pads. (No buck module — the LM1117 regulator is on the protoboard; nothing to pre-set.)
-4. Mount protoboard (SSR + LM1117 + R1/R2/R4/R5 + C1/C2), wire per `aF4-protoboard-layout.svg`.
-5. Flash the ESP32 over USB first — there's no USB cutout (OTA afterwards).
-6. Drop board onto standoffs, RJ45 into wall opening, 3× M2.
-7. Dupont jumpers to GPIO13/GND, tighten glands, screw lid.
-8. Before first live feed: meter tip↔sleeve, press the ESPHome button, confirm ~10.4 V for 10 s then 0 V.
+1. Print both parts. Test-fit a barrel plug and a 3.5 mm plug into the two
+   +X wall holes **before** going further — a light chase with a round file is
+   normal.
+2. Fit the ESP32-POE-ISO onto its three standoffs, RJ45 into the wall opening,
+   3 × M2. **This has to happen first** — the hat covers two of its screws.
+3. Solder two 1 × 10 male headers into EXT1/EXT2, pins up, if not already done.
+4. Drop the hat on: sockets onto the headers, both jack noses into their wall
+   holes, then 2 × M3 into the standoffs. Seat the sockets before the screws.
+5. Lid on, 4 × M3 × 12.

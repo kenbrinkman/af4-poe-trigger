@@ -1,21 +1,35 @@
 #!/usr/bin/env python3
-"""aF4 PoE trigger enclosure (ESP32-POE-ISO + AQY212 protoboard) — raw OCP.
-Modeled in the BOARD frame (same coords as ESP32-PoE-ISO_Rev_N.step), exported
+"""aF4 PoE trigger enclosure — rev D (PCB hat) — raw OCP.
+
+Modelled in the BOARD frame (same coords as ESP32-PoE-ISO_Rev_N.step), exported
 both in-frame (fit check) and origin-translated (printing).
 
-Measured board facts:
-  board   x 90.15..118.15, y -188.15..-90, top z 1.578
-  RJ45    face x 101.26..117.14, z 0.758..14.498 @ y=-196.0 (flush plane)
-  wings   x 99.06..119.34, z 4.17..11.08, y>=-194.0
-  pins    to z=-8.59 below board;  RJ45 top z=16.70; headers z=13.15
-  antenna tip y=-83.69
-  M2 mount holes (97.79,-185.42) (92.71,-117.47) (115.57,-117.47)
+REV D CHANGE OF SHAPE
+  The 25x25mm protoboard is gone. In its place a 57 x 50 mm PCB hat plugs onto
+  the ESP32's EXT1/EXT2 headers and extends sideways past the board to carry a
+  board-mounted barrel jack and 3.5 mm jack, which protrude through the +X wall.
+  Deleted from rev C: protoboard bay and its four bosses, the vestigial MP1584EN
+  buck pocket, the DC-099 hole in the input wall, and the PG7 gland in the output
+  wall. The case loses 38 mm of length and gains 5.5 mm of width.
+
+COORDINATE NOTE
+  The hat is designed in KiCad with +Y running the other way. Enclosure Y is the
+  negative of the hat's KiCad Y:  enclosure_y = -kicad_y.
+
+MEASURED FACTS
+  ESP32 board  x 90.15..118.15, y -188.15..-90, top z 1.578
+  RJ45 face    x 101.26..117.14, z 0.758..14.498 @ y=-196.0 (flush plane)
+  wings        x 99.06..119.34, z 4.17..11.08, y>=-194.0
+  pins         to z=-8.59 below board;  RJ45 top z=16.70
+  antenna tip  y=-83.69
+  M2 mounts    (97.79,-185.42) (92.71,-117.47) (115.57,-117.47)
+  UEXT box hdr 4.40 mm tall (vendor 3D model) — clears the hat easily
 """
 import math
 from OCP.gp import gp_Pnt, gp_Vec, gp_Dir, gp_Ax2, gp_Trsf, gp_Ax1
 from OCP.BRepPrimAPI import (BRepPrimAPI_MakeBox, BRepPrimAPI_MakeCylinder,
                              BRepPrimAPI_MakeCone, BRepPrimAPI_MakePrism)
-from OCP.BRepAlgoAPI import BRepAlgoAPI_Fuse, BRepAlgoAPI_Cut
+from OCP.BRepAlgoAPI import BRepAlgoAPI_Fuse, BRepAlgoAPI_Cut, BRepAlgoAPI_Common
 from OCP.BRepBuilderAPI import (BRepBuilderAPI_MakeEdge, BRepBuilderAPI_MakeWire,
                                 BRepBuilderAPI_MakeFace, BRepBuilderAPI_Transform)
 from OCP.BRepFilletAPI import BRepFilletAPI_MakeFillet
@@ -31,65 +45,81 @@ from OCP.BRepBndLib import BRepBndLib
 from OCP.GProp import GProp_GProps
 from OCP.BRepGProp import BRepGProp
 
-# ---------------- parameters ----------------
+# ============================================================ parameters
 WALL, FLOOR, LID_T = 3.0, 2.4, 3.0
-IX0, IX1 = 66.5, 120.2   # v5: left wall pushed out another 8mm (12 total) — gland-nut
-                          # clearance now comes from case WIDTH, not length: the nut sits
-                          # fully left of the board footprint (see G1X)
-IY0, IY1 = -193.0, -44.0  # v5: input wall back at the v1 position, RJ45 face flush with
-                          # the outer plane.
-                          # output wall pushed out 14mm: gland nut + cable zone in front of protoboard
-IZ0, IZ1 = -9.5, 27.0
+
+# --- the hat, in enclosure coordinates -------------------------------------
+HAT_X0, HAT_X1 = 89.15, 146.15          # 57.0 mm wide
+HAT_Y0, HAT_Y1 = -160.00, -110.00       # 50.0 mm long (kicad y 110..160)
+HAT_T = 1.6
+# stack: ESP32 top 1.578 + male header plastic 2.54 + socket body 8.5
+HAT_Z = 1.578 + 2.54 + 8.50             # 12.618 -> hat underside
+HAT_TOP = HAT_Z + HAT_T                 # 14.218 -> hat top face
+HAT_PIN_DROP = 3.4                      # THT pin protrusion below the hat
+
+# jack axes, from the vendor 3D models (see aF4-rev-D-pcb-notes.md)
+J1_Y, J1_AXIS_Z = -116.56, HAT_TOP + 3.60   # barrel jack, body 7.2 tall
+J1_FACE_X = 145.28                          # front face of the jack body
+J2_Y, J2_AXIS_Z = -148.50, HAT_TOP + 2.50   # 3.5 mm jack, body 5.0 tall
+J2_NOSE_X = 148.45                          # nose tip, 6.0 mm dia
+
+# --- interior -------------------------------------------------------------
+IX0 = 87.50                              # 1.65 clear of the hat's left edge
+IX1 = 146.65                             # 0.50 clear of the hat's right edge
+IY0 = -193.00                            # RJ45 flush plane at OY0 = -196.0
+IY1 = -82.00                             # 1.7 past the antenna tip (-83.69)
+IZ0 = -9.50                              # under-board clearance for THT leads
+IZ1 = 23.50                              # 2.1 above the barrel jack's crown
 OX0, OX1 = IX0 - WALL, IX1 + WALL
-OY0, OY1 = IY0 - WALL, IY1 + WALL          # OY0=-196.0 RJ45 flush plane
+OY0, OY1 = IY0 - WALL, IY1 + WALL
 OZ0 = IZ0 - FLOOR
 FILLET_R = 3.0
 
 RJX0, RJX1, RJZ0, RJZ1 = 100.76, 117.64, 0.26, 15.0
 WGX0, WGX1, WGZ0, WGZ1, WG_D = 98.4, 119.9, 3.5, 11.8, 1.5
 
-GLAND_D = 12.6            # output wall: PG7 gland (12.5 thread)
-JACK_D = 12.2             # v6 input wall: DC-099 panel-mount barrel jack (12.0 thread,
-                          # 12mm nominal mounting hole; +0.2 for print shrink). Replaces
-                          # the input PG7 gland — the inD splitter's 5.5x2.5 male tap
-                          # lead plugs straight in; jack's 18AWG pigtails go to polyfuse/buck.
-G1X, G1Z = 77.5, 4.0     # position unchanged from v5. DC-099 locknut (~16 OD) is smaller
-                         # than the PG7 nut it replaces, so the left-of-board clearance
-                         # argument still holds (board edge x=90.15). Body runs ~17mm past
-                         # the inner face (y -193..-176) — open air there.
-CX = (IX0 + IX1) / 2
-G2X, G2Z = CX, 4.0
+# --- wall penetrations for the hat's jacks ---------------------------------
+J1_HOLE_D = 7.4          # passes a 5.5 mm plug barrel with room, blocks the body
+J1_CBORE_D = 13.0        # outside counterbore: thins the wall so the plug seats
+J1_CBORE_T = 1.8         # leaves 1.2 mm of wall -> ~6.9 mm of plug engagement
+J2_HOLE_D = 6.6          # 6.0 mm nose + 0.3 clearance per side
 
+# --- mounts ----------------------------------------------------------------
 BOSSES_BOARD = [(97.79, -185.42), (92.71, -117.47), (115.57, -117.47)]
-# 6 perfboard grid pitches (15.24mm) so mount holes land on the 2.54mm grid
-PB = 15.24 / 2
-BOSSES_PROTO = [(CX - PB, -70 - PB), (CX + PB, -70 - PB), (CX - PB, -70 + PB), (CX + PB, -70 + PB)]
-PROTO_H = 6.0
+# Hat bosses rise from the floor to the hat's underside. They sit in the hat's
+# isolation band, at the only X that clears the ESP32's right edge (118.15)
+# below and the parts column (from 126.45) above.
+BOSSES_HAT = [(123.00, -118.00), (123.50, -147.00)]
+HAT_BOSS_D = 7.0
 M2_PILOT, M3_PILOT = 1.7, 2.5
 LID_BOSS_D, LB_IN = 9.0, 4.0
+LID_ZB = 15.0
 LID_BOSSES = [
-    (IX0 + LB_IN, IY0 + LB_IN, 18.0),
-    (IX1 - LB_IN, IY0 + LB_IN, 18.0),
-    (IX0 + LB_IN, IY1 - LB_IN, 15.0),
-    (IX1 - LB_IN, IY1 - LB_IN, 15.0),
+    (IX0 + LB_IN, IY0 + LB_IN, LID_ZB),
+    (IX1 - LB_IN, IY0 + LB_IN, LID_ZB),
+    (IX0 + LB_IN, IY1 - LB_IN, LID_ZB),
+    (IX1 - LB_IN, IY1 - LB_IN, LID_ZB),
 ]
 
-# ---------------- helpers ----------------
+# --- LED sight holes in the lid (D3 rail-live, D5 feed) --------------------
+LED_HOLES = [(139.50, -139.00), (128.20, -150.80)]
+LED_HOLE_D = 3.5
+
+# ============================================================ helpers
 def box(x0, y0, z0, x1, y1, z1):
     return BRepPrimAPI_MakeBox(gp_Pnt(x0, y0, z0), gp_Pnt(x1, y1, z1)).Shape()
 
 def cyl_z(cx, cy, z0, h, d):
-    ax = gp_Ax2(gp_Pnt(cx, cy, z0), gp_Dir(0, 0, 1))
-    return BRepPrimAPI_MakeCylinder(ax, d / 2, h).Shape()
+    return BRepPrimAPI_MakeCylinder(gp_Ax2(gp_Pnt(cx, cy, z0), gp_Dir(0, 0, 1)),
+                                    d / 2, h).Shape()
 
-def cyl_y(cx, cz, y0, ln, d):
-    ax = gp_Ax2(gp_Pnt(cx, y0, cz), gp_Dir(0, 1, 0))
-    return BRepPrimAPI_MakeCylinder(ax, d / 2, ln).Shape()
+def cyl_x(cy, cz, x0, ln, d):
+    return BRepPrimAPI_MakeCylinder(gp_Ax2(gp_Pnt(x0, cy, cz), gp_Dir(1, 0, 0)),
+                                    d / 2, ln).Shape()
 
 def cone_z(cx, cy, ztop, r_top, r_bot, h):
-    """cone from z=ztop-h (r_bot) up to ztop (r_top)"""
-    ax = gp_Ax2(gp_Pnt(cx, cy, ztop - h), gp_Dir(0, 0, 1))
-    return BRepPrimAPI_MakeCone(ax, r_bot, r_top, h).Shape()
+    return BRepPrimAPI_MakeCone(gp_Ax2(gp_Pnt(cx, cy, ztop - h), gp_Dir(0, 0, 1)),
+                                r_bot, r_top, h).Shape()
 
 def fuse(a, b):
     return BRepAlgoAPI_Fuse(a, b).Shape()
@@ -97,32 +127,34 @@ def fuse(a, b):
 def cut(a, b):
     return BRepAlgoAPI_Cut(a, b).Shape()
 
-TD_CAP = 6.8  # truncated-teardrop crown height above hole center: stays under the
-              # PG7 hex body (~7.5mm across flats) and locknut (~9.5mm), flat bridge ~4.2mm
-TD_CAP_JACK = 6.5  # DC-099 front flange is only ~14-15mm OD (r~7) — lower crown so the
-                   # flange fully hides it; flat bridge ~4.3mm, same as the PG7 crown
+def common(a, b):
+    return BRepAlgoAPI_Common(a, b).Shape()
 
-def teardrop_y(cx, cz, y0, y1, d, cap=TD_CAP):
-    """hole along +Y with truncated 45deg roof (support-free, fully covered by gland)"""
-    ln = y1 - y0
-    s = cyl_y(cx, cz, y0, ln, d)
+TD_CAP = 6.0
+
+def teardrop_x(cy, cz, x0, x1, d, cap=TD_CAP):
+    """Hole along +X with a truncated 45 deg roof so it prints without support.
+    The crown stays under the plug's shoulder / the jack nose, so it is hidden."""
+    ln = x1 - x0
+    s = cyl_x(cy, cz, x0, ln, d)
     r = d / 2
     k = r * math.sin(math.radians(45))
     apex = r / math.cos(math.radians(45))
-    w = apex - cap  # half-width of flat crown
-    pts = [gp_Pnt(cx - k, y0, cz + k), gp_Pnt(cx + k, y0, cz + k),
-           gp_Pnt(cx + w, y0, cz + cap), gp_Pnt(cx - w, y0, cz + cap)]
+    w = apex - cap
+    if w <= 0.4:
+        w = 0.4
+    pts = [gp_Pnt(x0, cy - k, cz + k), gp_Pnt(x0, cy + k, cz + k),
+           gp_Pnt(x0, cy + w, cz + cap), gp_Pnt(x0, cy - w, cz + cap)]
     mw = BRepBuilderAPI_MakeWire()
     for i in range(4):
         mw.Add(BRepBuilderAPI_MakeEdge(pts[i], pts[(i + 1) % 4]).Edge())
     f = BRepBuilderAPI_MakeFace(mw.Wire()).Face()
-    tri = BRepPrimAPI_MakePrism(f, gp_Vec(0, ln, 0)).Shape()
+    tri = BRepPrimAPI_MakePrism(f, gp_Vec(ln, 0, 0)).Shape()
     return fuse(s, tri)
 
 def fillet_vertical_edges(shape, r):
     mk = BRepFilletAPI_MakeFillet(shape)
     ex = TopExp_Explorer(shape, TopAbs_ShapeEnum.TopAbs_EDGE)
-    n = 0
     seen = set()
     while ex.More():
         e = TopoDS.Edge_s(ex.Current())
@@ -133,12 +165,12 @@ def fillet_vertical_edges(shape, r):
             vx.Next()
         if len(pts) == 2:
             p1, p2 = pts
-            if abs(p1.X() - p2.X()) < 1e-6 and abs(p1.Y() - p2.Y()) < 1e-6 and abs(p1.Z() - p2.Z()) > 1:
+            if (abs(p1.X() - p2.X()) < 1e-6 and abs(p1.Y() - p2.Y()) < 1e-6
+                    and abs(p1.Z() - p2.Z()) > 1):
                 key = (round(p1.X(), 3), round(p1.Y(), 3))
                 if key not in seen:
                     seen.add(key)
                     mk.Add(r, e)
-                    n += 1
         ex.Next()
     return mk.Shape()
 
@@ -168,109 +200,125 @@ def rot_x180(shape):
     t = gp_Trsf(); t.SetRotation(gp_Ax1(gp_Pnt(0, 0, 0), gp_Dir(1, 0, 0)), math.pi)
     return BRepBuilderAPI_Transform(shape, t, True).Shape()
 
-# ---------------- case ----------------
+# ============================================================ case
 outer = box(OX0, OY0, OZ0, OX1, OY1, IZ1)
 outer = fillet_vertical_edges(outer, FILLET_R)
 case = cut(outer, box(IX0, IY0, IZ0, IX1, IY1, IZ1 + 1))
 
-# RJ45 flush opening + wing relief (v1 style: jack face in the outer wall plane)
+# RJ45 flush opening + latch-wing relief + top shield-bump relief
 case = cut(case, box(RJX0, OY0 - 1, RJZ0, RJX1, IY0 + 0.01, RJZ1))
 case = cut(case, box(WGX0, IY0 - WG_D, WGZ0, WGX1, IY0 + 0.01, WGZ1))
-# top shield-bump relief (jack top rear reaches y=-194.0, z to ~16.0)
 case = cut(case, box(104.5, IY0 - WG_D, 14.8, 113.9, IY0 + 0.01, 17.0))
 
-# wall penetrations: DC-099 12V jack (input wall), PG7 gland (output wall)
-case = cut(case, teardrop_y(G1X, G1Z, OY0 - 1, IY0 + 1, JACK_D, TD_CAP_JACK))
-case = cut(case, teardrop_y(G2X, G2Z, IY1 - 1, OY1 + 1, GLAND_D))
+# +X wall: the hat's two jacks
+case = cut(case, teardrop_x(J1_Y, J1_AXIS_Z, IX1 - 1, OX1 + 1, J1_HOLE_D))
+case = cut(case, cyl_x(J1_Y, J1_AXIS_Z, OX1 - J1_CBORE_T, J1_CBORE_T + 1,
+                       J1_CBORE_D))
+case = cut(case, teardrop_x(J2_Y, J2_AXIS_Z, IX1 - 1, OX1 + 1, J2_HOLE_D))
 
-# board standoffs (top z=0), M2 pilots
+# ESP32 board standoffs (top z=0), M2 pilots
 for bx, by in BOSSES_BOARD:
     case = fuse(case, cyl_z(bx, by, IZ0, 0.0 - IZ0, 6.0))
     case = cut(case, cyl_z(bx, by, -8.0, 8.01, M2_PILOT))
 
-# protoboard bosses
-for bx, by in BOSSES_PROTO:
-    case = fuse(case, cyl_z(bx, by, IZ0, PROTO_H, 6.0))
-    case = cut(case, cyl_z(bx, by, IZ0 + PROTO_H - 5.5, 5.51, M2_PILOT))
+# hat standoffs: floor up to the hat's underside, M3 pilots
+for bx, by in BOSSES_HAT:
+    case = fuse(case, cyl_z(bx, by, IZ0, HAT_Z - IZ0, HAT_BOSS_D))
+    case = cut(case, cyl_z(bx, by, HAT_Z - 11.0, 11.01, M3_PILOT))
+    # gusset into the floor: a tall thin post needs a foot
+    case = fuse(case, cone_z(bx, by, IZ0 + 6.0, HAT_BOSS_D / 2,
+                             HAT_BOSS_D / 2 + 3.0, 6.0))
 
-# --- buck converter drop-in pocket (measured from actual MP1584EN STEP model) ---
-# Module: 22.4 x 17.1, PCB 1.6, components to 4.6 total; back face is FLAT bare PCB.
-# Both long edges and the short-edge middles carry components; corner pads get
-# solder + wires. Nothing may grip any edge => pocket touches ONLY the flat back
-# and the bottom edge face:
-#   - back flat against wall (0.3 gap), landscape, pot side up/front
-#   - bottom PCB edge rests on a shelf (shelf stops before the component zone)
-#   - side fences beyond the board ends (0.4 play, no contact)
-#   - flexible front post, centered, with a stepped snap nub over the top-front;
-#     module drops in from above, post flexes ~0.5mm, nub prevents lift/tip-out
-BUCK_CY = -139.0
-MOD_HALF = 11.2            # half of 22.4 length (along wall)
-MOD_BOT = -5.5             # bottom edge resting height
-MOD_TOP = MOD_BOT + 17.1   # 11.6
-PCB_BACK = IX0 + 0.3       # 74.8
-PCB_FRONT = PCB_BACK + 1.6 # 76.4
-COMP_FRONT = PCB_BACK + 4.6  # 79.4 (tallest component face)
-# shelf: supports PCB strip only (stops 0.2 past PCB front)
-case = fuse(case, box(IX0, BUCK_CY - MOD_HALF - 1.3, IZ0,
-                      PCB_FRONT + 0.2, BUCK_CY + MOD_HALF + 1.3, MOD_BOT))
-# side fences (0.4 play each end, 2.4 thick, full component depth + 0.8)
-for sgn in (-1, 1):
-    fy = BUCK_CY + sgn * (MOD_HALF + 0.4)
-    fy2 = fy + sgn * 2.4
-    case = fuse(case, box(IX0, min(fy, fy2), IZ0, COMP_FRONT + 0.8, max(fy, fy2), 8.0))
-# front snap post: moved 1.2 inboard after v1 fit check (was COMP_FRONT+0.5 —
-# nub tip barely reached the component plane, no real engagement). Inner face
-# now 0.7 PAST the tallest-component plane: light press contact, real retention.
-POST_INSET = 1.2
-POST_T = 2.0                   # thinned from 2.2: needs ~1.5mm flex on insert
-POST_X0 = COMP_FRONT + 0.5 - POST_INSET   # 78.7
-case = fuse(case, box(POST_X0, BUCK_CY - 3.0, IZ0, POST_X0 + POST_T, BUCK_CY + 3.0, MOD_TOP + 1.8))
-# stepped nub (points toward wall, hooks over top-front components; 1.2 deep,
-# 1.4 tall lip, 3-step staircase = insert lead-in)
-case = fuse(case, box(POST_X0 - 0.4, BUCK_CY - 3.0, MOD_TOP + 0.2, POST_X0, BUCK_CY + 3.0, MOD_TOP + 1.6))
-case = fuse(case, box(POST_X0 - 0.8, BUCK_CY - 3.0, MOD_TOP + 0.2, POST_X0, BUCK_CY + 3.0, MOD_TOP + 1.1))
-case = fuse(case, box(POST_X0 - 1.2, BUCK_CY - 3.0, MOD_TOP + 0.2, POST_X0, BUCK_CY + 3.0, MOD_TOP + 0.6))
-
-# wall-mount tabs: one per long side, centered along Y, flush with case bottom
-TAB_W, TAB_L, TAB_T = 16.0, 12.0, 4.0   # width along wall, protrusion, thickness
-TAB_HOLE = 4.5                           # #8 / M4 clearance
+# wall-mount tabs, one per long side, flush with the case bottom
+TAB_W, TAB_L, TAB_T, TAB_HOLE = 16.0, 12.0, 4.0, 4.5
 TYM = (OY0 + OY1) / 2
 for wx, sgn in ((OX0, -1), (OX1, 1)):
     tx0, tx1 = sorted((wx, wx + sgn * TAB_L))
-    case = fuse(case, box(tx0, TYM - TAB_W / 2, OZ0, tx1, TYM + TAB_W / 2, OZ0 + TAB_T))
-    case = cut(case, cyl_z(wx + sgn * (TAB_L - 5.5), TYM, OZ0 - 0.01, TAB_T + 0.02, TAB_HOLE))
+    case = fuse(case, box(tx0, TYM - TAB_W / 2, OZ0, tx1, TYM + TAB_W / 2,
+                          OZ0 + TAB_T))
+    case = cut(case, cyl_z(wx + sgn * (TAB_L - 5.5), TYM, OZ0 - 0.01,
+                           TAB_T + 0.02, TAB_HOLE))
 
-# lid bosses, pilot open at bottom
+# lid bosses, pilot open at the bottom so screws cannot bottom out
 for bx, by, zb in LID_BOSSES:
     case = fuse(case, cyl_z(bx, by, zb, IZ1 - zb, LID_BOSS_D))
     case = cut(case, cyl_z(bx, by, zb - 0.01, IZ1 - zb + 0.02, M3_PILOT))
 
-# ---------------- lid ----------------
+# ============================================================ lid
 lid = box(OX0, OY0, IZ1, OX1, OY1, IZ1 + LID_T)
 lid = fillet_vertical_edges(lid, FILLET_R)
 LIP_L, LIP_T, LIP_H, CLR = 30.0, 1.2, 2.0, 0.25
 ymid = (IY0 + IY1) / 2
 for lx0 in (IX0 + CLR, IX1 - CLR - LIP_T):
-    lid = fuse(lid, box(lx0, ymid - LIP_L / 2, IZ1 - LIP_H, lx0 + LIP_T, ymid + LIP_L / 2, IZ1))
-# short-side lips: 26mm (not 30) so the ends clear the O9 corner lid bosses by ~1.4mm
+    lid = fuse(lid, box(lx0, ymid - LIP_L / 2, IZ1 - LIP_H, lx0 + LIP_T,
+                        ymid + LIP_L / 2, IZ1))
 LIP_L2 = 26.0
 xmid = (IX0 + IX1) / 2
 for ly0 in (IY0 + CLR, IY1 - CLR - LIP_T):
-    lid = fuse(lid, box(xmid - LIP_L2 / 2, ly0, IZ1 - LIP_H, xmid + LIP_L2 / 2, ly0 + LIP_T, IZ1))
+    lid = fuse(lid, box(xmid - LIP_L2 / 2, ly0, IZ1 - LIP_H,
+                        xmid + LIP_L2 / 2, ly0 + LIP_T, IZ1))
 for bx, by, zb in LID_BOSSES:
     lid = cut(lid, cyl_z(bx, by, IZ1 - 0.01, LID_T + 0.02, 3.4))
     lid = cut(lid, cone_z(bx, by, IZ1 + LID_T + 0.01, 6.8 / 2 + 0.01, 3.4 / 2, 1.71))
+# LED sight holes, chamfered on the outside for a wider viewing cone
+for lx, ly in LED_HOLES:
+    lid = cut(lid, cyl_z(lx, ly, IZ1 - 0.01, LID_T + 0.02, LED_HOLE_D))
+    lid = cut(lid, cone_z(lx, ly, IZ1 + LID_T + 0.01,
+                          LED_HOLE_D / 2 + 1.2, LED_HOLE_D / 2, 1.21))
 
-# ---------------- report + export ----------------
-print("case volume cm3:", round(volume(case) / 1000, 1), " lid:", round(volume(lid) / 1000, 1))
-print("case bbox:", [round(v, 2) for v in bbox(case)])
-print("lid bbox:", [round(v, 2) for v in bbox(lid)])
+# ============================================================ checks
+def clear(name, got, want, unit="mm"):
+    ok = "OK " if got >= want else "FAIL"
+    print("  [%s] %-42s %7.2f %s (want >= %.2f)" % (ok, name, got, unit, want))
+    return got >= want
 
+print("rev D enclosure — geometry checks")
+ok = True
+ok &= clear("hat left edge to interior wall", HAT_X0 - IX0, 1.0)
+ok &= clear("hat right edge to interior wall", IX1 - HAT_X1, 0.3)
+ok &= clear("hat front edge to interior wall", HAT_Y0 - IY0, 1.0)
+ok &= clear("hat back edge to interior wall", IY1 - HAT_Y1, 1.0)
+ok &= clear("barrel jack crown to lid underside", IZ1 - (HAT_TOP + 7.2), 1.0)
+ok &= clear("hat underside pins to ESP32 top", (HAT_Z - HAT_PIN_DROP) - 1.578, 2.0)
+ok &= clear("hat underside pins to UEXT header top", (HAT_Z - HAT_PIN_DROP) - (1.578 + 4.40), 1.0)
+ok &= clear("RJ45 crown to lid underside", IZ1 - 16.70, 2.0)
+ok &= clear("interior past antenna tip", IY1 - (-83.69), 1.0)
+for bx, by in BOSSES_HAT:
+    ok &= clear("hat boss %.1f clear of ESP32 edge" % bx,
+                bx - HAT_BOSS_D / 2 - 118.15, 0.5)
+ok &= clear("J1 plug engagement", 9.5 - ((WALL - J1_CBORE_T) + (IX1 - J1_FACE_X)), 5.0)
+ok &= clear("J2 nose recess inside outer face", OX1 - J2_NOSE_X, 0.5)
+print("  all geometry checks pass" if ok else "  *** CHECKS FAILED ***")
+
+# solid interference test: does the case body intersect the hat's envelope?
+# The bosses are meant to touch each board's underside, so the tests start at
+# the plane each board sits on: anything above that is a real collision.
+hat_env = box(HAT_X0, HAT_Y0, HAT_Z, HAT_X1, HAT_Y1, HAT_TOP + 7.2)
+v1 = volume(common(case, hat_env))
+esp_env = box(90.15, -188.15, 0.0, 118.15, -90.0, 1.578 + 4.40)
+v2 = volume(common(case, esp_env))
+print("  [%s] case intersects hat envelope        %8.3f mm3 (want 0)"
+      % ("OK " if v1 < 1e-6 else "FAIL", v1))
+print("  [%s] case intersects ESP32 envelope      %8.3f mm3 (want 0)"
+      % ("OK " if v2 < 1e-6 else "FAIL", v2))
+lid_env = box(IX0, IY0, IZ1, IX1, IY1, IZ1 + LID_T)
+v3 = volume(common(lid_env, hat_env))
+print("  [%s] lid volume intersects hat envelope  %8.3f mm3 (want 0)"
+      % ("OK " if v3 < 1e-6 else "FAIL", v3))
+
+print("case volume cm3:", round(volume(case) / 1000, 1),
+      " lid:", round(volume(lid) / 1000, 1))
+cb = [round(v, 2) for v in bbox(case)]
+print("case bbox:", cb)
+print("external: %.1f x %.1f x %.1f mm"
+      % (OX1 - OX0, OY1 - OY0, (IZ1 + LID_T) - OZ0))
+
+# ============================================================ export
 write_step(case, "af4_case_inframe.step")
 write_step(lid, "af4_lid_inframe.step")
 
 case_p = translate(case, -OX0, -OY0, -OZ0)
-lid_p = rot_x180(lid)                       # flip: top face to bed
+lid_p = rot_x180(lid)
 b = bbox(lid_p)
 lid_p = translate(lid_p, -b[0], -b[1], -b[2])
 
