@@ -71,7 +71,7 @@ resistor). Rev D uses GPIO32.
 | **D2 SMAJ13A on the 12 V input** | New. Clamps supply-side transients ahead of the regulator; 13 V standoff sits above the 12 V rail so there is no standing leakage |
 | **C2 → 10 µF 25 V tantalum** | 16 V at a 10.4 V rail is only 65 % derating; tantalums want 50 %. Still tantalum, because the LM1117 needs output-cap ESR |
 | **R3 100 kΩ bleed across the trigger output** | Guarantees the port sees 0 V for its 60 s re-arm instead of relying on stray discharge. 104 µA |
-| **D3 / D5 indicator LEDs** | D3 green = 10.4 V rail live (also acts as extra minimum load). D5 yellow = trigger asserted. Turns the assembly-guide meter checks into a glance |
+| **D3 / D5 indicator LEDs** | D3 green = 10.4 V rail live, D5 yellow = trigger asserted. Turns the assembly-guide meter checks into a glance. **Series resistors are deliberately unequal — R6 = 1.0 kΩ, R7 = 6.8 kΩ** — because the two LEDs differ ~12× in efficiency (APT2012SGC 12 mcd vs APT2012SYCK 150 mcd, both at 20 mA). The LM1117 minimum load is carried by the R4/R5 divider's 10.3 mA, not by D3 |
 | **TP1–TP5 test pads** | 12 V, 10.4 V, trigger tip, power ground, logic ground. Probeable without clipping onto component legs |
 | **No series resistor on the tip** | Considered and rejected: at 10.4 V into a short it would sit right at the polyfuse's hold current and cook rather than trip. The LDO's internal current limit plus the polyfuse handle a shorted tip properly |
 
@@ -85,8 +85,8 @@ than assumed equivalent.
 | U1 | AQY212GH, DIP-4, 60 V / 1.1 A, 0.34 Ω, **5000 Vrms** isolation | AQY212GS, SOP-4, 60 V / 1.0 A, 0.34 Ω, **1500 Vrms** | Same family and die. **Isolation drops 5000 → 1500 Vrms.** Both sides are SELV (12 V vs 3.3 V), so 1500 V is still ~100× any credible fault. Accepted deliberately. Toshiba's SMD photorelays are worse, not better — TLP3475S is 500 Vrms |
 | U2 | LM1117T-ADJ, TO-220 | LM1117MPX-ADJ/NOPB, SOT-223 | Same die, same datasheet. **The TO-220 pin-crossing problem disappears** — the SOT-223 footprint puts ADJ where ADJ goes, so the pin-1 sleeving step in the rev C assembly guide is deleted |
 | R4 | KOA MF1/4DCT52R1210F, 121 Ω axial | 0805 1 % 121 Ω | **The rev C sourcing problem evaporates.** 121 Ω 1 % in 0805 is a stocked jellybean; no 18-week Yageo lead time to work around |
-| C1/C2 | Panasonic ECA-1HM100I, one part for both | C1 10 µF 50 V X7R 1206; C2 10 µF 25 V tantalum | No longer one part. C1 is ceramic (fine at the input); C2 must stay tantalum for ESR |
-| F1 | MF-R010, radial | 1206L010/60YR, 1206 | Same 0.10 A hold. 60 V rating |
+| C1/C2 | Panasonic ECA-1HM100I, one part for both | C1 10 µF 50 V X5R 1206; C2 10 µF 25 V tantalum | No longer one part. C1 is ceramic (fine at the input); C2 must stay tantalum for ESR |
+| F1 | MF-R010, radial | 1206L010/60WR, 1206 | Same 0.10 A hold. 60 V rating |
 | D4 | P6KE15CA, DO-15 | SMBJ13CA, SMB | Bidirectional either way. 13 V standoff still sits above the 10.4 V line — the rev C lesson holds |
 | J1 | DALQUIS DC-099 panel jack + pigtails | PJ-079BH board jack, 5.5 × 2.5, 24 V / 5 A | **Watch the trap:** PJ-002AH and PJ-102AH are the 2.0–2.1 mm parts. Only the "B" suffix parts are 2.5 mm centre pin |
 | J2 | MP3-3501 plug on a captive cable | SJ1-3523N board jack + a commercial 3.5 mm patch cable | Jack is 3-conductor; ring is tied to sleeve on the board, which is what a TS plug does anyway |

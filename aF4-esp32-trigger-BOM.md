@@ -35,17 +35,17 @@ This is the manufacturing BOM. The machine-readable version PCBWay wants is
 | U1 | **Panasonic AQY212GS** PhotoMOS, 60 V / 1 A, 0.34 Ω, 1500 Vrms | SOP-4 | Same family and die as the rev C DIP part. Isolation drops 5000 → 1500 Vrms, accepted: both sides are SELV. Pins 3/4 are a symmetric MOSFET pair, no polarity |
 | U2 | **TI LM1117MPX-ADJ/NOPB** | SOT-223 | Same die as the rev C TO-220. **The pin-crossing problem is gone** — the footprint puts ADJ where ADJ goes |
 | R4 / R5 | 121 Ω / 887 Ω, 1 %, 0805 | 0805 | Vout = 1.25 × (1 + 887/121) = 10.41 V, +53 mV from I_ADJ ≈ **10.46 V**. Fixed by construction. **The rev C sourcing problem vanishes** — 121 Ω 1 % in 0805 is a stocked jellybean, no 18-week lead |
-| C1 | 10 µF 50 V X7R | 1206 | Regulator input bulk |
+| C1 | 10 µF 50 V X5R | 1206 | Regulator input bulk. X5R, not X7R: Murata's 1206 10 µF 50 V part (GRM31CR61H106KA12L) is X5R; X7R at that C/V needs a 1210 |
 | C2 | 10 µF 25 V **tantalum** | EIA-3528 (B) | Must stay tantalum — the LM1117 needs output-cap ESR. 25 V not 16 V: 16 V at a 10.4 V rail is only 65 % derating, and tantalums want 50 %. **Polarised** |
 | D1 | **SS14** Schottky, 40 V / 1 A | SMA | **New in rev D.** Reverse-polarity protection in series with the 12 V input — rev C had none at all. Costs 0.3 V of the 1.5 V headroom and turns a polarity mistake into "nothing happens" |
 | D2 | **SMAJ13A** TVS, unidirectional | SMA | **New.** Input clamp. 13 V standoff sits above the 12 V rail, so no standing leakage |
 | D4 | **SMBJ13CA** TVS, bidirectional | SMB | Was the P6KE15CA spliced behind the plug. Now on-board at the jack. Bidirectional, so no orientation |
-| F1 | **1206L010/60YR** PPTC, 0.10 A hold / 0.30 A trip, 60 V | 1206 | Was the MF-R010 spliced into a pigtail. The feeder supply can source 12.5 A; steady draw here is ~15 mA |
+| F1 | **1206L010/60WR** PPTC, 0.10 A hold / 0.25 A trip, 60 V | 1206 | Was the MF-R010 spliced into a pigtail. The feeder supply can source 12.5 A; steady draw here is ~15 mA |
 | R1 | 220 Ω 1 % | 0805 | PhotoMOS LED current, ~9 mA from GPIO32 — inside Panasonic's recommended 5–10 mA |
 | R2 | 10 kΩ 1 % | 0805 | GPIO32 pulldown. **On GPIO32 this is unopposed** — see the GPIO13 note below |
 | R3 | 100 kΩ 1 % | 0805 | **New.** Bleeds the trigger line so the port reliably sees 0 V for its 60 s re-arm. 104 µA |
-| R6 / D3 | 10 kΩ + green LED | 0805 | **New.** Rail-live indicator, visible through a lid hole. Doubles as extra minimum load |
-| R7 / D5 | 10 kΩ + yellow LED | 0805 | **New.** Lights while the trigger is asserted — turns the meter checks into a glance |
+| R6 / D3 | **1.0 kΩ** + green LED | 0805 | **New.** Rail-live indicator, visible through a lid hole. 1.0 kΩ gives 8.2 mA: the APT2012SGC is only 12 mcd typ / 5 mcd min at 20 mA, so at the 10 kΩ first drafted it sat near 0.5 mcd and was invisible |
+| R7 / D5 | **6.8 kΩ** + yellow LED | 0805 | **New.** Lights while the trigger is asserted — turns the meter checks into a glance. Only 1.2 mA needed: the APT2012SYCK is 150 mcd at 20 mA, ~12× the green's efficiency, so an equal resistor would badly mismatch them |
 | J1 | **Same Sky PJ-079BH**, 5.5 × 2.5 mm, 24 V / 5 A | THT right-angle | **Watch the trap:** PJ-002AH and PJ-102AH are the 2.0–2.1 mm parts. Only the "B" suffix is 2.5 mm centre pin. Same trap as the splitter |
 | J2 | **Same Sky SJ1-3523N**, 3.5 mm, 3-conductor | THT right-angle | Tip = signal. Ring is tied to sleeve on the board, which is what a TS plug does anyway |
 | J3 / J4 | **Sullins PPTC101LFBN-RC**, 1 × 10 socket, 2.54 mm | THT | Mate EXT1 and EXT2. Their 8.5 mm body height sets the whole vertical stack |

@@ -199,13 +199,13 @@ place("Resistor_SMD", "R_0805_2012Metric", "R5", "887R", 143.00, 136.00, 0,
       {"1": "ADJ", "2": "GNDP"})
 
 # ---- power domain: indicators and trigger output ---------------------------
-place("Resistor_SMD", "R_0805_2012Metric", "R6", "10k", 136.00, 139.00, 0,
+place("Resistor_SMD", "R_0805_2012Metric", "R6", "1k0", 136.00, 139.00, 0,
       {"1": "+10V4", "2": "PWRLED"})
 place("LED_SMD", "LED_0805_2012Metric", "D3", "GRN", 139.50, 139.00, 180,
       {"1": "GNDP", "2": "PWRLED"})
 place("Resistor_SMD", "R_0805_2012Metric", "R3", "100k", 128.20, 143.30, 90,
       {"1": "TIP", "2": "GNDP"})
-place("Resistor_SMD", "R_0805_2012Metric", "R7", "10k", 128.20, 147.20, 270,
+place("Resistor_SMD", "R_0805_2012Metric", "R7", "6k8", 128.20, 147.20, 270,
       {"1": "TIP", "2": "FEEDLED"})
 place("LED_SMD", "LED_0805_2012Metric", "D5", "YEL", 128.20, 150.80, 90,
       {"1": "GNDP", "2": "FEEDLED"})
