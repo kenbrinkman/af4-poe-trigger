@@ -4,7 +4,7 @@ Line#,Quantity Per Part Number,Reference Designator,Part Number,Part Description
 3,1,D1,SS14-E3/61T,"Schottky rectifier, 40 V / 1 A",SMA (DO-214AC),SMD,Vishay,SS14-E3/61T,,"Reverse-polarity protection, in series with the 12 V input."
 4,1,D2,SMAJ13A,"TVS diode, unidirectional, 13 V standoff, 400 W",SMA (DO-214AC),SMD,Littelfuse,SMAJ13A,,Input clamp. Standoff sits above the 12 V rail; cathode to +12 V.
 5,1,D4,SMBJ13CA,"TVS diode, bidirectional, 13 V standoff, 600 W",SMB (DO-214AA),SMD,Littelfuse,SMBJ13CA,,Across the trigger pair at the jack. Bidirectional - no orientation.
-6,1,D3,APT2012SGC,"LED, green, 2.0 V typ",0805,SMD,Kingbright,APT2012SGC,,10.4 V rail live indicator.
+6,1,D3,APT2012SGC,"LED, green, 2.2 V typ",0805,SMD,Kingbright,APT2012SGC,,10.4 V rail live indicator.
 7,1,D5,APT2012SYCK,"LED, yellow, 2.0 V typ",0805,SMD,Kingbright,APT2012SYCK,,Lights while the trigger output is asserted.
 8,1,F1,1206L010/60WR,"PPTC resettable fuse, 0.10 A hold / 0.25 A trip, 60 V",1206,SMD,Littelfuse,1206L010/60WR,,On the 12 V tap. Feeder supply can source 12.5 A.
 9,1,C1,GRM31CR61H106KA12L,"Capacitor, 10 uF, 50 V, X5R",1206,SMD,Murata,GRM31CR61H106KA12L,,Regulator input bulk.

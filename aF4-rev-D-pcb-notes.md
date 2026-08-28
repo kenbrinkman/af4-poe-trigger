@@ -113,7 +113,8 @@ Upload `pcb/af4-trigger-hat-rev-D-PCBWay.zip`. It contains:
   get wrong
 
 Order shape: 5 pieces, 2 layers, 1.6 mm, top side only, full turn-key.
-20 SMD placements plus 4 through-hole parts (44 joints) that they hand-solder.
+17 SMD placements plus 4 through-hole parts (28 joints) that they hand-solder.
+20 unique part numbers.
 Expect a parts-availability review email before they quote firm.
 
 ## Verification status

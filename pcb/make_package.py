@@ -35,7 +35,7 @@ PARTS = [
     (["D4"], "TVS diode, bidirectional, 13 V standoff, 600 W", "SMB (DO-214AA)",
      "SMD", "Littelfuse", "SMBJ13CA",
      "Across the trigger pair at the jack. Bidirectional - no orientation."),
-    (["D3"], "LED, green, 2.0 V typ", "0805", "SMD", "Kingbright", "APT2012SGC",
+    (["D3"], "LED, green, 2.2 V typ", "0805", "SMD", "Kingbright", "APT2012SGC",
      "10.4 V rail live indicator."),
     (["D5"], "LED, yellow, 2.0 V typ", "0805", "SMD", "Kingbright", "APT2012SYCK",
      "Lights while the trigger output is asserted."),
@@ -130,6 +130,23 @@ with open("af4-trigger-hat-centroid.csv", "w", newline="") as f:
         n += 1
 print("centroid rows (SMD only):", n)
 
+# through-hole joint count, computed from the board - never hand-written.
+# (An earlier hand-written "4 parts / 44 joints" survived here for revisions while
+# the itemised list directly beneath it summed to 28. PCBWay prices hand-soldered
+# joints, so that fiction had a price attached to it.)
+tht = []
+for fp in sorted(b.GetFootprints(), key=lambda f: f.GetReference()):
+    ref = fp.GetReference()
+    if ref.startswith(("H", "TP")):
+        continue
+    pth = [p for p in fp.Pads() if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH]
+    if pth:
+        tht.append((ref, len(pth)))
+tht_parts = len(tht)
+tht_joints = sum(c for _, c in tht)
+tht_lines = "\n".join("                      %-3s %2d joints" % (r, c) for r, c in tht)
+print("THT: %d parts / %d joints" % (tht_parts, tht_joints))
+
 # ------------------------------------------------------------- fab README
 open("PCBWay-README.txt", "w").write("""aF4 PoE Trigger Hat - rev D
 Fabrication and assembly notes for PCBWay
@@ -156,11 +173,8 @@ ASSEMBLY
   Sides populated   top only
   Unique part nos.  %d
   SMD placements    %d
-  Through-hole      4 parts / 44 joints:
-                      J1  DC jack        3 terminals + 2 shield tabs
-                      J2  3.5 mm jack    3 terminals
-                      J3  1x10 socket    10 pins
-                      J4  1x10 socket    10 pins
+  Through-hole      %d parts / %d joints:
+%s
   Sourcing          full turn-key, by manufacturer part number (see BOM)
 
 COORDINATE SYSTEM
@@ -181,7 +195,7 @@ CRITICAL NOTES
      side of the circuit.
   5. J3 and J4 must be seated flush and square - they mate with a header
      on another board and any tilt will prevent assembly.
-""" % (W, H, len(rows), n))
+""" % (W, H, len(rows), n, tht_parts, tht_joints, tht_lines))
 
 # ------------------------------------------------------------------- zip
 with zipfile.ZipFile("af4-trigger-hat-rev-D-PCBWay.zip", "w",

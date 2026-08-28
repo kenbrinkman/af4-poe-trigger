@@ -23,11 +23,11 @@ ASSEMBLY
   Sides populated   top only
   Unique part nos.  20
   SMD placements    17
-  Through-hole      4 parts / 44 joints:
-                      J1  DC jack        3 terminals + 2 shield tabs
-                      J2  3.5 mm jack    3 terminals
-                      J3  1x10 socket    10 pins
-                      J4  1x10 socket    10 pins
+  Through-hole      4 parts / 28 joints:
+                      J1   5 joints
+                      J2   3 joints
+                      J3  10 joints
+                      J4  10 joints
   Sourcing          full turn-key, by manufacturer part number (see BOM)
 
 COORDINATE SYSTEM

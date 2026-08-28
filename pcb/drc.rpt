@@ -1,0 +1,217 @@
+** Drc report for af4-trigger-hat.kicad_pcb **
+** Created on 2026-08-28 19:34:40 **
+
+** Found 61 DRC violations **
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(105.0000 mm, 131.5000 mm): PCB Text 'GPIO32 = EXT2 pin 6' on F.Silkscreen
+    @(129.8500 mm, 147.2000 mm): Reference 'R7'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(105.0000 mm, 131.5000 mm): PCB Text 'GPIO32 = EXT2 pin 6' on F.Silkscreen
+    @(128.9350 mm, 146.9729 mm): Line on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(125.8500 mm, 140.0000 mm): Line on F.Silkscreen
+    @(126.5500 mm, 150.8000 mm): Reference 'D5'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(125.8500 mm, 140.0000 mm): Line on F.Silkscreen
+    @(129.8500 mm, 147.2000 mm): Reference 'R7'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(130.7000 mm, 126.5000 mm): Reference 'D2'
+    @(129.8500 mm, 122.9900 mm): Line on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(122.1500 mm, 113.5000 mm): Line on F.Silkscreen
+    @(123.5000 mm, 143.1500 mm): Reference 'H2'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(125.8500 mm, 113.5000 mm): Line on F.Silkscreen
+    @(125.7000 mm, 117.5000 mm): Reference 'D1'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(126.5500 mm, 121.0100 mm): Line on F.Silkscreen
+    @(125.7000 mm, 117.5000 mm): Reference 'D1'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(141.0000 mm, 132.0000 mm): Reference 'U2'
+    @(140.9600 mm, 132.4900 mm): Line on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(129.8500 mm, 147.2000 mm): Reference 'R7'
+    @(129.8500 mm, 147.2000 mm): Reference 'R7'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(129.8500 mm, 147.2000 mm): Reference 'R7'
+    @(128.9350 mm, 146.9729 mm): Line on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(132.8500 mm, 148.5000 mm): Reference 'J2'
+    @(105.0000 mm, 141.3520 mm): Reference 'TP5'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(129.8500 mm, 147.2000 mm): Reference 'R7'
+    @(128.9350 mm, 146.9729 mm): Line on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(126.5500 mm, 150.8000 mm): Reference 'D5'
+    @(127.2400 mm, 149.8000 mm): Line on F.Silkscreen
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(129.1600 mm, 152.4850 mm): Line on F.Silkscreen
+    @(129.9000 mm, 153.0000 mm): Reference 'D4'
+[silk_overlap]: Silkscreen overlap
+    Rule: board setup constraints silk; Severity: warning
+    @(127.2400 mm, 152.4850 mm): Line on F.Silkscreen
+    @(129.9000 mm, 153.0000 mm): Reference 'D4'
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(122.1500 mm, 113.5000 mm): Line on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(122.1500 mm, 140.0000 mm): Line on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(122.1500 mm, 113.5000 mm): Line on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(122.1500 mm, 140.0000 mm): Line on B.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(105.0000 mm, 131.5000 mm): PCB Text 'GPIO32 = EXT2 pin 6' on F.Silkscreen
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(129.5000 mm, 113.8200 mm): Reference 'F1'
+[silk_over_copper]: Silkscreen clipped by solder mask
+    Local override; Severity: warning
+    @(141.0000 mm, 132.0000 mm): Reference 'U2'
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; Severity: warning
+    @(95.6000 mm, 121.6000 mm): PCB Text 'PIN 1' on F.Silkscreen
+[text_height]: Text height out of range (board setup constraints silk text height min height 0.8000 mm; actual 0.7500 mm)
+    Rule: board setup constraints silk text height; Severity: warning
+    @(112.4000 mm, 121.6000 mm): PCB Text 'PIN 1' on F.Silkscreen
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(91.4400 mm, 123.2200 mm): Footprint J3
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(116.8400 mm, 123.2200 mm): Footprint J4
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(124.0000 mm, 137.0000 mm): Footprint U1
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(120.5000 mm, 132.0000 mm): Footprint R1
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(112.0000 mm, 132.1100 mm): Footprint R2
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(144.0000 mm, 121.0000 mm): Footprint J1
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(141.6500 mm, 148.5000 mm): Footprint J2
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(129.5000 mm, 112.0000 mm): Footprint F1
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(128.2000 mm, 117.5000 mm): Footprint D1
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(128.2000 mm, 126.5000 mm): Footprint D2
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(132.6000 mm, 124.5000 mm): Footprint C1
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(141.0000 mm, 127.5000 mm): Footprint U2
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(138.5000 mm, 134.0000 mm): Footprint C2
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(143.0000 mm, 133.0000 mm): Footprint R4
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(143.0000 mm, 136.0000 mm): Footprint R5
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(136.0000 mm, 139.0000 mm): Footprint R6
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(139.5000 mm, 139.0000 mm): Footprint D3
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(128.2000 mm, 143.3000 mm): Footprint R3
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(128.2000 mm, 147.2000 mm): Footprint R7
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(128.2000 mm, 150.8000 mm): Footprint D5
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(129.9000 mm, 156.0000 mm): Footprint D4
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(131.5000 mm, 120.0000 mm): Footprint TP1
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(134.0000 mm, 131.0000 mm): Footprint TP2
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(132.0000 mm, 145.0000 mm): Footprint TP4
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(131.5000 mm, 150.0000 mm): Footprint TP3
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(105.0000 mm, 143.0000 mm): Footprint TP5
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(123.0000 mm, 118.0000 mm): Footprint H1
+[lib_footprint_issues]: The current configuration does not include the library ''.
+    Local override; Severity: warning
+    @(123.5000 mm, 147.0000 mm): Footprint H2
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; Severity: warning
+    @(146.1500 mm, 110.0000 mm): Line on Edge.Cuts
+    @(146.1500 mm, 153.0000 mm): Line on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; Severity: warning
+    @(146.1500 mm, 110.0000 mm): Line on Edge.Cuts
+    @(146.1500 mm, 151.5000 mm): Line on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; Severity: warning
+    @(146.1500 mm, 110.0000 mm): Line on Edge.Cuts
+    @(147.9500 mm, 151.5000 mm): Line on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; Severity: warning
+    @(146.1500 mm, 110.0000 mm): Line on Edge.Cuts
+    @(144.9500 mm, 150.5000 mm): Line on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; Severity: warning
+    @(146.1500 mm, 110.0000 mm): Line on Edge.Cuts
+    @(147.9500 mm, 146.5000 mm): Line on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; Severity: warning
+    @(146.1500 mm, 110.0000 mm): Line on Edge.Cuts
+    @(146.1500 mm, 145.5000 mm): Line on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; Severity: warning
+    @(146.1500 mm, 110.0000 mm): Line on Edge.Cuts
+    @(144.9500 mm, 144.0000 mm): Line on F.Silkscreen
+[silk_edge_clearance]: Silkscreen clipped by board edge
+    Rule: board setup constraints silk; Severity: warning
+    @(146.1500 mm, 110.0000 mm): Line on Edge.Cuts
+    @(146.1500 mm, 144.0000 mm): Line on F.Silkscreen
+
+** Found 0 unconnected pads **
+
+** Found 0 Footprint errors **
+
+** End of Report **

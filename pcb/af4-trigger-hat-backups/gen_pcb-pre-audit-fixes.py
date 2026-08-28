@@ -10,10 +10,6 @@ socket positions come straight from the vendor CAD:
 import re, os, math
 
 FPDIR = "/usr/share/kicad/footprints"
-# project-local footprints take precedence over the stock KiCad libraries.
-# aF4.pretty holds parts whose stock footprint is wrong for the part we buy -
-# see AQY212GS_SOP4_Panasonic.kicad_mod.
-LOCALFP = os.path.join(os.path.dirname(os.path.abspath(__file__)), "footprints")
 
 MIN_SLOT = 0.70   # PCBWay will not route a slot narrower than this; some library
                   # footprints (SJ1-3523N) specify 0.40 mm blade slots, which would
@@ -32,11 +28,7 @@ net("")
 
 # ------------------------------------------------------------------- helpers
 def load(lib, name):
-    for root in (LOCALFP, FPDIR):
-        path = os.path.join(root, lib + ".pretty", name + ".kicad_mod")
-        if os.path.exists(path):
-            return open(path).read()
-    raise FileNotFoundError("%s:%s not found in %s or %s" % (lib, name, LOCALFP, FPDIR))
+    return open(os.path.join(FPDIR, lib + ".pretty", name + ".kicad_mod")).read()
 
 def sexp_span(text, start):
     i = text.index("(", start)
@@ -173,16 +165,7 @@ place("Connector_PinSocket_2.54mm", "PinSocket_1x10_P2.54mm_Vertical",
 
 # The PhotoMOS bridges the isolation frontier: pins 1/2 (LED) in the logic
 # domain, pins 3/4 (a symmetric MOSFET pair) in the feeder-power domain.
-# U1 land pattern. Taken from the RECOMMENDED MOUNTING PAD drawing in Panasonic's
-# semi_eng_gu_sop4_1a.pdf, NOT from a stock library part - see
-# footprints/aF4.pretty/AQY212GS_SOP4_Panasonic.kicad_mod.
-#   Panasonic: pad 0.8 wide (pitch axis) x 1.2 long (lead axis),
-#              centres 2.54 apart on the pitch axis, 6.0 apart across the span.
-# History: rev D originally shipped SO-4_4.4x2.3mm_P1.27mm (1.27 mm pitch, an
-# OPTEK OPIA403 pattern) - every pin missed its pad. The interim fix used KiCad's
-# SO-4_4.4x4.3mm_P2.54mm, which has the right pad CENTRES but its pads are rotated
-# 90 deg: 0.8 along the lead axis where Panasonic asks for 1.2, i.e. no toe fillet.
-place("aF4", "AQY212GS_SOP4_Panasonic", "U1", "AQY212GS", 124.00, 137.00, 0,
+place("Package_SO", "SO-4_4.4x2.3mm_P1.27mm", "U1", "AQY212GS", 124.00, 137.00, 0,
       {"1": "LED_A", "2": "GNDL", "3": "TIP", "4": "+10V4"})
 place("Resistor_SMD", "R_0805_2012Metric", "R1", "220R", 120.50, 132.00, 0,
       {"1": "GPIO32", "2": "LED_A"})
@@ -200,7 +183,7 @@ place("Resistor_SMD", "R_1206_3216Metric", "F1", "010", 129.50, 112.00, 180,
       {"1": "+12V_RAW", "2": "+12V_F"})     # rot 180 puts pad 1 on the right
 place("Diode_SMD", "D_SMA", "D1", "SS14", 128.20, 117.50, 90,
       {"1": "+12V", "2": "+12V_F"})         # pad1 = cathode, lower
-place("Diode_SMD", "D_SMA", "D2", "SMAJ13A", 128.20, 126.50, 270,
+place("Diode_SMD", "D_SMA", "D2", "SMAJ15A", 128.20, 126.50, 270,
       {"1": "+12V", "2": "GNDP"})           # pad1 = cathode, upper
 
 # ---- power domain: regulator ------------------------------------------------
@@ -248,8 +231,7 @@ for ref, x, y in [("H1", 123.00, 118.00), ("H2", 123.50, 147.00)]:
 # Grounds ride the two pours; only signal and power nets are routed.
 route([PP("J4", "6"), (118.60, 135.92), (118.60, 132.00), PP("R1", "1")], "GPIO32")
 route([(118.60, 132.11), PP("R2", "2")], "GPIO32")
-route([PP("R1", "2"), (121.60, 132.00), (121.60, PP("U1", "1")[1]),
-       PP("U1", "1")], "LED_A")
+route([PP("R1", "2"), (121.60, 132.00), (121.60, 136.365), PP("U1", "1")], "LED_A")
 
 # 12 V in -> polyfuse -> reverse-polarity Schottky -> TVS -> bulk cap -> LDO
 route([PP("J1", "1"), (141.60, 121.00), (141.60, 114.00),
@@ -271,7 +253,7 @@ route([(137.85, 131.60), (140.25, 131.60), (140.25, 134.00), PP("C2", "1")],
       "+10V4", w=0.60)
 route([(140.25, 131.60), (143.9125, 131.60), PP("R4", "1")], "+10V4", w=0.60)
 route([PP("TP2", "1"), (134.00, 134.00), (129.50, 134.00),
-       (129.50, PP("U1", "4")[1]), PP("U1", "4")], "+10V4", w=0.60)
+       (129.50, 136.365), PP("U1", "4")], "+10V4", w=0.60)
 route([(134.00, 134.00), (134.00, 139.00), PP("R6", "1")], "+10V4", w=0.50)
 route([PP("R6", "2"), PP("D3", "2")], "PWRLED")
 
@@ -281,8 +263,7 @@ route([PP("U2", "1"), (145.00, 129.80), (145.00, 134.50), (142.0875, 134.50),
 route([(142.0875, 134.50), PP("R5", "1")], "ADJ")
 
 # trigger output
-route([PP("U1", "3"), (130.00, PP("U1", "3")[1]), (130.00, 144.2125),
-       PP("R3", "1")],
+route([PP("U1", "3"), (130.00, 137.635), (130.00, 144.2125), PP("R3", "1")],
       "TIP", w=0.50)
 route([PP("R3", "1"), PP("R7", "1")], "TIP", w=0.50)
 route([PP("R7", "2"), PP("D5", "2")], "FEEDLED")
@@ -330,7 +311,7 @@ for lay in ("F.SilkS", "B.SilkS"):
 # =============================================================== SILKSCREEN
 text("aF4 PoE TRIGGER HAT", 107.00, 114.20, size=1.3, thick=0.24)
 text("rev D    inD aF4 frozen feeder", 107.00, 116.60, size=0.85)
-text("ISOLATION BARRIER", 124.00, 125.50, size=0.8, thick=0.15, rot=90)
+text("ISOLATION BARRIER", 124.00, 128.00, size=0.8, thick=0.15, rot=90)
 text("EXT1", 95.60, 124.60, size=1.0)
 text("EXT2", 112.40, 124.60, size=1.0)
 text("PIN 1", 95.60, 121.60, size=0.75)

@@ -40,8 +40,8 @@ This is the manufacturing BOM. The machine-readable version PCBWay wants is
 | D1 | **SS14** Schottky, 40 V / 1 A | SMA | **New in rev D.** Reverse-polarity protection in series with the 12 V input — rev C had none at all. Costs 0.3 V of the 1.5 V headroom and turns a polarity mistake into "nothing happens" |
 | D2 | **SMAJ13A** TVS, unidirectional | SMA | **New.** Input clamp. 13 V standoff sits above the 12 V rail, so no standing leakage |
 | D4 | **SMBJ13CA** TVS, bidirectional | SMB | Was the P6KE15CA spliced behind the plug. Now on-board at the jack. Bidirectional, so no orientation |
-| F1 | **1206L010/60WR** PPTC, 0.10 A hold / 0.25 A trip, 60 V | 1206 | Was the MF-R010 spliced into a pigtail. The feeder supply can source 12.5 A; steady draw here is ~15 mA |
-| R1 | 220 Ω 1 % | 0805 | PhotoMOS LED current, ~9 mA from GPIO32 — inside Panasonic's recommended 5–10 mA |
+| F1 | **1206L010/60WR** PPTC, 0.10 A hold / 0.25 A trip, 60 V | 1206 | Was the MF-R010 spliced into a pigtail. The feeder supply can source 12.5 A; steady draw here is ~19 mA (divider 10.4 + D3 8.3), ~20 mA during a feed |
+| R1 | 220 Ω 1 % | 0805 | PhotoMOS LED current, ~9 mA from GPIO32 (6.8 mA worst case at a 3.0 V GPIO and Vf max 1.5 V) — inside Panasonic's recommended 5–30 mA |
 | R2 | 10 kΩ 1 % | 0805 | GPIO32 pulldown. **On GPIO32 this is unopposed** — see the GPIO13 note below |
 | R3 | 100 kΩ 1 % | 0805 | **New.** Bleeds the trigger line so the port reliably sees 0 V for its 60 s re-arm. 104 µA |
 | R6 / D3 | **1.0 kΩ** + green LED | 0805 | **New.** Rail-live indicator, visible through a lid hole. 1.0 kΩ gives 8.2 mA: the APT2012SGC is only 12 mcd typ / 5 mcd min at 20 mA, so at the 10 kΩ first drafted it sat near 0.5 mcd and was invisible |
@@ -71,8 +71,8 @@ role, not shared with UEXT. Do not move it back.
 ## Ordering the board
 
 Upload `pcb/af4-trigger-hat-rev-D-PCBWay.zip`. Order shape: 5 pieces, 2 layers,
-1.6 mm, top side populated, full turn-key. 20 SMD placements plus 4 through-hole
-parts (44 joints) that they hand-solder. Full procedure and the fab notes are in
+1.6 mm, top side populated, full turn-key. 17 SMD placements plus 4 through-hole
+parts (28 joints) that they hand-solder. 20 unique part numbers. Full procedure and the fab notes are in
 `aF4-rev-D-pcb-notes.md`.
 
 Distributor part numbers are deliberately blank in the CSV — PCBWay sources by

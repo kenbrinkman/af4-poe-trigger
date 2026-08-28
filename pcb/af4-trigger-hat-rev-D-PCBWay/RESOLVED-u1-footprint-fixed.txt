@@ -1,0 +1,48 @@
+RESOLVED 2026-08-28 - this package is current and valid.
+
+U1 now uses a PROJECT-LOCAL footprint authored from Panasonic's own
+"Recommended mounting pad (TOP VIEW)" drawing in semi_eng_gu_sop4_1a.pdf:
+
+    footprints/aF4.pretty/AQY212GS_SOP4_Panasonic.kicad_mod
+
+    pad size ............ 0.8 mm across the pitch axis
+                          1.2 mm along the lead axis
+    pad centres ......... 2.54 mm apart on the pitch axis
+                          6.00 mm apart across the span
+    tolerance ........... +/-0.1 mm
+
+Pads span 2.40..3.60 mm from the part centre. The lead tip sits at
+3.2..3.6 mm (6.8 +/-0.4 lead span), so the toe lands on the pad across the
+whole tolerance range.
+
+TWO EARLIER FOOTPRINTS WERE WRONG. Recorded because the failure mode repeats:
+  1. SO-4_4.4x2.3mm_P1.27mm - 1.27 mm pitch, an OPTEK OPIA403 pattern.
+     Every pin missed its pad by 0.635 mm. Chosen because the NAME matched.
+  2. SO-4_4.4x4.3mm_P2.54mm - correct pitch, correct body, correct pad
+     CENTRES, but the pads are rotated 90 degrees: 0.8 mm along the lead axis
+     where Panasonic asks for 1.2. Would have mounted, with no toe fillet at
+     the far end of the lead-span tolerance. Chosen by matching DIMENSIONS,
+     which is better than matching a name, and still not the same as reading
+     the recommended-pad drawing.
+
+VERIFICATION of the package in this folder
+  DRC            61 items, identical in class and count to a baseline
+                 regenerated with the old footprint.
+                 0 clearance, 0 courtyard, 0 hole, 0 copper-to-edge,
+                 0 unconnected pads, 0 mask bridges.
+  Drill tools    0.450 / 0.700 / 0.800 / 1.000 / 1.200 / 2.130 / 3.200 mm.
+                 No plated slot below 0.70 mm.
+  Cross-checks   BOM == PARTS == board refs (21). Centroid = 17 SMD.
+                 Through-hole 4 parts / 28 joints, computed from the board's
+                 PTH pads rather than hand-written.
+  Visual         Board rendered and inspected, not merely measured.
+
+ISOLATION, RE-DERIVED (the old "4.3 mm pad-to-pad" figure was an artefact of
+the first wrong footprint and is withdrawn)
+  U1 pad-to-pad copper gap ...................... 4.80 mm
+  Copper-free band, by design ................... 4.70 mm (x 121.65..126.35)
+  TRUE minimum logic-to-power creepage .......... 4.425 mm (was 4.225)
+      set by R1 pad 2 (logic, reaches x 121.925)
+      against the GNDP pour edge  (x 126.350)
+  The band sits entirely inside the U1 pad gap. Both mounting holes in the
+  band are NPTH - no copper. Zone fills stop exactly on the band edges.
