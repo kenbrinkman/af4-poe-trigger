@@ -1,3 +1,7 @@
+> **SUPERSEDED 2026-08-29.** PCBWay asked for a new inquiry rather than an
+> amendment to T-3P4W1125728A. Use `pcbway-new-inquiry-2026-08-29.md` instead.
+> Kept for the technical wording, which was reused there.
+
 **Subject:** aF4 trigger hat rev E, corrected package attached (Quotation T-3P4W1125728A)
 
 Hi Ivy,
