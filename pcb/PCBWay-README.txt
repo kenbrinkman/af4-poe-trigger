@@ -1,4 +1,4 @@
-aF4 PoE Trigger Hat - rev D
+aF4 PoE Trigger Hat - rev E
 Fabrication and assembly notes for PCBWay
 
 BOARD

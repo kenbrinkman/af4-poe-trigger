@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""Generate the aF4 PoE Trigger Hat (rev D) KiCad PCB.
+"""Generate the aF4 PoE Trigger Hat (rev E) KiCad PCB.
+
+rev E is rev D with the corrected U1 land pattern, relabelled. Copper,
+outline, drills, BOM and placements are identical to the final rev D
+package; only the revision string moved. The letter was advanced because
+rev D fab data had already been released to PCBWay and was then found
+invalid, so two different file sets would otherwise both answer to "rev D".
 
 Coordinates are expressed in the Olimex ESP32-POE-ISO Rev N board frame, so the
 socket positions come straight from the vendor CAD:
@@ -329,7 +335,7 @@ for lay in ("F.SilkS", "B.SilkS"):
 
 # =============================================================== SILKSCREEN
 text("aF4 PoE TRIGGER HAT", 107.00, 114.20, size=1.3, thick=0.24)
-text("rev D    inD aF4 frozen feeder", 107.00, 116.60, size=0.85)
+text("rev E    inD aF4 frozen feeder", 107.00, 116.60, size=0.85)
 text("ISOLATION BARRIER", 124.00, 125.50, size=0.8, thick=0.15, rot=90)
 text("EXT1", 95.60, 124.60, size=1.0)
 text("EXT2", 112.40, 124.60, size=1.0)
@@ -352,8 +358,8 @@ doc = """(kicad_pcb (version 20221018) (generator pcbnew)
   (paper "A4")
   (title_block
     (title "aF4 PoE Trigger Hat")
-    (date "2026-08-27")
-    (rev "D")
+    (date "2026-08-29")
+    (rev "E")
     (company "inD aF4 frozen feeder")
   )
 

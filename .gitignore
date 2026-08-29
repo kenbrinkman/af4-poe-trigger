@@ -16,3 +16,6 @@ Thumbs.db
 *.step.bak
 __pycache__/
 *.pyc
+
+# PCB build outputs - regenerate with gen_pcb.py + kicad-cli, or unzip the package
+pcb/gerbers/

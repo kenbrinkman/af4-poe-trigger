@@ -148,7 +148,7 @@ tht_lines = "\n".join("                      %-3s %2d joints" % (r, c) for r, c 
 print("THT: %d parts / %d joints" % (tht_parts, tht_joints))
 
 # ------------------------------------------------------------- fab README
-open("PCBWay-README.txt", "w").write("""aF4 PoE Trigger Hat - rev D
+open("PCBWay-README.txt", "w").write("""aF4 PoE Trigger Hat - rev E
 Fabrication and assembly notes for PCBWay
 
 BOARD
@@ -198,11 +198,11 @@ CRITICAL NOTES
 """ % (W, H, len(rows), n, tht_parts, tht_joints, tht_lines))
 
 # ------------------------------------------------------------------- zip
-with zipfile.ZipFile("af4-trigger-hat-rev-D-PCBWay.zip", "w",
+with zipfile.ZipFile("af4-trigger-hat-rev-E-PCBWay.zip", "w",
                      zipfile.ZIP_DEFLATED) as z:
     for fn in sorted(os.listdir("gerbers")):
         z.write(os.path.join("gerbers", fn), "gerbers/" + fn)
     for fn in ["af4-trigger-hat-BOM.csv", "af4-trigger-hat-centroid.csv",
                "PCBWay-README.txt"]:
         z.write(fn)
-print("wrote af4-trigger-hat-rev-D-PCBWay.zip")
+print("wrote af4-trigger-hat-rev-E-PCBWay.zip")
