@@ -1,7 +1,7 @@
-# aF4 PoE Trigger — Assembly Guide (rev D)
+# aF4 PoE Trigger — Assembly Guide (rev E)
 
-Build sequence for the ESP32-POE-ISO feeder trigger with the rev D PCB hat.
-Companion docs: `aF4-esp32-trigger-BOM.md` (parts), `aF4-rev-D-pcb-notes.md`
+Build sequence for the ESP32-POE-ISO feeder trigger with the rev E PCB hat.
+Companion docs: `aF4-esp32-trigger-BOM.md` (parts), `aF4-pcb-notes.md`
 (board design and PCBWay ordering), `aF4-enclosure-notes.md` (print details),
 `aF4-reference.md` (feeder specs and measured values).
 
@@ -64,8 +64,8 @@ a fresh board. `af4-feeder.yaml` in this folder is the source of truth; paste it
 into the ESPHome Device Builder on the Unraid server (port 6052) and install.
 
 > **If you are re-using the already-flashed board:** the trigger pin changed.
-> Rev D drives **GPIO32**, not GPIO13, because of the factory 2.2 kΩ pull-up on
-> GPIO13 — see `aF4-rev-D-pcb-notes.md`. Push the updated YAML over OTA before
+> Rev E drives **GPIO32**, not GPIO13, because of the factory 2.2 kΩ pull-up on
+> GPIO13 — see `aF4-pcb-notes.md`. Push the updated YAML over OTA before
 > you plug the hat on. The board will do nothing at all until you do.
 
 ## 5. Assemble

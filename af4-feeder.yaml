@@ -16,7 +16,7 @@
 #   - port needs ~0V for >60s      -> covered by the lockout tail
 #   - feeds must be >=5 min apart  -> 10s + 290s = 300s, script mode: single
 #
-# See aF4-reference.md, aF4-rev-D-pcb-notes.md and aF4-assembly-guide.md.
+# See aF4-reference.md, aF4-pcb-notes.md and aF4-assembly-guide.md.
 
 substitutions:
   device_name: af4-feeder

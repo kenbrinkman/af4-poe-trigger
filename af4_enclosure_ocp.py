@@ -57,7 +57,7 @@ HAT_Z = 1.578 + 2.54 + 8.50             # 12.618 -> hat underside
 HAT_TOP = HAT_Z + HAT_T                 # 14.218 -> hat top face
 HAT_PIN_DROP = 3.4                      # THT pin protrusion below the hat
 
-# jack axes, from the vendor 3D models (see aF4-rev-D-pcb-notes.md)
+# jack axes, from the vendor 3D models (see aF4-pcb-notes.md)
 J1_Y, J1_AXIS_Z = -116.56, HAT_TOP + 3.60   # barrel jack, body 7.2 tall
 J1_FACE_X = 145.28                          # front face of the jack body
 J2_Y, J2_AXIS_Z = -148.50, HAT_TOP + 2.50   # 3.5 mm jack, body 5.0 tall

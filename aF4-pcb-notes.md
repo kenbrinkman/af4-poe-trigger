@@ -1,6 +1,6 @@
-# aF4 PoE Trigger — rev D PCB (professional assembly)
+# aF4 PoE Trigger — rev E PCB (professional assembly)
 
-Rev D replaces the hand-wired 25 × 25 mm protoboard with a real PCB designed for
+Rev D replaced the hand-wired 25 × 25 mm protoboard with a real PCB designed for
 PCBWay turn-key assembly. The mechanism is unchanged: PoE ESP32 → GPIO → PhotoMOS
 → 10.4 V from the feeder's own supply onto the 3.5 mm trigger jack. What changed
 is everything that existed only because the board was being built by hand.
@@ -56,7 +56,7 @@ firmware runs.
 
 **GPIO32 touches only the ESP32 module and EXT2 pin 6** — no pull-up, no strapping
 function, not shared with UEXT. GPIO33 is nearly as clean (one unpopulated
-resistor). Rev D uses GPIO32.
+resistor). Rev D onward uses GPIO32.
 
 > **Action required in `af4-feeder.yaml`:** change the feed switch pin from
 > `GPIO13` to `GPIO32`, then OTA. The board will not work until this is done.
@@ -102,7 +102,7 @@ Two mounting holes sit in it, which is free real estate.
 
 ## Ordering from PCBWay
 
-Upload `pcb/af4-trigger-hat-rev-D-PCBWay.zip`. It contains:
+Upload `pcb/af4-trigger-hat-rev-E-PCBWay.zip`. It contains:
 
 - `gerbers/` — RS-274X, all layers, plus Excellon drill and a drill map
 - `af4-trigger-hat-BOM.csv` — PCBWay's turn-key column set, keyed by manufacturer

@@ -2,7 +2,7 @@
 
 Project: replace the inD connect WiFi dongle with a PoE ESP32 (ESPHome) triggering feeds via the aF4's 0-10V port, scheduled in Home Assistant. See `aF4-esp32-trigger-BOM.md` for parts.
 
-> **Rev D (2026-08-27).** The hand-wired protoboard is retired. The trigger circuit is now a 57 x 50 mm PCB "hat" that plugs onto the ESP32's EXT1/EXT2 headers and carries both panel connectors, assembled by PCBWay. Two things changed that matter beyond packaging: the trigger moved from **GPIO13 to GPIO32** (the Olimex board has a factory 2.2 k pull-up on GPIO13 that can partially turn the PhotoMOS on during boot), and the input gained **reverse-polarity protection**, which rev C did not have. Design decisions, the part-by-part equivalence review and the PCBWay procedure live in `aF4-rev-D-pcb-notes.md`. Everything below about the *feeder* — port spec, measured values, the regulator maths — is unchanged and still governs.
+> **Rev D (2026-08-27).** The hand-wired protoboard is retired. The trigger circuit is now a 57 x 50 mm PCB "hat" that plugs onto the ESP32's EXT1/EXT2 headers and carries both panel connectors, assembled by PCBWay. Two things changed that matter beyond packaging: the trigger moved from **GPIO13 to GPIO32** (the Olimex board has a factory 2.2 k pull-up on GPIO13 that can partially turn the PhotoMOS on during boot), and the input gained **reverse-polarity protection**, which rev C did not have. Design decisions, the part-by-part equivalence review and the PCBWay procedure live in `aF4-pcb-notes.md`. Everything below about the *feeder* — port spec, measured values, the regulator maths — is unchanged and still governs.
 
 ## System components
 
@@ -85,7 +85,7 @@ The underlying problems were structural, not just QC: (a) the load is ~5mA/50mW,
 - `PAN_AQY21-DIP4_PAN.step` — Panasonic AQY212GH PhotoMOS, DIP-4 package.
 - `aF4-trigger-case.stl/.step` + `aF4-trigger-lid.stl/.step` — printed enclosure, **rev D** (PETG, 65.2 x 117.0 x 38.4 mm): flush RJ45 on the input wall; the trigger hat's barrel jack and 3.5 mm jack exit one long wall; two tall standoffs carry the hat; two LED sight holes in the lid. The rev C protoboard bay, buck pocket, DC-099 hole and PG7 gland are all gone. Details in `aF4-enclosure-notes.md`; parametric source `af4_enclosure_ocp.py`, which asserts its own fit checks before exporting.
 - `aF4-protoboard-layout.svg`, `aF4-protoboard-solder-side.svg` — **rev C history.** They describe the hand-wired protoboard, which rev D replaces with a PCB. Kept for the record; do not build from them.
-- `pcb/` — rev D KiCad project, the generator script that produces it, and the PCBWay upload package. See `aF4-rev-D-pcb-notes.md`.
+- `pcb/` — rev E KiCad project, the generator script that produces it, and the PCBWay upload package. See `aF4-pcb-notes.md`.
 - `aF4-assembly-guide.md` — full build sequence: print, protoboard build (incl. on-board regulator), wiring, flash, commissioning checks.
 
 ## Home Assistant notes

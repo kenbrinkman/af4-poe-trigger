@@ -1,10 +1,10 @@
-# aF4 PoE Trigger — Parts List (rev D)
+# aF4 PoE Trigger — Parts List (rev E)
 
 Goal: a PoE ESP32 running ESPHome pulses 10.4 V (matching the measured OEM level)
 onto the aF4's 3.5 mm 0-10 V port (≥9 V for >6 s = feed), scheduled from Home
 Assistant. Replaces the inD connect dongle.
 
-Rev D moves the whole trigger circuit onto a PCB hat assembled by PCBWay. The
+Rev D moved the whole trigger circuit onto a PCB hat assembled by PCBWay. The
 electronics BOM is therefore two lists: **things you buy** (three of them) and
 **things that arrive already soldered to the board**.
 
@@ -13,7 +13,7 @@ electronics BOM is therefore two lists: **things you buy** (three of them) and
 | Item | Pick | ~Price | Notes |
 |---|---|---|---|
 | PoE ESP32 board | **Olimex ESP32-POE-ISO** | $28–35 | Get the ISO version. Ships with EXT1/EXT2 unpopulated |
-| Trigger hat, assembled | **PCBWay, 5 pcs turn-key** | ~$100–160 for five | Upload `pcb/af4-trigger-hat-rev-D-PCBWay.zip`. See `aF4-rev-D-pcb-notes.md` |
+| Trigger hat, assembled | **PCBWay, 5 pcs turn-key** | ~$100–160 for five | Upload `pcb/af4-trigger-hat-rev-E-PCBWay.zip`. See `aF4-pcb-notes.md` |
 | 1 × 10 male headers | 2.54 mm, 2 off | pennies | Solder into EXT1/EXT2 **pins up**. Olimex ships these loose; Sullins PRPC010SAAN-RC is equivalent |
 | 12 V DC splitter | Barrel Y-splitter, **5.5 × 2.5 mm, centre-positive (confirmed)** | $6 | Taps the feeder's 12 V. Many cheap splitters are 5.5 × 2.1 — buy 2.5 specifically |
 | 3.5 mm patch cable | Male–male, mono or stereo, ~0.5 m | $5 | Hat jack → aF4 0-10 V port. Stereo is fine; the aF4's jack shorts ring to sleeve |
@@ -70,10 +70,10 @@ role, not shared with UEXT. Do not move it back.
 
 ## Ordering the board
 
-Upload `pcb/af4-trigger-hat-rev-D-PCBWay.zip`. Order shape: 5 pieces, 2 layers,
+Upload `pcb/af4-trigger-hat-rev-E-PCBWay.zip`. Order shape: 5 pieces, 2 layers,
 1.6 mm, top side populated, full turn-key. 17 SMD placements plus 4 through-hole
 parts (28 joints) that they hand-solder. 20 unique part numbers. Full procedure and the fab notes are in
-`aF4-rev-D-pcb-notes.md`.
+`aF4-pcb-notes.md`.
 
 Distributor part numbers are deliberately blank in the CSV — PCBWay sources by
 manufacturer part number. Fill them in only if you want to buy any of it yourself.

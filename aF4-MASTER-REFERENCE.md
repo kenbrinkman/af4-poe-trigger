@@ -1,4 +1,4 @@
-# aF4 PoE Trigger — Master Reference (rev D)
+# aF4 PoE Trigger — Master Reference (rev E)
 
 **Purpose of this document.** A single consolidated reference for the aF4 frozen-feeder
 PoE trigger project, written to be *audited*. Every load-bearing claim carries a provenance
@@ -14,7 +14,7 @@ assertion that has not. The assertions are the interesting part — attack those
 > folded in throughout and marked **[AUDIT]**.
 
 Generated 2026-08-28, revised after independent audit the same day. Canonical source for this file is the repo; the other project docs
-(`aF4-reference.md`, `aF4-rev-D-pcb-notes.md`, `aF4-esp32-trigger-BOM.md`,
+(`aF4-reference.md`, `aF4-pcb-notes.md`, `aF4-esp32-trigger-BOM.md`,
 `aF4-enclosure-notes.md`, `aF4-assembly-guide.md`) remain authoritative in their own areas
 and go deeper. This document does not replace them; it makes the whole thing checkable in
 one pass.
@@ -505,7 +505,7 @@ construction. **Edit the script, not the board file.**
 
 ### Verification status of the board
 
-`[ASSERT]` — the following is reported in `aF4-rev-D-pcb-notes.md` and was **not re-run**
+`[ASSERT]` — the following is reported in `aF4-pcb-notes.md` and was **not re-run**
 during this audit pass. DRC via `pcbnew.WriteDRCReport` (KiCad 7): clearance 0, courtyard
 overlaps 0, hole clearance 0, hole-to-hole 0, copper-to-edge 0, unconnected 0, mask bridges 0.
 Remaining flags are silkscreen cosmetics and "library footprint differs", both expected for
@@ -764,7 +764,7 @@ check as written. Consider widening the acceptance band to 10.0–10.9 V.
 | `aF4-MASTER-REFERENCE.md` | This document — consolidated, audit-oriented |
 | `af4-feeder.yaml` | ESPHome config, **source of truth** |
 | `aF4-reference.md` | Feeder specs, measurements, regulator rationale |
-| `aF4-rev-D-pcb-notes.md` | Board design decisions, part equivalence, PCBWay procedure |
+| `aF4-pcb-notes.md` | Board design decisions, part equivalence, PCBWay procedure |
 | `aF4-esp32-trigger-BOM.md` | Human-readable parts list with reasoning |
 | `aF4-assembly-guide.md` | Build sequence and commissioning |
 | `aF4-enclosure-notes.md` | Print and fit notes |
@@ -772,7 +772,7 @@ check as written. Consider widening the acceptance band to 10.0–10.9 V.
 | `pcb/gen_pcb.py` | **Source of truth for the board.** Edit this, not the `.kicad_pcb` |
 | `pcb/post.py` | Fills copper pours, runs DRC |
 | `pcb/make_package.py` | Generates BOM, centroid, fab notes, zip |
-| `pcb/af4-trigger-hat-rev-D-PCBWay.zip` | The upload package |
+| `pcb/af4-trigger-hat-rev-E-PCBWay.zip` | The upload package |
 | `aF4-protoboard-*.svg`, `protoboard 20x20.stl` | **Rev C history — do not build from these** |
 
 ### Toolchain constraints worth knowing

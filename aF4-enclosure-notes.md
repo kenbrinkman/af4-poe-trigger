@@ -1,6 +1,6 @@
 # aF4 Trigger Enclosure — rev D print & assembly notes
 
-Case for the ESP32-POE-ISO plus the rev D trigger hat. Modelled against the
+Case for the ESP32-POE-ISO plus the rev E trigger hat. Modelled against the
 measured `ESP32-PoE-ISO_Rev_N.step` and against the hat's own KiCad geometry;
 fit verified digitally (zero interference — the build script asserts it).
 
