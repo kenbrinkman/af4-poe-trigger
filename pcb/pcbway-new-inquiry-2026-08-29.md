@@ -1,5 +1,70 @@
 # PCBWay new order, rev E
 
+## SUBMITTED 2026-08-31 - status and the form's traps
+
+Submitted as a fresh inquiry. Both cart line items are **"Subject to audit"**,
+review quoted 1-2 days, **nothing paid**.
+
+| Item | Product No. | Price |
+|---|---|---|
+| PCB Production, 2 layers 57x50 1.6 mm, green/white, 24 h, qty 5 | W1125728AS3P5 | $5.00 |
+| PCB Assembly, qty 5, $5.80/pc | T-3P6W1125728A | $29.00 |
+
+Shipping $27.27 fully offset by the freight promo. **$34.00 shown, components
+NOT yet priced** - expect roughly $110 all-in. Routed to Ivy Yang again.
+
+**TRAP: the new assembly number differs from the deleted one by one character**
+- T-3P**6**W1125728A now, T-3P**4**W1125728A before.
+
+### BOTH note boxes cap at 600 characters, enforced SILENTLY
+
+There is no `maxlength` attribute, so nothing truncates on entry and an
+over-length field looks perfectly fine. Over the limit, **Calculate does
+nothing at all**: no price, no page error, nothing in the console, and "Save to
+Cart" stays hidden. The Part 1 text below is 2587 characters and does NOT fit.
+What actually went in were two ~590-character versions.
+
+**Rule for what earns space in the box: only what exists nowhere else.** The
+three assembly constraints, the 28-joint breakdown and the polarity warnings
+are all already in `PCBWay-README.txt` inside the zip, which has no length
+limit - so the note points at the README instead of repeating it. The
+substitution fence and the C1 alternate exist nowhere else, so they get the
+room.
+
+### Uploads: two line items, four slots
+
+The cart splits into **PCB Production** and **PCB Assembly**, each with its own
+file state - one all-in-one zip satisfies one and leaves the other empty, which
+is what went wrong before. The dialog has four slots (Gerbers zip / BOM /
+Centroid / assembly other) and **auto-commits on successful upload**. Its own
+instruction: anything related to PCB *fabrication* goes INSIDE the Gerber zip,
+not in the "other" slot.
+
+What was uploaded:
+- `af4-trigger-hat-rev-E-GERBERS.zip` - the 12 fab files flat at the zip root
+  plus `PCBWay-README.txt`. Built 2026-08-31.
+- `af4-trigger-hat-BOM.xlsx`
+- `af4-trigger-hat-centroid.xlsx`
+
+**`af4-trigger-hat-rev-E-PCBWay.zip` (the all-in-one) was NOT used** and should
+not be - it sits beside the new file under a nearly identical name.
+
+Build gotcha: the mounted folder blocks unlink, so `zip` fails with "Operation
+not permitted" on its write-then-replace. Build outside the mount, then copy in.
+
+### Still owed on the requote
+
+Components priced on all 20 lines including F1, R6 and R7; C1 priced against
+GRM31CR61H106KA12L or the TDK alternate explicitly; 28 hand-soldered joints not
+44; total lead time.
+
+---
+
+## Historical: the original long-form notes
+
+Everything below predates submission and is kept for its technical wording. The
+Part 1 text is **too long for the 600-character box** - do not paste it as-is.
+
 Updated 2026-08-31. This is a COMPLETELY NEW inquiry/order. The previous
 quotation T-3P4W1125728A was deleted at PCBWay's end and nothing carries over
 from it. Decision by Kenny 2026-08-31: no reply email to Ivy is being sent;
