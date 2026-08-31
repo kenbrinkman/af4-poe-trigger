@@ -115,3 +115,46 @@ soldered to a board.
 4. Drop the hat on: sockets onto the headers, both jack noses into their wall
    holes, then 2 × M3 into the standoffs. Seat the sockets before the screws.
 5. Lid on, 4 × M3 × 12.
+
+## The fitment dummy (2026-08-31)
+
+`aF4-trigger-hat-dummy.stl` is a printable stand-in for the rev E hat, so the
+enclosure can be proven before the real board comes back from PCBWay. Generated
+by `af4_hat_dummy_ocp.py`, which — like the enclosure script — asserts its own
+fit before it exports, and does it against the exported case and lid solids
+rather than against a bounding box:
+
+```
+  board outline 57.0 x 50.0 x 1.6, both M3 holes at 3.30 (real board is 3.20)
+  J1 PJ-079BH body 11.5 x 10.1 x 7.2, bored 6.0 x 9.5 from the front face
+  J2 SJ1-3523N body 11.0 x 12.0 x 5.0, 9.0 mm shoulder, 6.0 mm nose to x=147.95
+  U1, D3 and D5 bumps under the two lid sight holes
+  two detachable 8.5 mm socket bars (J3/J4) that peg into the underside
+```
+
+Checks, all passing: zero intersection with the case solid and with the lid
+solid; an M3 shank passes both mounting holes; a 5.5 mm plug pushed through the
+wall bore reaches the J1 bore; and each socket bar clears the tallest ESP32
+feature under it by 1.17 mm, taken from the vertices of
+`ESP32-PoE-ISO_Rev_N.stl` rather than assumed.
+
+Bodies come from the **F.Fab outlines actually placed in the .kicad_pcb**,
+transformed into the board frame — not from the datasheets a second time. One
+discrepancy surfaced doing that: F.Fab puts the J2 nose tip at x = 147.95, while
+`af4_enclosure_ocp.py` carries `J2_NOSE_X = 148.45`. The enclosure constant is
+the conservative one (recess 1.20 vs 1.70 mm inside the outer face), so nothing
+needs changing — but they should not be allowed to drift further apart.
+
+**What the dummy cannot prove.** The J2 barrel axis at hat top + 2.50 is an
+assumed number in `af4_enclosure_ocp.py`, and the dummy is built from the same
+assumption, so it cannot catch an error in it. The Ø6.6 wall hole leaves only
+0.3 mm per side around a Ø6.0 nose, so a 0.5 mm error in that axis height is an
+interference. **Measure the real jack's barrel axis above its seating plane when
+the parts arrive.** The same applies, less tightly, to the barrel jack: Ø7.4
+hole, axis assumed at hat top + 3.60.
+
+Print: as exported, no supports, 0.2 mm layers, 3 walls, 15 % infill. **Use a
+brim** — the board is a thin 57 x 50 plate and the two socket bars are thin
+standing walls. Plate is 58.8 x 87.4 x 10.1 mm. The socket bars are optional;
+print them only if the ESP32 is going in the case for the same test, and press
+their 1.6 mm pegs into the four holes on the board's underside.
