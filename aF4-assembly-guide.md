@@ -89,14 +89,34 @@ test pad on the power side of the board (TP4), not to the ESP32's ground.
 | # | Check | Expect |
 |---|---|---|
 | 6.1 | Splitter tap plugged into J1 | Green LED (D3) lit |
-| 6.2 | TP1 (12 V) to TP4 | 11.6–12.2 V (12 V less the Schottky drop) |
-| 6.3 | TP2 (10.4 V) to TP4 | **10.3–10.5 V.** This is the check that matters — it confirms the R4/R5 divider |
+| 6.2 | TP1 (12 V) to TP4 | **11.4–12.0 V** (12 V less the Schottky drop) |
+| 6.3 | TP2 (10.4 V) to TP4 | **10.0–10.9 V.** This is the check that matters — it confirms the R4/R5 divider |
 | 6.4 | TP3 (tip) to TP4, at rest | 0 V, and the yellow LED (D5) dark |
-| 6.5 | Press the Feed button on the ESPHome web page | Yellow LED lights, TP3 reads ~10.4 V for 10 s, then returns to 0 V |
-| 6.6 | Feed Lockout binary sensor | Turns on with the pulse, clears about 5 minutes later |
+| 6.5 | Press the Feed button on the ESPHome web page | Yellow LED lights, TP3 reads ~10.4 V for **20 s**, then returns to 0 V |
+| 6.6 | Feed Lockout binary sensor | Turns on with the pulse, clears **310 s** later |
+| 6.7 | Plug the 3.5 mm patch cable into J2 | **Link LED on the aF4 goes solid** — the port sees the connection |
+| 6.8 | Press Feed again | **Link LED flashes green** — the pulse was accepted. Confirms the trigger without waiting to watch food move (newer units; our SN 130063 qualifies) |
 
 If 6.3 reads ~1.4 V, R4 and R5 are swapped. If it reads near 12 V, the divider is
 not connected. Either way, stop — do not connect the feeder.
+
+⚠️ **Ranges widened 2026-09-01 on measured evidence.** 6.2 was 11.6–12.2 V and 6.3 was
+10.3–10.5 V; **both would have failed a perfectly good board.** The feeder's 12 V rail
+measures 11.77 V at its worst under load (`aF4-meter-test-battery.md`, A2), putting TP1
+near 11.47 V, and a low-tolerance divider legitimately regulates at 10.08 V.
+
+**If 6.3 reads low, check 6.2 first.** A low-but-passing 6.2 means the LM1117 is simply
+in dropout and following its input — the divider is innocent. In dropout the output
+lands at ~10.5 V regardless of R4/R5, which is why the widened range is the correct
+test rather than a loosened one.
+
+**The ESPHome web page now requires a login** (`af4` / see `af4-feeder.yaml`), added
+2026-09-01 to close an unauthenticated LAN control path. Home Assistant is unaffected —
+it uses the API, not this page.
+
+**After any reboot inside a feed cycle the device serves a 300 s recovery lockout** and
+ignores Feed presses until it clears. If 6.5 does nothing, check the log for
+`boot recovery lockout active` before suspecting the hardware.
 
 Only once 6.1–6.6 all pass, connect the 3.5 mm patch cable from J2 to the aF4's
 0-10 V port and confirm the link icon lights on the feeder.

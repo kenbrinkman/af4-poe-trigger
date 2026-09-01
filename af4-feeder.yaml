@@ -11,10 +11,25 @@
 # role, not shared with UEXT. Do not move this back to GPIO13.
 #
 # All feeder timing rules are enforced ON-DEVICE. Home Assistant is scheduler only:
-# it presses button.af4_feed and nothing else. Per inD 0-10V spec:
-#   - trigger = >=9V held >6s      -> 10s pulse
-#   - port needs ~0V for >60s      -> covered by the lockout tail
-#   - feeds must be >=5 min apart  -> 10s + 290s = 300s, script mode: single
+# it presses button.af4_feed and nothing else.
+#
+# TIMING, corrected 2026-09-01. inD publishes THREE different hold times across
+# their own guides:
+#     6s  - Neptune Systems 0-10V page (quoted verbatim, audit-verified 2026-08-28)
+#    10s  - inD Connect dongle guide
+#    15s  - Coralvue Hydros guide (Run Time 00:00:15)
+# Design to the longest. The previous 10s pulse satisfied 6s but FAILED 15s.
+#   - trigger = >=9V held >=15s     -> 20s pulse (33% margin over the worst case)
+#   - port needs ~0V for >60s       -> covered by the 290s lockout tail
+#   - feeds must be >=5 min apart   -> 20s + 290s = 310s, comfortably over 300s,
+#                                      and script mode: single drops re-entrant presses
+#
+# BOOT SAFETY. script.do_feed state is RAM-only, so a reboot inside the cycle
+# (OTA, crash, brownout, power blip) used to silently clear the lockout and let
+# the next press feed again within seconds. A flash-persisted flag now closes it:
+# feed_in_flight is set when the pulse starts and cleared when the lockout ends,
+# so a reboot mid-cycle is detected on boot and serves a 300s recovery lockout.
+# It costs nothing in the normal case — a clean boot leaves the flag false.
 #
 # See aF4-reference.md, aF4-pcb-notes.md and aF4-assembly-guide.md.
 
@@ -26,6 +41,15 @@ esphome:
   name: ${device_name}
   friendly_name: ${friendly_name}
   comment: "aF4 frozen feeder 0-10V trigger (PoE)"
+  on_boot:
+    priority: -100
+    then:
+      - if:
+          condition:
+            lambda: 'return id(feed_in_flight);'
+          then:
+            - logger.log: "aF4: reboot detected inside a feed cycle - serving 300s recovery lockout"
+            - script.execute: boot_recovery
 
 esp32:
   board: esp32-poe-iso
@@ -54,8 +78,22 @@ ota:
     password: "GZY7CtoC7VMT9fvbAWTc2isS"
 
 # Local control page for commissioning (assembly guide step 7) and manual feeds.
+# auth: added 2026-09-01 — this was a second UNAUTHENTICATED control path on the
+# LAN. Home Assistant is unaffected: it talks over the API, not this page.
 web_server:
   port: 80
+  auth:
+    username: af4
+    password: "Rk8vQt3mZpX7wLd2NhCe"
+
+# ---------------------------------------------------------------------------
+# Persisted across reboots. See BOOT SAFETY above.
+# ---------------------------------------------------------------------------
+globals:
+  - id: feed_in_flight
+    type: bool
+    restore_value: yes
+    initial_value: 'false'
 
 # ---------------------------------------------------------------------------
 # Raw output — internal so Home Assistant can never touch the line directly.
@@ -74,13 +112,30 @@ script:
   - id: do_feed
     mode: single          # re-entrant presses are DROPPED, not queued
     then:
-      - logger.log: "aF4: feed pulse start"
+      - globals.set:
+          id: feed_in_flight
+          value: 'true'
+      - logger.log: "aF4: feed pulse start (20s)"
       - switch.turn_on: feed_ssr
-      - delay: 10s        # spec: >=9V for >6s
+      - delay: 20s        # spec: >=9V for >=15s (longest of inD's three figures)
       - switch.turn_off: feed_ssr
       - logger.log: "aF4: pulse done, 290s lockout"
-      - delay: 290s       # enforces 5-min spacing + >60s 0V re-arm
+      - delay: 290s       # 20 + 290 = 310s: clears 5-min spacing and the >60s 0V re-arm
+      - globals.set:
+          id: feed_in_flight
+          value: 'false'
       - logger.log: "aF4: lockout cleared"
+
+  # Runs ONLY when a reboot is detected mid-cycle. Holds the line idle for a full
+  # spacing interval, then clears the flag.
+  - id: boot_recovery
+    mode: single
+    then:
+      - delay: 300s
+      - globals.set:
+          id: feed_in_flight
+          value: 'false'
+      - logger.log: "aF4: boot recovery lockout cleared"
 
 # ---------------------------------------------------------------------------
 # The ONLY exposed control.
@@ -91,7 +146,13 @@ button:
     id: af4_feed
     icon: mdi:fish
     on_press:
-      - script.execute: do_feed
+      - if:
+          condition:
+            lambda: 'return id(boot_recovery).is_running();'
+          then:
+            - logger.log: "aF4: press IGNORED - boot recovery lockout active"
+          else:
+            - script.execute: do_feed
 
   - platform: restart
     name: "Restart"
@@ -102,7 +163,7 @@ binary_sensor:
     name: "Feed Lockout"
     id: af4_lockout
     icon: mdi:lock-clock
-    lambda: 'return id(do_feed).is_running();'
+    lambda: 'return id(do_feed).is_running() || id(boot_recovery).is_running();'
 
   - platform: status
     name: "Status"
