@@ -254,6 +254,9 @@ If nothing dispenses, run one **Auto-Clean** and retry Feed Now before worrying.
 
 Power off and drain the reservoir.
 
+**Completed 2026-09-01.** inD's pre-use rinse requirement is satisfied; the unit
+has been flushed three times and is ready for first real use.
+
 #### Record
 
 The idle reading, and the **minimum across the whole session**.
@@ -291,9 +294,13 @@ immediately.** That is precisely what is worth knowing before paying.
 | Baseline, aF4 off | 12.13 V |
 | Idle, TEC running | 11.84 → 11.86 V (sag 0.29 V, stable) |
 | **Minimum during feed** | **11.77 V**, recovering immediately |
+| Repeatability | **Floor held at 11.77 V across all three rinse cycles** |
 
 The feed adds only **0.09 V** over the TEC load — pump and solenoid are minor
 next to the TEC, so there is no transient risk hiding behind the steady figure.
+**Confirmed over three complete feed + auto-clean cycles**: same floor each time,
+immediate recovery, no drift or droop as the run went on — which is where a
+genuinely marginal supply would have shown itself.
 Total sag from baseline 0.36 V. Measured under the heaviest conditions the unit
 will ever see: first pull-down from ambient, TEC flat out, feed stacked on top.
 
@@ -629,7 +636,7 @@ missed-feed alert be proven against real hardware ahead of commissioning.
 | A1 brick open-circuit | **12.13 V, stable** | 2026-09-01 | TVS **PASS**, open item 7 closed. Headroom **AMBER** — bottom of band, open-circuit; makes A2 critical |
 | A2 baseline (aF4 off) | **12.13 V** | 2026-09-01 | Matches A1 — rig verified |
 | A2 idle, TEC running | **11.84 V @ 1 min, 11.86 @ 3 min** | 2026-09-01 | Sag **0.29 V**, stable. LDO input ≈ 11.54 V → **1.07 V headroom vs ~1 V dropout — at the boundary**; worst-case divider in dropout |
-| A2 minimum during feed | **11.77 V**, recovers to 11.86 fast | 2026-09-01 | Feed adds only **0.09 V**. **PASS — no board change.** See verdict |
+| A2 minimum during feed | **11.77 V** — held across **all 3 rinse cycles** | 2026-09-01 | Feed adds only **0.09 V**, immediate recovery, no drift cycle to cycle. **PASS — no board change** |
 | A3 tip–sleeve, polarity 1 | **11 kΩ** (unpowered, TS plug) | 2026-09-01 | ~0.95 mA at 10.4 V — negligible |
 | A3 tip–sleeve, polarity 2 | | | Differing values ⇒ protection diodes present |
 | A3 ring–sleeve | blocked by TS plug | 2026-09-01 | Superseded by A7 |
