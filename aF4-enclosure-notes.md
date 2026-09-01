@@ -53,7 +53,7 @@ used to be hand-wired inside it is gone.
   wall on the right, is what holds the hat.
 - **Lid:** 4 × M3 × 12 coarse self-tapping into Ø9 corner bosses (2.5 mm pilots,
   open-bottomed). Registration lips on all four sides. **Four LED sight holes**
-  fitted with 3 mm light pipes, and the label `aF4 PoE / TRIGGER` engraved 0.8 mm
+  fitted with 3 mm light pipes, and the label `aF4 PoE / Feed Trigger` engraved 0.8 mm
   into the outer face — both detailed in their own section below.
 - **Wall-mount tabs:** one per long side, mid-length, flush with the case bottom,
   4.5 mm hole for #8 / M4.
@@ -98,10 +98,12 @@ CHRG1 −176.784, PWR1 −171.069, LNK1 −165.354, ACT1 −159.639.
 - **CHRG1** is the LiPo charge LED and there is no battery in this build. U3
   (SOT-23-5) is also only 2.9 mm away, which a 3 mm pipe would foul.
 
-**Engraved label.** `aF4 PoE` / `TRIGGER`, DejaVu Sans Bold at 8 mm, 0.8 mm deep,
-block centred at (117.0, −108.0) and reading along +Y — upright when the box is
-held landscape with the cable end on the left. Nearest obstruction is 14.4 mm
-away. The lid exports top-face-down, so the recess lands on the bed and comes out
+**Engraved label.** `aF4 PoE` / `Feed Trigger`, DejaVu Sans Bold at **6.5 mm**,
+0.8 mm deep, block centred at (117.0, −108.0) and reading along +Y — upright when
+the box is held landscape with the cable end on the left. The block is
+45.4 × 14.6 mm; nearest obstruction is D3 at 16.8 mm, and there is 6.3 mm to the
++Y edge. **8 mm was the first attempt and does not fit**: `Feed Trigger` runs
+55.8 mm at that size and leaves no margin against D3 or the edge. The lid exports top-face-down, so the recess lands on the bed and comes out
 crisp. Glyph outlines come from `matplotlib`'s TextPath, the same idiom as the
 Temp Junction Box scripts, so the build now needs `matplotlib` installed.
 

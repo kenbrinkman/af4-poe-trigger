@@ -143,8 +143,9 @@ LED_PIPE_GAP = 0.60          # pipe tip to LED: close, never touching
 # Reads along the lid's long axis (landscape), in the clear +Y half, away from
 # every sight hole and boss counterbore. The lid prints top-face-down
 # (rot_x180 at export), so this recess lands on the bed and comes out crisp.
-LID_LINES = ["aF4 PoE", "TRIGGER"]
-LID_LABEL_SIZE = 8.0
+LID_LINES = ["aF4 PoE", "Feed Trigger"]
+LID_LABEL_SIZE = 6.5         # "Feed Trigger" is 45.4 mm here. 8.0 would make it
+                             # 55.8 and leave no margin against D3 and the +Y edge.
 LID_LABEL_DEPTH = 0.8
 LID_LABEL_WEIGHT = "bold"
 LID_LABEL_LEADING = 1.30
