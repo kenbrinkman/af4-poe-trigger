@@ -26,6 +26,7 @@ MEASURED FACTS
   UEXT box hdr 4.40 mm tall (vendor 3D model) — clears the hat easily
 """
 import math
+import numpy as np
 from OCP.gp import gp_Pnt, gp_Vec, gp_Dir, gp_Ax2, gp_Trsf, gp_Ax1
 from OCP.BRepPrimAPI import (BRepPrimAPI_MakeBox, BRepPrimAPI_MakeCylinder,
                              BRepPrimAPI_MakeCone, BRepPrimAPI_MakePrism)
@@ -101,9 +102,54 @@ LID_BOSSES = [
     (IX1 - LB_IN, IY1 - LB_IN, LID_ZB),
 ]
 
-# --- LED sight holes in the lid (D3 rail-live, D5 feed) --------------------
-LED_HOLES = [(139.50, -139.00), (128.20, -150.80)]
-LED_HOLE_D = 3.5
+# --- LED sight holes in the lid -------------------------------------------
+# Both sets now take a 3 mm PMMA rod light pipe. The bore is stepped: a
+# clearance hole from the lid underside that lands on a smaller aperture at the
+# top face, so the rod drops in from inside, seats on the step, and cannot fall
+# through onto the LED. A bead of clear epoxy at the inner face retains and
+# seals it -- better ingress-wise than the open holes this replaces.
+#
+# WHY PIPES AND NOT PLAIN HOLES. The hat's LEDs sit on HAT_TOP, 8.5 mm under
+# the lid: a plain 3.5 mm hole gave an 11.6 deg viewing half-angle, which works.
+# The Olimex LEDs are 21.2 mm down and the same hole gives 4.7 deg -- a
+# look-at-it-dead-on-or-not-at-all indicator. Widening does not rescue it
+# (4.5 mm only reaches 6.1 deg); the air gap is the limiter, not the aperture.
+#
+#   hat  D3 (GRN, rail live) and D5 (YEL, feed) -- 0805 on the hat top
+#   PoE  PWR1 (RED, 3V3 rail) and LNK1 (GRN, ethernet link) -- 0603 on the
+#        Olimex board. x/y read straight out of ESP32-PoE-ISO_Rev_N.step,
+#        which is authored in this same frame. All four of its LEDs sit in one
+#        column at x = 91.567 on a 5.715 mm pitch.
+#
+# The other two Olimex LEDs are deliberately absent:
+#   ACT1  (y = -159.639) is 0.361 mm INSIDE the hat footprint (HAT_Y0 = -160.0)
+#         and is blindfolded by 1.6 mm of opaque FR4. Nothing in the lid can
+#         see it -- do not add a hole here.
+#   CHRG1 (y = -176.784) is the LiPo charge LED and there is no battery in this
+#         build. U3 (SOT-23-5) is also only 2.9 mm away, which a 3 mm pipe
+#         would foul.
+LED_HOLES_HAT = [(139.50, -139.00), (128.20, -150.80)]
+LED_HOLES_POE = [(91.567, -171.069), (91.567, -165.354)]
+LED_PIPE_D = 3.50            # rod clearance bore. 1/8" acrylic rod is sold as
+                             # "3 mm" and runs 3.0-3.3 extruded, so this stays
+                             # loose on purpose and the epoxy fills the annulus.
+LED_APERTURE_D = 2.60        # aperture at the top face; the rod seats on it
+LED_APERTURE_T = 0.90        # thickness of the aperture land
+LED_Z_HAT = HAT_TOP + 0.70   # emitting face of an 0805 on the hat top
+LED_Z_POE = 2.30             # emitting face of an 0603 on the Olimex board
+LED_PIPE_GAP = 0.60          # pipe tip to LED: close, never touching
+
+# --- engraved lid label ----------------------------------------------------
+# Reads along the lid's long axis (landscape), in the clear +Y half, away from
+# every sight hole and boss counterbore. The lid prints top-face-down
+# (rot_x180 at export), so this recess lands on the bed and comes out crisp.
+LID_LINES = ["aF4 PoE", "TRIGGER"]
+LID_LABEL_SIZE = 8.0
+LID_LABEL_DEPTH = 0.8
+LID_LABEL_WEIGHT = "bold"
+LID_LABEL_LEADING = 1.30
+LID_LABEL_CX = 117.00        # centre of the block, lid X
+LID_LABEL_CY = -108.00       # centre of the block, lid Y
 
 # ============================================================ helpers
 def box(x0, y0, z0, x1, y1, z1):
@@ -200,6 +246,91 @@ def rot_x180(shape):
     t = gp_Trsf(); t.SetRotation(gp_Ax1(gp_Pnt(0, 0, 0), gp_Dir(1, 0, 0)), math.pi)
     return BRepBuilderAPI_Transform(shape, t, True).Shape()
 
+# ---- engraved text -------------------------------------------------------
+# Same idiom as the Temp Junction Box / display-temp scripts: glyph outlines
+# come from matplotlib's TextPath (DejaVu Sans ships with matplotlib, so the
+# result is identical on any machine), then each closed loop is extruded in OCP
+# and the counters are booleaned out. No shapely needed here.
+
+def _glyph_loops(lines, size, leading):
+    """Closed 2D loops for a block of text, centred on its own bounding box.
+
+    Returns (outer_loops, hole_loops) in glyph space: +x along the reading
+    direction, +y up the page.
+    """
+    try:
+        from matplotlib.textpath import TextPath
+        from matplotlib.font_manager import FontProperties
+    except ImportError:                                   # pragma: no cover
+        raise SystemExit("lid engraving needs matplotlib (pip install matplotlib)")
+    fp = FontProperties(family="DejaVu Sans", weight=LID_LABEL_WEIGHT)
+    step = size * leading
+    total = step * (len(lines) - 1)
+    loops = []
+    for i, s in enumerate(lines):
+        tp = TextPath((0, 0), s, size=size, prop=fp)
+        raw = [np.asarray(p) for p in tp.to_polygons() if len(p) >= 4]
+        if not raw:
+            continue
+        allpts = np.vstack(raw)
+        dx = -(allpts[:, 0].min() + allpts[:, 0].max()) / 2.0   # centre this line
+        dy = total / 2.0 - i * step
+        for p in raw:
+            loops.append(p + np.array([dx, dy]))
+    if not loops:
+        return [], []
+    allpts = np.vstack(loops)
+    dy = -(allpts[:, 1].min() + allpts[:, 1].max()) / 2.0       # centre the block
+    loops = [p + np.array([0.0, dy]) for p in loops]
+
+    def signed_area(p):
+        x, y = p[:, 0], p[:, 1]
+        return 0.5 * np.sum(x * np.roll(y, -1) - np.roll(x, -1) * y)
+
+    outers = [p for p in loops if signed_area(p) < 0]
+    holes = [p for p in loops if signed_area(p) >= 0]
+    return outers, holes
+
+def _loop_prism(pts, cx, cy, z0, h, rot90=True):
+    """Extrude one closed loop. rot90 turns the reading direction onto +Y."""
+    mw = BRepBuilderAPI_MakeWire()
+    q = [(-p[1], p[0]) if rot90 else (p[0], p[1]) for p in pts]
+    q = [(x + cx, y + cy) for x, y in q]
+    if math.hypot(q[0][0] - q[-1][0], q[0][1] - q[-1][1]) < 1e-9:
+        q = q[:-1]
+    n = len(q)
+    added = 0
+    for i in range(n):
+        a, b = q[i], q[(i + 1) % n]
+        if math.hypot(a[0] - b[0], a[1] - b[1]) < 1e-9:
+            continue
+        mw.Add(BRepBuilderAPI_MakeEdge(gp_Pnt(a[0], a[1], z0),
+                                       gp_Pnt(b[0], b[1], z0)).Edge())
+        added += 1
+    if added < 3:
+        return None
+    f = BRepBuilderAPI_MakeFace(mw.Wire(), True).Face()
+    return BRepPrimAPI_MakePrism(f, gp_Vec(0, 0, h)).Shape()
+
+def engrave(shape, lines, size, depth, cx, cy, ztop, leading=1.30):
+    """Cut `lines` into the +Z face of `shape` at height `ztop`."""
+    outers, holes = _glyph_loops(lines, size, leading)
+    if not outers:
+        return shape
+    z0, h = ztop - depth, depth + 0.5
+    text = None
+    for p in outers:
+        s = _loop_prism(p, cx, cy, z0, h)
+        if s is not None:
+            text = s if text is None else fuse(text, s)
+    for p in holes:
+        s = _loop_prism(p, cx, cy, z0 - 0.1, h + 0.2)
+        if s is not None and text is not None:
+            text = cut(text, s)
+    print("  engraved %s  (%d outlines, %d counters)"
+          % (" / ".join(lines), len(outers), len(holes)))
+    return cut(shape, text)
+
 # ============================================================ case
 outer = box(OX0, OY0, OZ0, OX1, OY1, IZ1)
 outer = fillet_vertical_edges(outer, FILLET_R)
@@ -260,11 +391,20 @@ for ly0 in (IY0 + CLR, IY1 - CLR - LIP_T):
 for bx, by, zb in LID_BOSSES:
     lid = cut(lid, cyl_z(bx, by, IZ1 - 0.01, LID_T + 0.02, 3.4))
     lid = cut(lid, cone_z(bx, by, IZ1 + LID_T + 0.01, 6.8 / 2 + 0.01, 3.4 / 2, 1.71))
-# LED sight holes, chamfered on the outside for a wider viewing cone
+# LED sight holes: stepped bore for a 3 mm rod light pipe, plus a light
+# chamfer at the mouth. The rod goes in from the underside and seats on the
+# aperture land, so it cannot migrate down onto the LED.
+LED_HOLES = LED_HOLES_HAT + LED_HOLES_POE
 for lx, ly in LED_HOLES:
-    lid = cut(lid, cyl_z(lx, ly, IZ1 - 0.01, LID_T + 0.02, LED_HOLE_D))
+    lid = cut(lid, cyl_z(lx, ly, IZ1 - 0.01,
+                         LID_T - LED_APERTURE_T + 0.01, LED_PIPE_D))
+    lid = cut(lid, cyl_z(lx, ly, IZ1 - 0.01, LID_T + 0.02, LED_APERTURE_D))
     lid = cut(lid, cone_z(lx, ly, IZ1 + LID_T + 0.01,
-                          LED_HOLE_D / 2 + 1.2, LED_HOLE_D / 2, 1.21))
+                          LED_APERTURE_D / 2 + 0.40, LED_APERTURE_D / 2, 0.41))
+
+# engraved label, on the outer face
+lid = engrave(lid, LID_LINES, LID_LABEL_SIZE, LID_LABEL_DEPTH,
+              LID_LABEL_CX, LID_LABEL_CY, IZ1 + LID_T, LID_LABEL_LEADING)
 
 # ============================================================ checks
 def clear(name, got, want, unit="mm"):
@@ -288,6 +428,30 @@ for bx, by in BOSSES_HAT:
                 bx - HAT_BOSS_D / 2 - 118.15, 0.5)
 ok &= clear("J1 plug engagement", 9.5 - ((WALL - J1_CBORE_T) + (IX1 - J1_FACE_X)), 5.0)
 ok &= clear("J2 nose recess inside outer face", OX1 - J2_NOSE_X, 0.5)
+
+# --- light pipes -----------------------------------------------------------
+PIPE_SEAT_Z = IZ1 + LID_T - LED_APERTURE_T      # the land the rod seats on
+PIPE_LEN_HAT = PIPE_SEAT_Z - LED_Z_HAT - LED_PIPE_GAP
+PIPE_LEN_POE = PIPE_SEAT_Z - LED_Z_POE - LED_PIPE_GAP
+ok &= clear("aperture land leaves a real step", (LED_PIPE_D - LED_APERTURE_D) / 2, 0.30)
+# the two PoE pipes must stay outboard of the hat, which is opaque FR4
+for lx, ly in LED_HOLES_POE:
+    ok &= clear("PoE pipe %.1f clear of the hat edge" % -ly,
+                HAT_Y0 - (ly + LED_PIPE_D / 2), 0.50)
+# nearest tall neighbour on the Olimex board to either PoE pipe
+for nm, nx, ny, nr in [("U3 SOT-23-5", 93.853, -178.562, 1.75),
+                       ("TVS1 SOT-23-5", 97.282, -176.911, 1.75),
+                       ("USB-UART1", 96.176, -152.654, 3.50)]:
+    d = min(math.hypot(lx - nx, ly - ny) for lx, ly in LED_HOLES_POE)
+    ok &= clear("PoE pipe clear of %s" % nm, d - LED_PIPE_D / 2 - nr, 0.30)
+# pipes must not foul the lid's own screw counterbores
+for lx, ly in LED_HOLES:
+    d = min(math.hypot(lx - bx, ly - by) for bx, by, _ in LID_BOSSES)
+    ok &= clear("sight hole %.1f,%.1f clear of lid boss" % (lx, ly),
+                d - LED_PIPE_D / 2 - 6.8 / 2, 1.00)
+print("  light pipes: 3 mm rod, %d x %.1f mm (hat) + %d x %.1f mm (PoE),"
+      " seat z=%.2f" % (len(LED_HOLES_HAT), PIPE_LEN_HAT,
+                        len(LED_HOLES_POE), PIPE_LEN_POE, PIPE_SEAT_Z))
 print("  all geometry checks pass" if ok else "  *** CHECKS FAILED ***")
 
 # solid interference test: does the case body intersect the hat's envelope?
@@ -305,6 +469,25 @@ lid_env = box(IX0, IY0, IZ1, IX1, IY1, IZ1 + LID_T)
 v3 = volume(common(lid_env, hat_env))
 print("  [%s] lid volume intersects hat envelope  %8.3f mm3 (want 0)"
       % ("OK " if v3 < 1e-6 else "FAIL", v3))
+
+# The fitted light pipes hang off the lid. They must clear both PCBs -- this
+# is the test that rules ACT1 out and would catch any future hole placed over
+# something the hat covers.
+pipes = None
+for lx, ly in LED_HOLES_HAT:
+    p = cyl_z(lx, ly, LED_Z_HAT + LED_PIPE_GAP, PIPE_LEN_HAT, LED_PIPE_D)
+    pipes = p if pipes is None else fuse(pipes, p)
+for lx, ly in LED_HOLES_POE:
+    p = cyl_z(lx, ly, LED_Z_POE + LED_PIPE_GAP, PIPE_LEN_POE, LED_PIPE_D)
+    pipes = fuse(pipes, p)
+hat_pcb = box(HAT_X0, HAT_Y0, HAT_Z - HAT_PIN_DROP, HAT_X1, HAT_Y1, HAT_TOP)
+esp_pcb = box(90.15, -188.15, 0.0, 118.15, -90.0, 1.578)
+v4 = volume(common(pipes, hat_pcb))
+v5 = volume(common(pipes, esp_pcb))
+print("  [%s] light pipes intersect hat PCB       %8.3f mm3 (want 0)"
+      % ("OK " if v4 < 1e-6 else "FAIL", v4))
+print("  [%s] light pipes intersect ESP32 PCB     %8.3f mm3 (want 0)"
+      % ("OK " if v5 < 1e-6 else "FAIL", v5))
 
 print("case volume cm3:", round(volume(case) / 1000, 1),
       " lid:", round(volume(lid) / 1000, 1))

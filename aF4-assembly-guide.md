@@ -31,6 +31,19 @@ Before going further, test-fit into the +X long wall:
 
 A light chase with a round file is normal on a first print.
 
+Chase the four lid sight holes with a 1/8" drill from the **inside** face only.
+Do not open up the Ø2.6 apertures on the outer face — those are the seats the
+light pipes land on.
+
+### Light pipes
+
+Cut four pieces of 3 mm (1/8") clear acrylic rod: **2 × 22.7 mm** for PWR1 and
+LNK1, **2 × 10.1 mm** for D3 and D5. Sand both ends flat on 400 then 1500 grit —
+a clean end face is most of the brightness. Drop each in from the lid's inside
+face until it seats on the aperture step, then run a small bead of clear
+5-minute epoxy around it on the inside. The lengths leave 0.6 mm of air over each
+LED; **a pipe that touches an LED is too long — trim it.**
+
 ## 2. Receive and inspect the board
 
 The hat arrives populated. Give it thirty seconds:
@@ -130,8 +143,11 @@ Only once 6.1–6.6 all pass, connect the 3.5 mm patch cable from J2 to the aF4'
 
 ## 7. Close up and enable
 
-1. Lid on, 4 × M3 × 12. The two LED sight holes should land over D3 and D5 — you
-   should be able to see the green rail LED through the lid.
+1. Lid on, 4 × M3 × 12. All four sight holes should land over their LEDs: **D3**
+   (green, rail live) and **D5** (yellow, feed) on the hat, **PWR1** (red, 3V3
+   rail) and **LNK1** (green, ethernet link) on the Olimex board. With the
+   splitter tap live and the patch cable in, all three of D3, PWR1 and LNK1
+   should read through the lid without opening anything.
 2. In Home Assistant, run one manual feed via `button.af4_feeder_feed` and watch
    the feeder actually cycle.
 3. Only then turn on `input_boolean.reef_af4_schedule_enabled`.

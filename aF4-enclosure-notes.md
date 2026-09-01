@@ -52,10 +52,58 @@ used to be hand-wired inside it is gone.
   Those two, plus twenty socket pins on the left and two jack noses captured in the
   wall on the right, is what holds the hat.
 - **Lid:** 4 × M3 × 12 coarse self-tapping into Ø9 corner bosses (2.5 mm pilots,
-  open-bottomed). Registration lips on all four sides. Two **Ø3.5 LED sight holes**
-  chamfered on the outside, over D3 (rail live, green) and D5 (feed pulsing, yellow).
+  open-bottomed). Registration lips on all four sides. **Four LED sight holes**
+  fitted with 3 mm light pipes, and the label `aF4 PoE / TRIGGER` engraved 0.8 mm
+  into the outer face — both detailed in their own section below.
 - **Wall-mount tabs:** one per long side, mid-length, flush with the case bottom,
   4.5 mm hole for #8 / M4.
+
+## Lid LED sight holes and light pipes
+
+Four Ø3.5 bores from the lid underside, each stepping down to a **Ø2.6 aperture**
+through the last 0.9 mm of the outer face. A 3 mm clear acrylic rod drops in from
+the inside, seats on that step — so it cannot migrate down onto the LED — and is
+held and sealed with a bead of clear epoxy at the inner face. That also **seals**
+four holes that were previously open to a sump room.
+
+| Hole | x, y | Over | Rod |
+|---|---|---|---|
+| hat D3 | 139.50, −139.00 | rail live, green | 10.1 mm |
+| hat D5 | 128.20, −150.80 | feed pulsing, yellow | 10.1 mm |
+| PWR1 | 91.567, −171.069 | Olimex 3V3 rail, red | 22.7 mm |
+| LNK1 | 91.567, −165.354 | Olimex ethernet link, green | 22.7 mm |
+
+Rods seat at z = 25.60 and stop 0.6 mm short of each LED. **They must never touch
+the LED.**
+
+**Why pipes and not plain holes.** The hat's LEDs sit on `HAT_TOP`, 8.5 mm under
+the lid, so a plain Ø3.5 hole gave an 11.6° viewing half-angle and worked fine.
+The Olimex LEDs are **21.2 mm** down and the same hole gives **4.7°** — visible
+only dead-on. Widening does not rescue it (Ø4.5 only reaches 6.1°). The air gap
+is the limiter, not the aperture.
+
+**Where the Olimex LED positions came from.** `ESP32-PoE-ISO_Rev_N.step` is
+authored in this same frame, so its component placements are enclosure
+coordinates directly — no mapping, and the Rev N Eagle files were not needed.
+All four of its LEDs sit in one column at x = 91.567 on a 5.715 mm pitch:
+CHRG1 −176.784, PWR1 −171.069, LNK1 −165.354, ACT1 −159.639.
+
+**Two of them deliberately have no hole.**
+
+- **ACT1** sits **0.361 mm inside the hat footprint** (`HAT_Y0` = −160.0) and is
+  blindfolded by 1.6 mm of opaque FR4. Nothing in the lid can see it, and no
+  amount of hole moving fixes it. The `light pipes intersect hat PCB` solid test
+  in `af4_enclosure_ocp.py` is what enforces this — it will fail the build if a
+  future hole is placed over anything the hat covers.
+- **CHRG1** is the LiPo charge LED and there is no battery in this build. U3
+  (SOT-23-5) is also only 2.9 mm away, which a 3 mm pipe would foul.
+
+**Engraved label.** `aF4 PoE` / `TRIGGER`, DejaVu Sans Bold at 8 mm, 0.8 mm deep,
+block centred at (117.0, −108.0) and reading along +Y — upright when the box is
+held landscape with the cable end on the left. Nearest obstruction is 14.4 mm
+away. The lid exports top-face-down, so the recess lands on the bed and comes out
+crisp. Glyph outlines come from `matplotlib`'s TextPath, the same idiom as the
+Temp Junction Box scripts, so the build now needs `matplotlib` installed.
 
 ## The vertical stack
 
