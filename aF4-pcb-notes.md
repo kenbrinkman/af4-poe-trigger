@@ -50,7 +50,7 @@ PhotoMOS LED through R1, with only the 10 kΩ pulldown opposing it. Solving the
 node: it settles near 1.4 V, pushing roughly **0.6–0.7 mA into the LED**. The
 AQY212's LED operate current is ~1.1 mA typical with no guaranteed non-operate
 floor below it. That is not a safe margin for a circuit whose failure mode is
-"10.4 V held on the trigger port for more than 6 seconds = unscheduled feed", and
+"10.4 V held on the trigger port past the trigger threshold = unscheduled feed", and
 `restore_mode: ALWAYS_OFF` cannot help, because the pin is high-Z before the
 firmware runs.
 

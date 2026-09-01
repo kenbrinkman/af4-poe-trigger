@@ -19,14 +19,22 @@ Open question: whether the internal 24h schedule keeps running while using exter
 
 ## 0-10V trigger port spec (3.5mm jack)
 
-Official rules (inD Neptune guide):
+Official rules, re-derived from inD's help centre 2026-09-01:
 
-- Feed triggers on **≥9V held for >6 seconds**
-- Port must see **~0V for >60 seconds** before it will re-arm for the next trigger
-- Feed cycles must be **≥5 minutes apart**
-- The "link" icon (top-right of aF4) illuminates when a controller is connected to the port
+- Feed triggers on **≥9V held for ≥15 seconds** `[VENDOR]` — design figure; see the conflict note below
+- Feed cycles must be **≥5 minutes apart** `[VENDOR]`
+- Port must see **~0V for >60 seconds** before it re-arms `[SPEC]`
+- **Connecting the link port completely overrides the aF4's internal 24h schedule** `[VENDOR]` — so an offline ESP32 means the fish are silently never fed
+- The "link" icon illuminates when a controller is connected, and **flashes green when a feed signal is accepted** (newer units)
+- Feed **quantity is set on the aF4 only** and cannot be driven over the link
 
-Implications for ESPHome: pulse ON for ~10s, then ensure OFF ≥60s (trivially satisfied by any sane schedule); never schedule feeds <5 min apart.
+⚠️ **inD publishes three different hold times.** The ">6 seconds" here was quoted verbatim
+from inD's Neptune Systems page and audit-verified 2026-08-28 — it is genuine. But the inD
+Connect guide says **10 s** and the Coralvue Hydros guide says **15 s**, and the current
+Neptune Apex article states none at all. **Design to the longest: 15 s.**
+
+Implications for ESPHome: pulse ON for **20s** (not 10s — 10s has no margin against 15s),
+then ensure OFF ≥60s; never schedule feeds <5 min apart.
 
 Assumed pinout (verify): tip = signal (+9-12V), sleeve = ground. Mono/TS sufficient.
 

@@ -46,4 +46,4 @@ centroid, fab notes.
 
 ## Key trigger rules (inD 0-10V spec)
 
-Feed triggers on ≥9V held >6s; port must see ~0V for >60s to re-arm; feeds ≥5 min apart. Measured OEM dongle trigger voltage: 10.37V (don't feed raw 12V).
+Feed triggers on ≥9V held ≥15s (inD publishes 6s/10s/15s across three guides — design to the longest); feeds ≥5 min apart; port must see ~0V for >60s to re-arm. Connecting the link port **overrides the aF4's internal 24h schedule** — an offline ESP32 means no feeding at all. Measured OEM dongle trigger voltage 10.37V open-circuit (don't feed raw 12V).

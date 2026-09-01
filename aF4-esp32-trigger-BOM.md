@@ -1,7 +1,7 @@
 # aF4 PoE Trigger — Parts List (rev E)
 
 Goal: a PoE ESP32 running ESPHome pulses 10.4 V (matching the measured OEM level)
-onto the aF4's 3.5 mm 0-10 V port (≥9 V for >6 s = feed), scheduled from Home
+onto the aF4's 3.5 mm 0-10 V port (≥9 V for ≥15 s = feed), scheduled from Home
 Assistant. Replaces the inD connect dongle.
 
 Rev D moved the whole trigger circuit onto a PCB hat assembled by PCBWay. The
@@ -92,7 +92,7 @@ Yes, with the same nuance as always: no ESP32 outputs 9–12 V natively. The boa
 is brains and network; the trigger voltage comes from the feeder's own supply via
 the splitter, regulated to 10.4 V on the hat and switched onto the tip by the
 PhotoMOS. You do **not** need a 0-10 V DAC — the aF4 treats the port as a
-threshold trigger (≥9 V, >6 s), not an analog level.
+threshold trigger (≥9 V, ≥15 s `[VENDOR] 2026-09-01`), not an analog level.
 
 ## Verification before wiring (voltmeter, OEM dongle installed)
 

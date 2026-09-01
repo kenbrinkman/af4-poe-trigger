@@ -150,9 +150,9 @@ level** — no DAC is required.
 
 | # | Requirement | Value | Source |
 |---|---|---|---|
-| R1 | Trigger threshold | ≥ 9 V held > 6 s | `[SPEC]` |
-| R2 | Re-arm | port must see ~0 V for > 60 s | `[SPEC]` |
-| R3 | Minimum feed spacing | ≥ 5 minutes | `[SPEC]` |
+| R1 | Trigger threshold | ≥ 9 V held **≥ 15 s** | `[VENDOR] 2026-09-01` — see note |
+| R2 | Re-arm | port must see ~0 V for > 60 s | `[SPEC]` — verbatim from inD's Neptune Systems page, audit-verified 2026-08-28 |
+| R3 | Minimum feed spacing | ≥ 5 minutes | `[VENDOR] 2026-09-01` — Apex guide states it |
 | R4 | Do not drive the port with raw 12 V | OEM dongle measured at **10.37 V** | `[MEAS] 2026-07-10` |
 | R5 | Feeder must stay powered continuously | it is a refrigerator | `[SPEC]` |
 | R6 | Supply | 12 V, 12.5 A external brick, barrel **5.5 × 2.5 mm centre-positive** | `[MEAS] 2026-07-10` |
@@ -165,6 +165,41 @@ level** — no DAC is required.
 | Tip↔sleeve during an OEM-triggered feed | 10.37 V | `[MEAS] 2026-07-10` |
 | "Link" icon mechanism | **mechanical** — a bare plug with nothing attached lights it. Jack insertion switch, no electrical sensing | `[MEAS] 2026-07-10` |
 | Consequence | no bleed resistor needed for link detect; rest voltage is genuinely 0 V | `[CALC]` |
+| Tip↔sleeve resistance, unpowered | **~11 kΩ** → **~0.95 mA at 10.4 V** | `[MEAS] 2026-09-01` |
+| OEM plug wiring | **TRS plug, only tip + sleeve wired. Ring floats** | `[MEAS] 2026-09-01` |
+| OEM dongle output, open-circuit | 10.35 V settling to **10.37 V** — confirms R4 was an *open-circuit* figure | `[MEAS] 2026-09-01` |
+| OEM dongle turn-on overshoot | **16.40 V**, brief, unloaded — boost startup overshoot | `[MEAS] 2026-09-01` |
+| OEM dongle pulse behaviour | **pass-through, no fixed-width pulse** — holds until toggled off | `[MEAS] 2026-09-01` |
+| 12 V brick, open-circuit | **12.13 V**, stable, centre-positive | `[MEAS] 2026-09-01` |
+| 12 V rail loaded (TEC + feed) | idle **11.84–11.86 V**, minimum **11.77 V** across 3 feed cycles | `[MEAS] 2026-09-01` |
+| aF4 unit under test | PN **10102101**, SN **130063** — outside every documented serial range | `[MEAS] 2026-09-01` |
+
+### ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times
+
+R1 previously read **`≥ 9 V held > 6 s`**. That figure is genuine: the 2026-08-28 audit
+fetched inD's **Neptune Systems page** and quoted it verbatim — *"9v or higher signal for
+greater than 6 seconds"*. R1–R3 were all verified against that page. **The 6 s was not
+invented.**
+
+The problem is that inD's own guides **disagree with each other**:
+
+| inD source | Hold time |
+|---|---|
+| Neptune Systems 0-10 V page (fetched 2026-08-28) | **> 6 s** |
+| inD Connect dongle guide (read 2026-09-01) | **≥ 10 s** |
+| Coralvue Hydros guide (read 2026-09-01), `Run Time 00:00:15` | **≥ 15 s** |
+
+The current Neptune **Apex** article no longer states a hold time at all, so the help
+centre appears to have been reorganised since August.
+
+**Design to the longest published figure.** R1 is therefore set to **≥ 15 s**. The 10 s
+firmware pulse satisfies the 6 s figure but **fails the 15 s one**, so the timing check's
+"67 % margin" was margin against only the most permissive of three numbers.
+**Fix: 20 s pulse / 280 s tail — that clears all three.** See open item 11.
+
+`[MEAS] 2026-09-01` closes the obvious escape route: the OEM dongle **passes the toggle
+through** rather than emitting a fixed-width pulse, so inD's "10 seconds" describes the
+**port**, not dongle logic.
 
 **Key design insight:** R1 defines a *window*, not a setpoint. 10.37 V is merely what the
 OEM dongle happens to produce. This is why a fixed resistor divider is the right answer and
@@ -176,8 +211,22 @@ own reading of the 10.37 V OEM measurement. The worst-case output of 10.88 V (§
 exceeds what the OEM dongle produces by half a volt. Almost certainly fine for a threshold
 input — but that ceiling should carry an `[ASSERT]` tag, and until now it read as `[SPEC]`.
 
-**Open question, unresolved:** whether the feeder's internal 24 h timer keeps running while
-external triggering is in use. Assumed yes; not confirmed. `[ASSERT]`
+### ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards
+
+This document previously asked whether the internal 24 h timer keeps running under
+external triggering, and **assumed yes**. Both inD's Neptune Apex and Coralvue Hydros
+guides state the built-in schedule is **completely overridden when the link port is
+connected** — Hydros words it as *connection*, not signalling.
+
+**So once J2's cable is plugged in the aF4 never feeds on its own.** An offline ESP32,
+a mid-OTA reboot, or `input_boolean.reef_af4_schedule_enabled` left OFF means the fish
+are **silently not fed**.
+
+Every guardrail in this design prevents an *extra* feed. This is the opposite direction
+and has **no detection at all**; the automation's "unavailable ≠ off" lockout guard does
+not cover it. Over-temperature faults are equally invisible and never self-clear.
+**Mitigation: alert when `counter.reef_af4_feeds_today` is still 0 past the scheduled
+time.** Open item 12.
 
 ---
 
@@ -389,9 +438,14 @@ function, not shared with UEXT. GPIO33 is nearly as clean (one unpopulated resis
 | F1 | 1206L010/60WR PPTC | Overcurrent on the 12 V tap | 0.10 A hold / **0.25 A trip** / 60 Vdc, −40…+85 °C `[DS]` |
 | R3 | 100 kΩ bleed | Guarantees the 0 V re-arm (R2 above) | 0.10 mA |
 
-⚠️ **Open verification item:** both TVS parts have a **13 V standoff on a nominally 12 V
-rail**. If the feeder's supply idles above 13 V at no load, D2 will begin to conduct and
-heat. The supply's actual open-circuit voltage has not been measured. `[ASSERT]`
+✅ **CLOSED `[MEAS] 2026-09-01`.** Both TVS parts have a 13 V standoff on a nominally
+12 V rail. The brick measures **12.13 V open-circuit, stable** — comfortably below the
+standoff, so D2 never conducts at idle and no part change is needed.
+
+Loaded, the rail sits at **11.84–11.86 V** and dips to **11.77 V** during a feed, so the
+standoff is even further away in service. Separately, the port itself tolerates the OEM
+dongle's **16.40 V** turn-on overshoot on every feed, which makes the worst-case 10.88 V
+output look tame.
 
 **Deliberately absent:** a series resistor on the trigger tip. At 10.4 V into a short it
 would sit right at the polyfuse hold current and cook rather than trip. The LDO's internal
@@ -558,10 +612,15 @@ presses one button and can do nothing else.
 ### Timing check against the spec `[CALC]`
 
 ```
-  10 s pulse   ≥ 6 s threshold hold        ✓  (67 % margin)
- 290 s off tail ≥ 60 s re-arm              ✓  (383 % margin)
- 10 + 290 = 300 s total cycle ≥ 5 min      ⚠ EXACTLY at the limit, not above
+  10 s pulse   ≥ 15 s threshold hold       ✗  SHORT BY 5 s  <-- as shipped
+  20 s pulse   ≥ 15 s threshold hold       ✓  (33 % margin) <-- after item 11
+ 280 s off tail ≥ 60 s re-arm             ✓  (367 % margin)
+ 20 + 280 = 300 s total cycle ≥ 5 min      ⚠ EXACTLY at the limit, not above
 ```
+
+⚠️ `[VENDOR] 2026-09-01` **The old version of this block read `≥ 6 s` and claimed a
+67 % margin. Against inD's actual figures the 10 s pulse has none.** Widen the *pulse*
+to 20 s and take it out of the tail, keeping the 300 s cycle intact.
 
 ⚠️ **Audit item.** R3 requires feeds ≥ 5 minutes apart and the script's cycle is exactly
 300 s. There is zero margin. Any rounding in ESPHome's `delay` handling, or a press arriving
@@ -804,10 +863,17 @@ isolation band; every diode and regulator orientation checked pad-by-pad.
 
 ### Still unverified after the audit
 
-1. Supply open-circuit voltage vs the 13 V standoff — needs a DMM.
-2. **Feeder trigger-port input impedance / current draw — never measured.** The whole load
-   budget assumes it draws ~nothing. One measurement during an OEM feed closes it.
-3. Feeder's internal 24 h timer behaviour under external triggering.
+*(Items 1–3 were closed by the bench session and vendor-documentation pass of
+2026-09-01. Struck through rather than deleted, so the audit's original scope stays
+readable.)*
+
+1. ~~Supply open-circuit voltage vs the 13 V standoff~~ — **CLOSED `[MEAS]`: 12.13 V.**
+2. ~~Feeder trigger-port input impedance / current draw~~ — **CLOSED `[MEAS]`: ~11 kΩ,
+   about 0.95 mA at 10.4 V. Negligible against the 18.7 mA quiescent budget and F1's
+   0.10 A hold. The load-budget assumption was correct.**
+3. ~~Feeder's internal 24 h timer behaviour under external triggering~~ — **CLOSED
+   `[VENDOR]`: the schedule is completely overridden while the link port is connected.
+   The previous assumption was backwards. See §1.**
 4. DRC and the enclosure's 13+3 checks — reported, not re-run (no `pcbnew` available).
 5. **Panasonic's recommended SOP4 land pattern** — pitch (2.54 mm), pad size (0.5 × 1.0 mm)
    and lead span (6.8 ± 0.4 mm) are confirmed; the pad-centre spacing in X still has to come

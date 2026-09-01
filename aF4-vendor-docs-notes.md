@@ -25,9 +25,10 @@ together they are the closest thing to a published spec.
 
 ### 1.1 The hold time is longer than we assumed — action required
 
-Our documents carry `R1 = ≥ 9 V held > 6 s`, tagged `[SPEC]` in
-`aF4-MASTER-REFERENCE.md` §153. **No vendor page states 6 s.** The two
-pages that do give a number say 10 s and 15 s.
+Our documents carry `R1 = ≥ 9 V held > 6 s`, tagged `[SPEC]`. **That figure is genuine** —
+the 2026-08-28 audit quoted it verbatim from inD's Neptune Systems page. But inD's guides
+disagree: 6 s there, 10 s for inD Connect, 15 s for Hydros, and none at all in the current
+Apex article. **Design to the longest.**
 
 `af4-feeder.yaml` fires a **10 s** pulse and the audit credits it with a
 "67 % margin" over 6 s. Against the vendor figures that margin is gone:
@@ -69,10 +70,9 @@ a continuous one. The Apex worked example holds ON for a **14-minute
 window and produces exactly one feed**. That is independent vendor
 corroboration of the design's best safety property.
 
-The related `R2` figure — "~0 V for > 60 s to re-arm" — is still
-unsourced. The Apex OFF windows (~50 min) are far too long to bound it.
-The 290 s tail covers any plausible value, so this is a provenance
-problem, not a design one.
+The related `R2` figure — "~0 V for > 60 s to re-arm" — is `[SPEC]`, quoted verbatim
+from the same audit-verified inD page. The Apex OFF windows (~50 min) are far too long
+to bound it independently, but the 280 s tail clears it either way.
 
 ### 1.4 Connecting the port disables the aF4's own schedule — NEW, and it matters
 
@@ -222,7 +222,8 @@ Returns: 14 days on the aF4, 10 % restocking, unused and complete only.
 3. The port's actual input impedance or whether it is opto-isolated.
 4. Whether a *held* line re-triggers after some very long interval; the
    longest documented assertion is 14 minutes.
-5. Confirmation that 6 s is wrong rather than merely unsourced — only a
-   measurement on the real unit settles it.
+5. Which of inD's three hold times (6 s / 10 s / 15 s) the hardware actually enforces —
+   only a measurement on the real unit settles it. B1 does that; 20 s clears all three
+   regardless, so this is curiosity, not a blocker.
 
 Items 1–4 need a meter and the physical feeder, not more reading.

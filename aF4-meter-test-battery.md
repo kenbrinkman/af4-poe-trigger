@@ -56,8 +56,9 @@ the last cheap window to act on a measurement.
 - **A held-high line yields exactly one feed** — the Apex guide's worked example
   holds ON for 14 minutes and produces one feed. Independent corroboration of
   audit finding B5.
-- **`R1 = >6 s` is unsourced.** inD documents 15 s (Hydros) and 10 s (inD Connect).
-  The 10 s pulse's claimed "67 % margin" is actually zero or negative.
+- **`R1` — inD publishes THREE hold times**: 6 s (Neptune Systems page, audit-verified
+  2026-08-28), 10 s (inD Connect), 15 s (Hydros). The 6 s is genuine, just the most
+  permissive. Design to 15 s; the 10 s pulse fails it. **20 s clears all three.**
 - **Connecting the link port overrides the aF4's internal 24-hour schedule**, so an
   offline ESP32 means the fish are silently never fed.
 - 12 V / 12.5 A brick confirms `R6`. Driving the port is documented, supported use.
@@ -621,10 +622,7 @@ LibreTiny's BL602 support is uncertain (verify before believing it), and the res
 would be a 2.4 GHz WiFi device with none of the hat's protection or on-device
 guardrails — strictly worse than the board already designed.
 
-**The eWeLink HA integration is worth doing**, as a stopgap and a test rig. No
-soldering, gives HA-scheduled feeding before the PCB arrives, and lets the
-`counter.reef_af4_feeds_today` logic, the lockout condition and the item-12
-missed-feed alert be proven against real hardware ahead of commissioning.
+**Not pursuing eWeLink → HA.** Decided 2026-09-01: out of scope for now.
 
 ---
 
@@ -664,7 +662,7 @@ Tracked in project memory as open items 1–14.
 | 5 | Widen the feed cycle past exactly 300 s, and widen check 6.3 from 10.3–10.5 V to ~10.0–10.9 V. If widening the cycle, widen the **tail**, not the pulse |
 | 8 | `web_server: port: 80` has no `auth:`; API key and OTA password committed in plaintext |
 | 9 | `gen_pcb.py` stray "exclude from BOM/pos" flags on J2 |
-| 11 | Retag `R1` `[VENDOR] ≥ 9 V held ≥ 15 s` and purge the unsourced 6 s from `aF4-reference.md`, `aF4-esp32-trigger-BOM.md`, `README.md`, `aF4-pcb-notes.md` |
+| 11 | ✅ **DONE 2026-09-01.** `R1` retagged `[VENDOR] ≥ 9 V held ≥ 15 s` with the three-way conflict documented, across `aF4-MASTER-REFERENCE.md`, `aF4-reference.md`, `aF4-esp32-trigger-BOM.md`, `README.md`, `aF4-pcb-notes.md`. **The YAML pulse change (item 2) is still outstanding.** |
 | 12 | **Missed-feed alert in HA** — `counter.reef_af4_feeds_today` still 0 past the scheduled time. The only wholly unmonitored failure direction; also covers over-temperature faults, which never self-clear |
 | 13 | Add link-LED checks as commissioning steps 6.7 / 6.8 |
 | 14 | **R5 at 77 % of an 0805's rating.** 0.25 W part is a drop-in. Decide before assembly — raising the divider impedance is NOT available, it is the minimum-load ballast |
