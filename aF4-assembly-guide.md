@@ -115,8 +115,15 @@ test rather than a loosened one.
 it uses the API, not this page.
 
 **After any reboot inside a feed cycle the device serves a 300 s recovery lockout** and
-ignores Feed presses until it clears. If 6.5 does nothing, check the log for
-`boot recovery lockout active` before suspecting the hardware.
+ignores Feed presses until it clears. If 6.5 does nothing, suspect this before the
+hardware — but **do not go looking for it in the log.** The `on_boot` message fires
+seconds after boot, while ethernet is still coming up and no log client is attached
+yet, and ESPHome does not replay it. Verified 2026-09-01: the line is never observable.
+
+**Read the state instead.** Feed Lockout ON at a low uptime, with nobody having pressed
+Feed since the reboot, IS the recovery lockout — `do_feed` state is RAM-only and the
+reboot wipes it, so nothing else can hold that sensor on. And check **uptime** first:
+a Restart click that silently failed to register looks exactly like a broken lockout.
 
 Only once 6.1–6.6 all pass, connect the 3.5 mm patch cable from J2 to the aF4's
 0-10 V port and confirm the link icon lights on the feeder.
