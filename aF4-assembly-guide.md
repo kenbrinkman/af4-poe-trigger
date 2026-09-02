@@ -128,6 +128,24 @@ There is no USB cutout in the case, so flash **before** final assembly if this i
 a fresh board. `af4-feeder.yaml` in this folder is the source of truth; paste it
 into the ESPHome Device Builder on the Unraid server (port 6052) and install.
 
+> **Do this once before that first install.** The YAML no longer carries its
+> credentials inline — it reads them with `!secret`, and `!secret` resolves against
+> the `secrets.yaml` sitting beside the file being compiled, **not** against this
+> repo. Open the Device Builder's Secrets editor and create the four keys listed in
+> this folder's `secrets.yaml` (`af4_api_key`, `af4_ota_password`,
+> `af4_web_username`, `af4_web_password`). Without them the build fails at
+> compile time with an unresolved-secret error, which is the safe way to fail.
+>
+> **Then mind the OTA ordering.** All three credentials were rotated 2026-09-02.
+> The Device Builder authenticates the *upload* with the password already on the
+> device and installs firmware carrying the new one, so the first install after
+> the rotation still needs the **old** OTA password. It is recorded in the header
+> of `secrets.yaml`; delete that line once the install succeeds.
+>
+> **And expect Home Assistant to ask.** The API encryption key changed, so the
+> ESPHome integration will prompt for the new one after the device comes back.
+> Entity IDs and history survive — the device name is unchanged.
+
 > **If you are re-using the already-flashed board:** the trigger pin changed.
 > Rev E drives **GPIO32**, not GPIO13, because of the factory 2.2 kΩ pull-up on
 > GPIO13 — see `aF4-pcb-notes.md`. Push the updated YAML over OTA before
@@ -175,9 +193,10 @@ in dropout and following its input — the divider is innocent. In dropout the o
 lands at ~10.5 V regardless of R4/R5, which is why the widened range is the correct
 test rather than a loosened one.
 
-**The ESPHome web page now requires a login** (`af4` / see `af4-feeder.yaml`), added
-2026-09-01 to close an unauthenticated LAN control path. Home Assistant is unaffected —
-it uses the API, not this page.
+**The ESPHome web page requires a login** — username and password are in `secrets.yaml`,
+which is gitignored and not in the repo. Added 2026-09-01 to close an unauthenticated LAN
+control path; the credentials were rotated 2026-09-02. Home Assistant is unaffected — it
+uses the API, not this page.
 
 **After any reboot inside a feed cycle the device serves a 300 s recovery lockout** and
 ignores Feed presses until it clears. If 6.5 does nothing, suspect this before the

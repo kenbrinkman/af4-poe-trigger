@@ -74,13 +74,18 @@ ethernet:
 logger:
   level: INFO
 
+# CREDENTIALS. All three live in secrets.yaml, which is gitignored. They were
+# committed here in plaintext until 2026-09-02, in a PUBLIC repo, and have been
+# rotated — the old values are still in git history and are worthless by design.
+# The Device Builder needs its own copy of secrets.yaml; see that file's header
+# for the OTA ordering, which matters on the first install after a rotation.
 api:
   encryption:
-    key: "6PvkLXgW+QwIAjDaOCeVU60Yun2J1+B5A9/VsL1YMHI="
+    key: !secret af4_api_key
 
 ota:
   - platform: esphome
-    password: "GZY7CtoC7VMT9fvbAWTc2isS"
+    password: !secret af4_ota_password
 
 # Local control page for commissioning (assembly guide step 6) and manual feeds.
 # auth: added 2026-09-01 — this was a second UNAUTHENTICATED control path on the
@@ -88,8 +93,8 @@ ota:
 web_server:
   port: 80
   auth:
-    username: af4
-    password: "Rk8vQt3mZpX7wLd2NhCe"
+    username: !secret af4_web_username
+    password: !secret af4_web_password
 
 # ---------------------------------------------------------------------------
 # Persisted across reboots. See BOOT SAFETY above.

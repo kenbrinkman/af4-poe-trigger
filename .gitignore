@@ -8,6 +8,10 @@ inD connect.pdf
 # Generated/local exports — regenerate from the Markdown sources
 aF4-project-overview.pdf
 
+# Secrets — NEVER commit. The values that were here until 2026-09-02 are in a
+# public repo's history and have been rotated.
+secrets.yaml
+
 # OS cruft
 .DS_Store
 Thumbs.db

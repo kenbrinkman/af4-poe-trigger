@@ -681,11 +681,23 @@ was a judgment call rather than a defect, but the document should have said so.
 assembly guide records the credential at the point of use; Home Assistant is unaffected
 because it talks over the API, not this page.
 
-🔴 **The related hygiene problem is now the worse one and is still open.** The API
-encryption key, the OTA password **and the new web_server password** are all committed in
-plaintext to a **public** GitHub repository. Adding web auth and publishing its password in
-the same commit closed nothing. All three need moving to a gitignored `secrets.yaml` **and
-rotating** — git history keeps the old values regardless. Open item 16.
+### ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02
+
+The API encryption key, the OTA password **and the new web_server password** were all
+committed in plaintext to a **public** GitHub repository. Adding web auth and publishing
+its password in the same commit closed nothing; it moved the hole from the LAN to the
+internet.
+
+All three now resolve through `!secret` against a gitignored `secrets.yaml`, **and all
+three were rotated** — which is the part that actually remediates it, because git history
+keeps the old values whatever the working tree says. History was deliberately *not*
+rewritten: rotation makes the exposed values worthless, and a filter-repo pass would
+rewrite all 46 commit SHAs while GitHub can still serve cached objects. Decided 2026-09-02.
+
+Two operational consequences, both recorded at the point of use in
+`aF4-assembly-guide.md` §4: the ESPHome Device Builder needs **its own copy** of
+`secrets.yaml`, and the first install after the rotation authenticates with the **old**
+OTA password while installing the new one.
 
 ### `[AUDIT]` Held-high failure modes are bounded — the design's best safety property
 
@@ -835,7 +847,7 @@ and 15 — all of them on Kenny's side of the fence, none of them on the board.
 | 13 | ~~Confirm the internal 24 h timer under external triggering~~ — **CLOSED `[VENDOR]`: the built-in schedule is completely overridden while the link port is connected.** The old assumption was backwards; this is what item 17 exists to cover | — |
 | 14 | Resolve the LED viewing-angle conflict, 120° vs 160°/140° (§2.6) | No — cosmetic |
 | 15 | Commissioning steps 6.1–6.8 must all pass before the schedule toggle is enabled | **YES** — gates go-live |
-| 16 | 🔴 **API key, OTA password and web_server password are committed in plaintext to a PUBLIC GitHub repo.** Move to a gitignored `secrets.yaml` **and rotate** — history keeps the old values | No, but it is the only live security defect |
+| 16 | ~~API key, OTA password and web_server password committed in plaintext to a PUBLIC repo~~ — **CLOSED 2026-09-02.** All three moved to a gitignored `secrets.yaml` via `!secret` **and rotated**. History deliberately not rewritten; rotation is what remediates. Completes on the item-11 flash, which carries the new values | — |
 | 17 | **Missed-feed alert in HA** — fire when `counter.reef_af4_feeds_today` is still 0 past the scheduled time. The only wholly unmonitored failure direction, and it also covers over-temperature faults, which never self-clear | No — but it is the last unattended-safety gap |
 | 18 | **R5 runs at 77 % of an 0805's 125 mW rating.** A 0.25 W part is a drop-in; raising the divider impedance is NOT available, it is the minimum-load ballast. **Window has now closed for this run** — boards are in fabrication | No — note for a future rev |
 | 19 | Silkscreen on the fabbed rev E boards reads **"10.4V 10s pulse"**. Corrected in `gen_pcb.py` for any future rev; the five boards in fabrication will carry the old string | No — cosmetic, and unfixable now |
