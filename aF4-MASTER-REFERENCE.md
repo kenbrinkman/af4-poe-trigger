@@ -12,9 +12,11 @@ assertion that has not. The assertions are the interesting part — attack those
 > answered the same day ("machine all 8 as drawn") and PCBWay restarts the fab clock from
 > the end of EQ. Nothing on the board is open. See `pcb/pcbway-order-YB1800644.md`.
 >
-> **The one thing still blocking working hardware is firmware, not the board:**
-> `af4-feeder.yaml` has never been pasted into the ESPHome Device Builder and flashed, so
-> the running device is still on GPIO13 with a 10 s pulse. Open item 11.
+> **Firmware is live.** The device is online at 192.168.1.55 running GPIO32, the 20 s pulse,
+> the 310 s cycle, the flash-persisted boot lockout and web auth — flashed 2026-09-01
+> 18:54, three minutes after the commit that wrote it, and re-flashed 2026-09-02 18:15 to
+> take the rotated credentials. Item 11 closed. **Nothing now blocks except the boards
+> themselves**, two headers (item 12) and commissioning (item 15).
 >
 > Earlier blocker, closed 2026-08-28: U1 now sits on **Panasonic's own recommended mounting
 > pad**, read off the dimension drawing rather than matched to a library part (§A1).
@@ -631,20 +633,22 @@ presses one button and can do nothing else.
 ### Timing check against the spec `[CALC]`
 
 ```
-  20 s pulse    ≥ 15 s threshold hold      ✓  (33 % margin)   <-- as written in the repo
+  20 s pulse    ≥ 15 s threshold hold      ✓  (33 % margin)   <-- live on the device
  290 s off tail ≥ 60 s re-arm              ✓  (383 % margin)
  20 + 290 = 310 s total cycle ≥ 5 min      ✓  (10 s of margin, was exactly 0)
 ```
 
-✅ **RESOLVED in the repo 2026-09-01 — but NOT YET FLASHED.** Two separate problems were
+✅ **RESOLVED AND FLASHED 2026-09-01.** Two separate problems were
 closed in one edit. The old block read `≥ 6 s` and claimed a 67 % margin; against inD's
 actual figures the 10 s pulse had none, so the pulse went to **20 s**. And the audit's
 zero-margin complaint — R3 requires feeds ≥ 5 min apart and the cycle was exactly 300 s —
 was closed by keeping the **290 s tail** rather than trimming it to 280 s, which buys the
 310 s cycle for free.
 
-⚠️ The device on the tank is still running the old 10 s / GPIO13 build. Everything in this
-section describes `af4-feeder.yaml` **as committed**, not as flashed. See open item 11.
+Everything in this section describes the firmware **as actually running**: the device
+reports its build as 2026-09-01 18:54:20, and the last YAML commit that evening was
+18:51:33. It was installed three minutes after it was written. A second install on
+2026-09-02 18:15:49 carried the rotated credentials and nothing else.
 
 ### ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01
 
@@ -864,6 +868,24 @@ still shipped four fresh instances of it, including a build blocker. The lesson 
 worth what the checking behind them was worth. Where this document now says `[DS]`, a
 datasheet was actually opened.
 
+### The inverse failure mode, named 2026-09-02
+
+Once the design stopped moving, the dominant error flipped direction. **The docs now lag
+execution rather than overstating it**, and a review that reads only the repo will invent
+work that is already done. Three instances surfaced in a single day:
+
+| What the repo said | What was true |
+|---|---|
+| "Missed-feed alert in HA" was the last unattended-safety gap (item 17) | `automation.reef_tank_feeder_health_watchdog` had been running it since 2026-08-27 |
+| `automation.reef_tank_af4_scheduled_feed` "presses the button at each feed time" | It also holds a return-pump interlock, a 15 s pulse confirmation, and a confirmation-gated counter — all load-bearing |
+| Firmware "has never been flashed", device "still on GPIO13" (item 11) | Flashed 2026-09-01 18:54, three minutes after the commit that wrote it |
+
+All three were caught by reading the live system — Home Assistant's config and the device's
+own reported build timestamp — rather than the documents describing it. **Check reality
+before opening an item, and record work at the moment it is done, not at the moment someone
+next reads the file.** The provenance tags do not help here: an `[ASSERT]` that has quietly
+become true looks identical to one that has not.
+
 ---
 
 ## 8. Open items
@@ -872,10 +894,11 @@ Revised after the 2026-08-28 audit, the 2026-08-31 pre-fabrication review, the 2
 bench and vendor-documentation passes, the 2026-09-02 order going to fabrication, and the
 2026-09-02 read of the live Home Assistant config.
 
-**Thirteen of the twenty are closed.** Only three still gate working hardware — **11, 12
-and 15** — and all three are bench or console work, none of them on the board. Of the rest,
-14 and 19 are cosmetic, 18 is deferred to a future revision because the fabrication window
-has closed, and **20 is the one real remaining hole in unattended safety**.
+**Thirteen of the twenty are closed.** Only two still gate working hardware — **12** (two
+headers) and **15** (commissioning) — and both wait on the boards, not on a decision. Of
+the rest, 14 and 19 are cosmetic, 18 is deferred to a future revision because the
+fabrication window has closed, **16 leaves one live exposure until the next serial flash**,
+and **20 is the one real remaining hole in unattended safety**.
 
 ⚠️ Item 17 is a caution about this table itself: it was opened by the 2026-09-02 review and
 closed the same day on discovering the work had existed in Home Assistant since 08-27 and
@@ -894,12 +917,12 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 8 | ~~Measure the trigger port's input current~~ — **CLOSED `[MEAS] 2026-09-01`: ~11 kΩ, about 0.95 mA at 10.4 V.** Negligible against the 18.7 mA budget; the load-budget assumption was right | — |
 | 9 | ~~`web_server: auth:`~~ — **CLOSED 2026-09-01**, and it created item 16 | — |
 | 10 | ~~C1 substitute~~ — **CLOSED 2026-08-31.** LCSC holds ~123 k of `GRM31CR61H106KA12L`; pre-approved alternate `C3216X5R1H106K160AB` (TDK) is in the order notes. PCBWay quoted the correct MPN 2026-09-02 and did not substitute | — |
-| 11 | **`af4-feeder.yaml` still needs pasting into the ESPHome Device Builder + OTA.** Carries GPIO13 → GPIO32, the 20 s pulse, the boot lockout and web auth in one go | **YES** — the board does nothing until then |
+| 11 | ~~`af4-feeder.yaml` needs pasting into the ESPHome Device Builder + OTA~~ — **CLOSED 2026-09-01**, and this row was stale for a day before anyone noticed. The device reports its firmware as built 18:54:20 that evening, three minutes after the commit that wrote it. GPIO32, the 20 s pulse, the boot lockout and web auth have been live since | — |
 | 12 | Solder two 1×10 male headers into EXT1/EXT2, pins up | **YES** — blocks assembly |
 | 13 | ~~Confirm the internal 24 h timer under external triggering~~ — **CLOSED `[VENDOR]`: the built-in schedule is completely overridden while the link port is connected.** The old assumption was backwards; this is what item 17 exists to cover | — |
 | 14 | Resolve the LED viewing-angle conflict, 120° vs 160°/140° (§2.6) | No — cosmetic |
 | 15 | Commissioning steps 6.1–6.8 must all pass before the schedule toggle is enabled | **YES** — gates go-live |
-| 16 | ~~API key, OTA password and web_server password committed in plaintext to a PUBLIC repo~~ — **CLOSED 2026-09-02.** All three moved to a gitignored `secrets.yaml` via `!secret` **and rotated**. History deliberately not rewritten; rotation is what remediates. Completes on the item-11 flash, which carries the new values | — |
+| 16 | **Secrets: two of three fully remediated 2026-09-02.** All three moved out of the repo to a gitignored `secrets.yaml` via `!secret`, and history deliberately not rewritten because rotation is what remediates. **API key and web_server password are rotated and verified live** on the device. ⚠️ **The OTA password on the device is still the value published in git history** — ESPHome uses one value for both compiling and authenticating the upload, so it cannot rotate over OTA (see `aF4-assembly-guide.md` §4). It rotates at the next **serial** flash, which item 12 puts the board on the bench for anyway | No — but it is a live exposure until the serial flash |
 | 17 | ~~Missed-feed alert in HA~~ — **ALREADY CLOSED, and this item should never have been opened.** `automation.reef_tank_feeder_health_watchdog` has done it since 2026-08-27: a 23:45 counter-vs-elapsed-feed-times backstop, plus a board-offline branch. The scheduled-feed automation independently notifies on skip and on unacknowledged press. Read from HA 2026-09-02; the work existed and was simply never written back to this repo | — |
 | 18 | **R5 runs at 77 % of an 0805's 125 mW rating.** A 0.25 W part is a drop-in; raising the divider impedance is NOT available, it is the minimum-load ballast. **Window has now closed for this run** — boards are in fabrication | No — note for a future rev |
 | 19 | Silkscreen on the fabbed rev E boards reads **"10.4V 10s pulse"**. Corrected in `gen_pcb.py` for any future rev; the five boards in fabrication will carry the old string | No — cosmetic, and unfixable now |

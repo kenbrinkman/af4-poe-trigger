@@ -10,7 +10,16 @@ aF4-project-overview.pdf
 
 # Secrets — NEVER commit. The values that were here until 2026-09-02 are in a
 # public repo's history and have been rotated.
+#
+# The wildcard is deliberate and is worth keeping. On 2026-09-02 a hand-made
+# backup copy of secrets.yaml landed in the repo root rather than beside it and
+# was one `git add -A` away from being published — the exact failure the rotation
+# had just finished cleaning up. No tracked file matches this pattern.
 secrets.yaml
+*secret*
+
+# Scratch parked here because the Claude session's mount cannot delete files.
+_to_delete/
 
 # OS cruft
 .DS_Store

@@ -657,7 +657,7 @@ Tracked in project memory as open items 1–14.
 | # | Item |
 |---|---|
 | 1 | **PCBWay requote** — components on all 20 lines, C1 MPN or TDK alternate, F1, R6/R7, 28 joints, lead time. Then decide on payment |
-| 2 | Paste `af4-feeder.yaml` into the ESPHome Device Builder + OTA — carries **both** GPIO13 → GPIO32 **and** the 10 s → 20 s / 290 s → 280 s change |
+| 2 | ✅ **DONE 2026-09-01 18:54** — pasted and installed three minutes after the commit that wrote it. Carried GPIO13 → GPIO32 and the 10 s → 20 s pulse; the tail stayed at 290 s rather than dropping to 280 s, giving a 310 s cycle. Re-flashed 2026-09-02 18:15 for the credential rotation |
 | 4 | `on_boot` lockout — `script.do_feed` state is RAM-only, so a reboot inside the 300 s cycle silently clears it |
 | 5 | Widen the feed cycle past exactly 300 s, and widen check 6.3 from 10.3–10.5 V to ~10.0–10.9 V. If widening the cycle, widen the **tail**, not the pulse |
 | 8 | `web_server: port: 80` has no `auth:`; API key and OTA password committed in plaintext |

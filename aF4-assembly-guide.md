@@ -128,23 +128,32 @@ There is no USB cutout in the case, so flash **before** final assembly if this i
 a fresh board. `af4-feeder.yaml` in this folder is the source of truth; paste it
 into the ESPHome Device Builder on the Unraid server (port 6052) and install.
 
-> **Do this once before that first install.** The YAML no longer carries its
-> credentials inline — it reads them with `!secret`, and `!secret` resolves against
-> the `secrets.yaml` sitting beside the file being compiled, **not** against this
-> repo. Open the Device Builder's Secrets editor and create the four keys listed in
-> this folder's `secrets.yaml` (`af4_api_key`, `af4_ota_password`,
-> `af4_web_username`, `af4_web_password`). Without them the build fails at
-> compile time with an unresolved-secret error, which is the safe way to fail.
+> **Do this once before any install.** The YAML no longer carries its credentials
+> inline — it reads them with `!secret`, and `!secret` resolves against the
+> `secrets.yaml` sitting beside the file being compiled, **not** against this repo.
+> Open the Device Builder's Secrets editor and create the four keys listed in this
+> folder's `secrets.yaml` (`af4_api_key`, `af4_ota_password`, `af4_web_username`,
+> `af4_web_password`). Without them the build fails at compile time with an
+> unresolved-secret error, which is the safe way to fail.
 >
-> **Then mind the OTA ordering.** All three credentials were rotated 2026-09-02.
-> The Device Builder authenticates the *upload* with the password already on the
-> device and installs firmware carrying the new one, so the first install after
-> the rotation still needs the **old** OTA password. It is recorded in the header
-> of `secrets.yaml`; delete that line once the install succeeds.
+> **Rotating the OTA password is the one credential change OTA cannot make.**
+> ESPHome uses a single value for both compiling the firmware and authenticating
+> the upload, so there is no install in which the old password authenticates and
+> the new one is written. Changing it in the config simply makes the next upload
+> fail against a device that still holds the old one. ESPHome's own documented
+> options are an `on_boot` lambda calling `id(my_ota).set_auth_password(...)`
+> compiled against the *old* password, or a serial flash. **The API encryption key
+> and the web_server password have no such problem** — they are only compiled in,
+> never used for the handshake, so they rotate over ordinary OTA.
 >
-> **And expect Home Assistant to ask.** The API encryption key changed, so the
-> ESPHome integration will prompt for the new one after the device comes back.
-> Entity IDs and history survive — the device name is unchanged.
+> That is how the 2026-09-02 rotation was done: API key and web password over OTA
+> with `af4_ota_password` left at its previous value, and the OTA password itself
+> deferred to the next serial flash — the board is on the bench for §3's headers
+> anyway.
+>
+> **Expect Home Assistant to ask.** The API encryption key changed, so the ESPHome
+> integration prompts for the new one after the device comes back. Entity IDs and
+> history survive — the device name is unchanged. Confirmed working 2026-09-02.
 
 > **If you are re-using the already-flashed board:** the trigger pin changed.
 > Rev E drives **GPIO32**, not GPIO13, because of the factory 2.2 kΩ pull-up on

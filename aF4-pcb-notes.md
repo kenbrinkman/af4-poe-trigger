@@ -190,9 +190,10 @@ have eaten most of the jack's 9.5 mm insertion depth. As built the plug engages
 
 ## Open items
 
-1. **`af4-feeder.yaml` moves GPIO13 → GPIO32.** The file in this repo is already
-   updated; it still needs pasting into the ESPHome Device Builder and an OTA.
-   Until that happens the board does nothing.
+1. ~~**`af4-feeder.yaml` moves GPIO13 → GPIO32.**~~ **Done 2026-09-01** — pasted into
+   the ESPHome Device Builder and installed the same evening; the running device
+   reports GPIO32 firmware built 18:54 that day. Re-flashed 2026-09-02 for the
+   credential rotation.
 2. Solder two 1 × 10 male headers into EXT1/EXT2, pointing up.
 3. Distributor part numbers are intentionally blank in the BOM — PCBWay sources by
    MPN. Fill them in only if you want to buy any of it yourself.
