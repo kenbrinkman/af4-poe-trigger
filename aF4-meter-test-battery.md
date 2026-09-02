@@ -109,7 +109,7 @@ or worse. A5 uses a series resistor — safer, and it yields input impedance fre
 continuous beeping, cooling continues, manual restart). A **130XXX is newer than
 all of them**, so it most likely behaves like `100XXX` or newer — inference, not
 documentation. Neither behaviour self-clears, and neither signals Home Assistant,
-which is part of the case for the item-12 missed-feed alert.
+which is part of the case for dispense confirmation — a fault is invisible to HA even with the missed-feed watchdog running, because the pulse still succeeds. Master-reference item 20.
 
 **Consequence worth having:** the link LED's flash-green-on-feed-signal is
 documented as "newer units only". This unit is newer than any published range, so
@@ -663,6 +663,6 @@ Tracked in project memory as open items 1–14.
 | 8 | `web_server: port: 80` has no `auth:`; API key and OTA password committed in plaintext |
 | 9 | `gen_pcb.py` stray "exclude from BOM/pos" flags on J2 |
 | 11 | ✅ **DONE 2026-09-01.** `R1` retagged `[VENDOR] ≥ 9 V held ≥ 15 s` with the three-way conflict documented, across `aF4-MASTER-REFERENCE.md`, `aF4-reference.md`, `aF4-esp32-trigger-BOM.md`, `README.md`, `aF4-pcb-notes.md`. **The YAML pulse change (item 2) is still outstanding.** |
-| 12 | **Missed-feed alert in HA** — `counter.reef_af4_feeds_today` still 0 past the scheduled time. The only wholly unmonitored failure direction; also covers over-temperature faults, which never self-clear |
+| 12 | ✅ **DONE — and it already existed when this line was written.** `automation.reef_tank_feeder_health_watchdog` runs a 23:45 counter-vs-elapsed-feed-times backstop plus a board-offline branch, and the scheduled-feed automation notifies on skip and on unacknowledged press. Verified against the live HA config 2026-09-02. **What it does NOT cover is an over-temperature fault** — the port is input-only, so a pulse can be confirmed while nothing dispenses. That is now master-reference item 20, and it needs a power-monitoring plug, not an automation |
 | 13 | Add link-LED checks as commissioning steps 6.7 / 6.8 |
 | 14 | **R5 at 77 % of an 0805's rating.** 0.25 W part is a drop-in. Decide before assembly — raising the divider impedance is NOT available, it is the minimum-load ballast |

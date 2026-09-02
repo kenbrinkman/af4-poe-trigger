@@ -718,24 +718,67 @@ Entities: `button.af4_feeder_feed` (sole control), `binary_sensor.af4_feeder_fee
 
 Helpers: `input_boolean.reef_af4_schedule_enabled` (master kill switch),
 `input_datetime.reef_af4_feed_time_1` / `_2`, `counter.reef_af4_feeds_today`,
-`sensor.reef_af4_next_feed`, `automation.reef_tank_af4_scheduled_feed`.
+`sensor.reef_af4_next_feed`.
 
-Two deliberate choices worth preserving:
+Automations: `automation.reef_tank_af4_scheduled_feed` (scheduler + per-feed confirmation),
+`automation.reef_tank_feeder_health_watchdog` (backstop, shared with the Plank feeder),
+`automation.reef_tank_reset_ato_counter_daily` (nightly counter reset).
+
+#### `automation.reef_tank_af4_scheduled_feed` — read from HA 2026-09-02
+
+Materially more than "presses a button", which is all this document used to say. Triggers
+on the two `input_datetime` helpers so times stay dashboard-editable, gated by the master
+kill switch, then:
+
+1. **Two interlocks before pressing.** `binary_sensor.af4_feeder_feed_lockout` must be
+   `off`, and `binary_sensor.reef_tank_sump_return_pump_..._running` must be `on`. The
+   second is the one this document never knew about: the feeder discharges into the sump,
+   so with no return pump the food never reaches the display. It reads `off` while the
+   system is unplumbed and self-clears when the return comes up.
+2. **Press, then wait up to 15 s for the lockout to go `on`.** On-device the lockout is
+   `do_feed.is_running() || boot_recovery.is_running()`, and the press only happens while
+   it is `off` — so **the lockout turning on is proof the pulse started**. That is as close
+   to feed confirmation as an input-only port allows.
+3. **The counter increments only on a confirmed pulse.** An unacknowledged press notifies
+   and is deliberately *not* counted, so a press lost in transit cannot log a phantom feed
+   and blind the watchdog below. This is load-bearing and must survive any rewrite.
+4. **Both failure paths notify**, naming which interlock failed.
+
+#### `automation.reef_tank_feeder_health_watchdog` — read from HA 2026-09-02
+
+The backstop for silent failure, in three branches:
+
+- **23:45 daily check.** Compares each feeder's counter against how many of its feed times
+  have actually elapsed today, computed from the `input_datetime` helpers rather than
+  hardcoded — so moving a feed time cannot false-alarm. 23:45 is late enough that any
+  plausible feed time has passed and early enough to beat the midnight counter reset.
+- **aF4 board offline 15+ minutes** while the schedule is enabled. Gated on the toggle, so
+  bench and case work with the schedule off stays quiet.
+- **Plank plug Z-Wave node dead** 15+ minutes.
+
+Three deliberate choices worth preserving:
 
 1. **Feed counting lives in HA, not on-device** — it survives ESP32 reboots and reuses the
    existing nightly reset automation.
-2. **The automation's lockout condition does double duty.** `off` means the device is
-   reachable *and* outside its lockout, so an offline ESP32 skips the feed rather than firing
-   a button press into the void.
+2. **The lockout condition does double duty.** `off` means the device is reachable *and*
+   outside its lockout, so an offline ESP32 skips the feed rather than firing a button
+   press into the void. Offline reads `unavailable`, which fails the check correctly.
+3. **The counter counts confirmed pulses, not presses.** See point 3 above.
 
 Networking: IP 192.168.1.55 reserved in OPNsense dnsmasq against Ethernet MAC
 `20:E7:C8:74:A6:D7` (host override `af4-feeder`, MAC match only, no client identifier). The
 board pulled a new DHCP lease after flashing, which broke HA's cached discovery with
 `Errno 113`; the reservation is the fix.
 
-**No feedback channel exists.** The 0-10 V port is input-only; there is no electrical
-confirmation that a dispense actually occurred. A power-monitoring smart plug on the 12 V
-supply could infer feed-motor activity if that is ever wanted.
+**No feedback channel exists, and this is now the only unmonitored failure direction.**
+The 0-10 V port is input-only, so everything above confirms that *the pulse was sent* and
+nothing confirms *that food came out*. The gap that matters is an over-temperature fault:
+per inD's own documentation it stops the feeder and **never self-clears**, and it is
+invisible to us — the ESP32 would pulse happily, the lockout would assert, the counter
+would increment, and the 23:45 watchdog would stay silent while the tank went unfed.
+
+A power-monitoring smart plug on the 12 V supply is the only way to close it without
+opening the unit: feed-motor current is the sole dispense evidence available. Open item 20.
 
 ---
 
@@ -826,9 +869,18 @@ datasheet was actually opened.
 ## 8. Open items
 
 Revised after the 2026-08-28 audit, the 2026-08-31 pre-fabrication review, the 2026-09-01
-bench and vendor-documentation passes, and the 2026-09-02 order going to fabrication.
-**Ten of the sixteen are closed.** The three that still gate working hardware are 11, 12
-and 15 — all of them on Kenny's side of the fence, none of them on the board.
+bench and vendor-documentation passes, the 2026-09-02 order going to fabrication, and the
+2026-09-02 read of the live Home Assistant config.
+
+**Thirteen of the twenty are closed.** Only three still gate working hardware — **11, 12
+and 15** — and all three are bench or console work, none of them on the board. Of the rest,
+14 and 19 are cosmetic, 18 is deferred to a future revision because the fabrication window
+has closed, and **20 is the one real remaining hole in unattended safety**.
+
+⚠️ Item 17 is a caution about this table itself: it was opened by the 2026-09-02 review and
+closed the same day on discovering the work had existed in Home Assistant since 08-27 and
+had simply never been written back here. **A ledger built by reading the repo will invent
+open items as readily as it misses closed ones.** Check reality before adding a row.
 
 | # | Item | Blocking? |
 |---|---|---|
@@ -848,9 +900,10 @@ and 15 — all of them on Kenny's side of the fence, none of them on the board.
 | 14 | Resolve the LED viewing-angle conflict, 120° vs 160°/140° (§2.6) | No — cosmetic |
 | 15 | Commissioning steps 6.1–6.8 must all pass before the schedule toggle is enabled | **YES** — gates go-live |
 | 16 | ~~API key, OTA password and web_server password committed in plaintext to a PUBLIC repo~~ — **CLOSED 2026-09-02.** All three moved to a gitignored `secrets.yaml` via `!secret` **and rotated**. History deliberately not rewritten; rotation is what remediates. Completes on the item-11 flash, which carries the new values | — |
-| 17 | **Missed-feed alert in HA** — fire when `counter.reef_af4_feeds_today` is still 0 past the scheduled time. The only wholly unmonitored failure direction, and it also covers over-temperature faults, which never self-clear | No — but it is the last unattended-safety gap |
+| 17 | ~~Missed-feed alert in HA~~ — **ALREADY CLOSED, and this item should never have been opened.** `automation.reef_tank_feeder_health_watchdog` has done it since 2026-08-27: a 23:45 counter-vs-elapsed-feed-times backstop, plus a board-offline branch. The scheduled-feed automation independently notifies on skip and on unacknowledged press. Read from HA 2026-09-02; the work existed and was simply never written back to this repo | — |
 | 18 | **R5 runs at 77 % of an 0805's 125 mW rating.** A 0.25 W part is a drop-in; raising the divider impedance is NOT available, it is the minimum-load ballast. **Window has now closed for this run** — boards are in fabrication | No — note for a future rev |
 | 19 | Silkscreen on the fabbed rev E boards reads **"10.4V 10s pulse"**. Corrected in `gen_pcb.py` for any future rev; the five boards in fabrication will carry the old string | No — cosmetic, and unfixable now |
+| 20 | **No dispense confirmation.** Everything in §5 confirms the pulse was *sent*; nothing confirms food came out. An over-temperature fault would be invisible and never self-clears. A power-monitoring smart plug on the 12 V supply is the only fix short of opening the unit | No — the last unmonitored failure direction |
 
 ### Commissioning gate (from `aF4-assembly-guide.md` §6)
 

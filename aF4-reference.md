@@ -121,20 +121,38 @@ against Ethernet MAC `20:E7:C8:74:A6:D7`.
 | `input_datetime.reef_af4_feed_time_1` / `_2` | Feed times (default 09:00 / 17:00) |
 | `counter.reef_af4_feeds_today` | Daily count; reset by `automation.reef_tank_reset_ato_counter_daily` |
 | `sensor.reef_af4_next_feed` | Template; reads `unknown` while the schedule toggle is off (expected) |
-| `automation.reef_tank_af4_scheduled_feed` | Presses the button at each feed time |
+| `automation.reef_tank_af4_scheduled_feed` | Scheduler **and** per-feed confirmation — see below |
+| `automation.reef_tank_feeder_health_watchdog` | Silent-failure backstop, shared with the Plank feeder |
+
+**The scheduled-feed automation is more than a button press** (read from HA
+2026-09-02; this table used to claim otherwise). It checks two interlocks before
+pressing — the feeder lockout must be `off`, **and the sump return pump must be
+running**, because the feeder discharges into the sump and without the return the
+food never reaches the display. After pressing it waits up to 15 s for the lockout
+to go `on`; since the press only happens while the lockout is `off`, that
+transition is proof the pulse started. **The counter increments only on that
+confirmation**, so a press lost in transit cannot log a phantom feed and blind the
+watchdog. Both failure paths send a phone notification naming the interlock.
+
+**`automation.reef_tank_feeder_health_watchdog`** is the backstop: a 23:45 check
+comparing the counter against how many feed times have actually elapsed today
+(computed from the `input_datetime` helpers, so editing a feed time cannot
+false-alarm), plus an alert when the board is offline 15+ minutes with the
+schedule enabled. 23:45 is late enough for any plausible feed time and early
+enough to beat the midnight counter reset.
 
 Feed counting is deliberately in HA, not on-device: the counter survives ESP32
-reboots and reuses the existing nightly reset. The automation's lockout
-condition does double duty — `off` means the device is reachable *and* outside
-its 5-minute lockout, so an offline ESP32 skips the feed instead of firing a
-press into the void.
+reboots and reuses the existing nightly reset. The lockout condition does double
+duty — `off` means the device is reachable *and* outside its 5-minute lockout, so
+an offline ESP32 skips the feed instead of firing a press into the void; offline
+reads `unavailable`, which fails the check correctly.
 
 Networking: the board pulled a new DHCP lease after flashing (.230 → .55),
 which broke HA's cached discovery with `Errno 113`. Fixed 2026-07-18: Ethernet
 MAC `20:E7:C8:74:A6:D7` reserved at 192.168.1.55 in OPNsense dnsmasq (host
 override `af4-feeder`, no client identifier — MAC match only).
 
-- Feeder has no feedback channel — the 0-10V port is input-only. Confirmation of an actual dispense isn't available electrically; a power-monitoring smart plug on the 12V supply could infer feed motor activity if desired
+- Feeder has no feedback channel — the 0-10V port is input-only. Everything above confirms the pulse was *sent*, never that food came out. The case that matters is an over-temperature fault: it stops the feeder, **never self-clears**, and is invisible to HA — the ESP32 would pulse, the lockout would assert, the counter would increment and the watchdog would stay quiet. A power-monitoring smart plug on the 12V supply is the only way to infer real feed-motor activity short of opening the unit
 
 ## Sources
 

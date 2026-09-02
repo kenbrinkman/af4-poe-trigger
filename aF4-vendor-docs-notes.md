@@ -192,7 +192,10 @@ Behaviour splits by serial number — **worth recording ours**:
 
 **The fault never clears itself**, even after cooling. Combined with §1.4,
 a fault means feeding stops with no signal reaching HA — the same
-unmonitored direction, reinforcing the case for the missed-feed alert.
+unmonitored direction. Note the missed-feed watchdog does **not** catch this one:
+the ESP32 still pulses, the lockout still asserts and the counter still increments,
+so only real dispense evidence — a power-monitoring plug on the 12 V supply —
+would see it. Master-reference item 20.
 
 Placement rules that bear on a sump-cabinet install: **6 inches clearance
 around all vents**, fan intake kept out of salt spray, active cabinet
