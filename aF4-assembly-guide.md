@@ -37,12 +37,64 @@ light pipes land on.
 
 ### Light pipes
 
-Cut four pieces of 3 mm (1/8") clear acrylic rod: **2 × 22.7 mm** for PWR1 and
-LNK1, **2 × 10.1 mm** for D3 and D5. Sand both ends flat on 400 then 1500 grit —
-a clean end face is most of the brightness. Drop each in from the lid's inside
-face until it seats on the aperture step, then run a small bead of clear
-5-minute epoxy around it on the inside. The lengths leave 0.6 mm of air over each
-LED; **a pipe that touches an LED is too long — trim it.**
+Four pipes, cut from **3 mm / ⅛" clear acrylic rod**. One 6" rod makes all four
+with half of it left over; a 4" rod is also enough.
+
+| Pipe | Over | Cut length | Should stand proud of the lid's INNER face by |
+|---|---|---|---|
+| ×2 | PWR1 (red), LNK1 (green) — Olimex | **22.7 mm** | 20.6 mm |
+| ×2 | D3 (green), D5 (yellow) — hat | **10.1 mm** | 8.0 mm |
+
+The rod occupies 2.10 mm inside the lid (seat at z 25.60 down to the lid
+underside at 23.50), which is where that second column comes from. **That is the
+check to trust** — seat a pipe dry in the lid and measure the protrusion with
+calipers. It verifies the length against the part in your hand, with no board
+involved.
+
+**Tolerance is one-sided.** The lengths leave 0.6 mm of air over each LED. Short
+is harmless — losing another half-millimetre of gap costs almost nothing in
+brightness. Long is not: **a pipe that touches an LED is too long.** When in
+doubt cut 0.3 mm short.
+
+**Cutting.** Fine-tooth razor saw in a miter block, cut ~0.5 mm long, then face
+to length. Do not use side cutters — acrylic chips and you will crack the rod.
+A rotary cut-off disc works but melts a hazed rim you then have to face off
+anyway.
+
+**Facing and polishing.** Only the two **ends**. Hold the rod square against
+wet-or-dry laid on glass or tile and draw circles: 400 → 800 → 1500 → 2000, then
+a plastic polish (Novus 2, PlastX) on a cloth. **Leave the sides alone** — the
+rod pipes light by total internal reflection off the acrylic/air sidewall, and
+sanding or painting the side is exactly how you dim it. The LED-facing end
+matters most; it is the coupling face.
+
+Flame polishing gives a better end but is optional and easy to overdo: one fast
+pass with butane, and check with calipers afterwards, because **a bulged end
+over 3.5 mm will not pass the bore.**
+
+**Fitting.** Deburr the bore, drop the pipe in from the lid's inside face until
+it stops on the aperture step, then a small bead of **clear 5-minute epoxy**
+around it on the inside face. Keep the epoxy inside; there is no need for it in
+the Ø2.6 well.
+
+- **Do not use cyanoacrylate.** CA crazes acrylic and its vapour will frost the
+  polished ends — and anything else in the box.
+- **Do not use acrylic solvent cement.** It does not bond PETG and will craze it.
+- Neutral-cure silicone is a fine alternative if you would rather have something
+  that stays flexible. Hot glue creeps and yellows; don't.
+
+The pipe seats 0.9 mm below the outer face, looking up a shallow Ø2.6 well. That
+is deliberate — it protects the end and the well is too shallow to narrow the
+view. Cutting the pipes longer to sit flush does not work: a 3 mm rod will not
+pass a 2.6 mm aperture.
+
+**Cross-talk** between PWR1 and LNK1 (centres 5.715 mm apart) is not worth
+engineering around. Both are steady-state indicators — red on means the 3V3 rail
+is up, green on means the link is up — so a little bleed does not change what
+either one tells you.
+
+**Check before you close up.** With the splitter tap live and the patch cable in,
+you should read red PWR1 and green LNK1 from a metre away, square on.
 
 ## 2. Receive and inspect the board
 
