@@ -34,7 +34,7 @@ This is the manufacturing BOM. The machine-readable version PCBWay wants is
 |---|---|---|---|
 | U1 | **Panasonic AQY212GS** PhotoMOS, 60 V / 1 A, 0.34 Ω, 1500 Vrms | SOP-4 | Same family and die as the rev C DIP part. Isolation drops 5000 → 1500 Vrms, accepted: both sides are SELV. Pins 3/4 are a symmetric MOSFET pair, no polarity |
 | U2 | **TI LM1117MPX-ADJ/NOPB** | SOT-223 | Same die as the rev C TO-220. **The pin-crossing problem is gone** — the footprint puts ADJ where ADJ goes |
-| R4 / R5 | 121 Ω / 887 Ω, 1 %, 0805 | 0805 | Vout = 1.25 × (1 + 887/121) = 10.41 V, +53 mV from I_ADJ ≈ **10.46 V**. Fixed by construction. **The rev C sourcing problem vanishes** — 121 Ω 1 % in 0805 is a stocked jellybean, no 18-week lead |
+| R4 / R5 | 121 Ω / 887 Ω, 1 %, 0805 | 0805 | Vout = 1.25 × (1 + 887/121) = 10.41 V, +53 mV from I_ADJ ≈ **10.47 V**. Fixed by construction. **The rev C sourcing problem vanishes** — 121 Ω 1 % in 0805 is a stocked jellybean, no 18-week lead |
 | C1 | 10 µF 50 V X5R | 1206 | Regulator input bulk. X5R, not X7R: Murata's 1206 10 µF 50 V part (GRM31CR61H106KA12L) is X5R; X7R at that C/V needs a 1210 |
 | C2 | 10 µF 25 V **tantalum** | EIA-3528 (B) | Must stay tantalum — the LM1117 needs output-cap ESR. 25 V not 16 V: 16 V at a 10.4 V rail is only 65 % derating, and tantalums want 50 %. **Polarised** |
 | D1 | **SS14** Schottky, 40 V / 1 A | SMA | **New in rev D.** Reverse-polarity protection in series with the 12 V input — rev C had none at all. Costs 0.3 V of the 1.5 V headroom and turns a polarity mistake into "nothing happens" |

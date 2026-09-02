@@ -95,10 +95,14 @@ than assumed equivalent.
 
 The logic domain (sockets, R1, R2, PhotoMOS LED side) and the feeder-power domain
 are separate ground pours with **no copper crossing between them**. The only
-connection is the PhotoMOS itself, which physically straddles the boundary — its
-own 4.3 mm pad-to-pad gap forms the barrier, which comfortably exceeds the
-creepage its 1500 Vrms rating implies. The band is marked on both silkscreens.
-Two mounting holes sit in it, which is free real estate.
+connection is the PhotoMOS itself, which physically straddles the boundary. On the
+corrected rev E land pattern its pad-to-pad gap is **4.80 mm** — the old 4.3 mm figure
+described the *wrong* U1 footprint and is withdrawn. The governing number is not U1 but
+**R1 pad 2**, whose logic-side copper reaches x 121.925 and intrudes 0.275 mm into the
+nominal band against the GNDP pour edge at 126.350, so the **true minimum logic-to-power
+creepage is 4.425 mm** — still far beyond anything 1500 Vrms between two SELV domains
+needs. The band is marked on both silkscreens. Two mounting holes sit in it, both NPTH
+with no copper, which is free real estate.
 
 ## Ordering from PCBWay
 
@@ -194,3 +198,16 @@ have eaten most of the jack's 9.5 mm insertion depth. As built the plug engages
    MPN. Fill them in only if you want to buy any of it yourself.
 4. The two protoboard SVGs and `protoboard 20x20.stl` describe hardware that no
    longer exists. Kept as rev C history; don't build from them.
+5. **`gen_pcb.py` and `af4-trigger-hat.kicad_pcb` now differ by one silkscreen
+   string.** The script says "10.4V 20s pulse"; the fabricated boards say 10s,
+   because the firmware timing changed on 2026-09-01 after the Gerbers shipped.
+   The board file and the Gerbers are the fabricated rev E and are correct as
+   they stand — **do not regenerate them to close the gap.** Re-running the
+   script starts the next revision.
+
+## Order status
+
+Rev E is in fabrication at PCBWay as order **YB1800644**, placed and paid
+2026-09-02, $169.95 all-in for five assembled boards. The engineering question on
+the J1/J2 slot widths was answered the same day. Full record, quote and per-line
+pricing: `pcbway-order-YB1800644.md`.

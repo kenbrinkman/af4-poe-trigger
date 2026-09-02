@@ -4,7 +4,7 @@ Replaces the inD connect WiFi dongle on the [inD aquatics aF4](https://www.indaq
 
 ## How it works
 
-ESP32-POE-ISO → GPIO32 → 220Ω → AQY212GS PhotoMOS → switches the feeder's own 12V supply (regulated to ~10.4V by an on-board LM1117-ADJ) onto the 3.5mm trigger jack. Safety guardrails (10s pulse, 5-min lockout, restore-off) are baked into the ESPHome config on-device; HA is scheduler only.
+ESP32-POE-ISO → GPIO32 → 220Ω → AQY212GS PhotoMOS → switches the feeder's own 12V supply (regulated to ~10.4V by an on-board LM1117-ADJ) onto the 3.5mm trigger jack. Safety guardrails (20s pulse, 5-min lockout, restore-off, flash-persisted boot lockout) are baked into the ESPHome config on-device; HA is scheduler only.
 
 **Rev E** puts all of that on a PCB "hat" that plugs onto the ESP32's EXT1/EXT2 headers and carries both panel connectors, assembled by PCBWay. The rev C hand-wired protoboard is retired.
 

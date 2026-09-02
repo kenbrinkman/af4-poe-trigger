@@ -41,7 +41,11 @@ conservatism rather than a hard threshold in the aF4 (Hydros run-time
 granularity; the dongle figure describes what the *dongle* must see, not
 the port). That is a reason to distrust 6 s, not a reason to keep it.
 
-**Recommended change — cheap, and it costs nothing else:**
+**Recommended change — cheap, and it costs nothing else.** ✅ **IMPLEMENTED 2026-09-01**,
+though with a 290 s tail rather than the 280 s sketched below: the shipped
+`af4-feeder.yaml` runs 20 s + 290 s = **310 s**, which also closes the
+zero-margin-at-exactly-300 s audit item. The block below is the original
+recommendation, kept for its reasoning:
 
 ```yaml
 - delay: 20s        # was 10s. >= 15s (Hydros), >= 10s (inD Connect)
@@ -164,7 +168,9 @@ connected (§1.4).
 
 **Power:** 12 V DC brick rated **12.5 A**, ~2 kWh/day at 70 °F ambient.
 Confirms `R6`. The docs still give **no figure for the link port's own
-input current**, so open item 6 stays open.
+input current** — but the bench closed it independently the same day:
+**~11 kΩ tip-to-sleeve, about 0.95 mA at 10.4 V** (`aF4-meter-test-battery.md`,
+A3/A5). Open item 6 is **closed by measurement, not by documentation**.
 
 **Power button needs a firm 3-second press.** Red LED above it = powered
 but off; solid green = running.
@@ -217,7 +223,7 @@ Returns: 14 days on the aF4, 10 % restocking, unused and complete only.
 
 ## 5. What the vendor docs still do not answer
 
-1. The port's input current — open item 6 is unchanged.
+1. ~~The port's input current~~ — **closed by measurement**: ~11 kΩ, ~0.95 mA (A3).
 2. The re-arm time (`R2`, our 60 s) — no vendor figure found.
 3. The port's actual input impedance or whether it is opto-isolated.
 4. Whether a *held* line re-triggers after some very long interval; the

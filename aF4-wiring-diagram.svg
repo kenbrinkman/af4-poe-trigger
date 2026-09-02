@@ -17,7 +17,7 @@
   </defs>
 
   <rect width="1180" height="720" fill="#f8fafc"/>
-  <text x="24" y="30" class="ttl">aF4 PoE trigger — rev D wiring</text>
+  <text x="24" y="30" class="ttl">aF4 PoE trigger — rev E wiring</text>
   <text x="24" y="49" class="sm">Everything except the ESP32 is on the trigger hat. Nothing crosses the isolation band except the PhotoMOS.</text>
 
   <!-- ===================== logic domain ===================== -->
@@ -55,7 +55,7 @@
 
   <!-- ===================== isolation band ===================== -->
   <rect x="452" y="66" width="34" height="586" fill="#f1f5f9" stroke="#cbd5e1" stroke-dasharray="6 5"/>
-  <text x="469" y="360" class="hdr" text-anchor="middle" transform="rotate(-90 469 360)">ISOLATION BARRIER — 4.3 mm, NO COPPER</text>
+  <text x="469" y="440" class="hdr" text-anchor="middle" transform="rotate(-90 469 440)">ISOLATION BARRIER — 4.8 mm PAD-TO-PAD, NO COPPER</text>
 
   <!-- PhotoMOS straddling the band -->
   <rect x="396" y="148" width="146" height="96" class="box"/>
@@ -116,7 +116,7 @@
   <text x="1040" y="397" class="lbl">R5 887R</text>
   <path class="w" d="M1064 364 V 382"/>
   <path class="wg" d="M1064 404 V 430 H 620"/>
-  <text x="1100" y="424" class="sm" text-anchor="end">10.46 V by construction</text>
+  <text x="1100" y="424" class="sm" text-anchor="end">10.47 V by construction</text>
 
   <!-- 10.4 V rail -->
   <path class="wp" d="M866 302 H 620 V 190 H 542"/>
@@ -132,7 +132,8 @@
   <!-- rail LED -->
   <path class="w" d="M686 302 V 342"/>
   <rect x="656" y="342" width="60" height="22" class="box"/>
-  <text x="664" y="357" class="lbl">R6 10k</text>
+  <text x="664" y="357" class="lbl">R6 1.0k</text>
+  <text x="650" y="357" class="sm" text-anchor="end">8.3 mA</text>
   <path class="w" d="M686 364 V 384"/>
   <polygon points="676,384 696,384 686,400" fill="#16a34a" stroke="#166534" stroke-width="1.4"/>
   <line x1="674" y1="402" x2="698" y2="402" stroke="#166534" stroke-width="2.2"/>
@@ -161,7 +162,8 @@
   <!-- feed LED -->
   <path class="wp" d="M600 540 V 604"/>
   <rect x="600" y="592" width="70" height="24" class="box"/>
-  <text x="608" y="608" class="lbl">R7 10k</text>
+  <text x="608" y="608" class="lbl">R7 6.8k</text>
+  <text x="594" y="608" class="sm" text-anchor="end">1.2 mA</text>
   <path class="w" d="M670 604 H 700"/>
   <polygon points="700,596 700,612 716,604" fill="#eab308" stroke="#a16207" stroke-width="1.4"/>
   <line x1="718" y1="594" x2="718" y2="614" stroke="#a16207" stroke-width="2.2"/>
@@ -177,7 +179,7 @@
   <path class="wg" d="M638 574 H 1018 V 572"/>
   <text x="1100" y="594" class="sm" text-anchor="end">→ patch cable → aF4 0-10 V port</text>
 
-  <text x="510" y="638" class="sm">Feed = ≥9 V held &gt;6 s. Pulse 10 s, then ≥5 min before the next. All timing is enforced on-device.</text>
+  <text x="510" y="638" class="sm">Feed = ≥9 V held ≥15 s. Pulse 20 s, then ≥5 min before the next. All timing is enforced on-device.</text>
 
   <!-- ===================== notes ===================== -->
   <rect x="24" y="300" width="420" height="112" rx="8" fill="#ffffff" stroke="#e2e8f0"/>
@@ -192,5 +194,5 @@
   <text x="40" y="450" class="hdr">TEST PADS</text>
   <text x="40" y="472" class="sm">TP1 +12 V     TP2 +10.4 V     TP3 tip</text>
   <text x="40" y="488" class="sm">TP4 supply GND     TP5 ESP32 GND</text>
-  <text x="40" y="510" class="sm">Commissioning: TP2 must read 10.3–10.5 V.</text>
+  <text x="40" y="510" class="sm">Commissioning: TP2 must read 10.0–10.9 V.</text>
 </svg>

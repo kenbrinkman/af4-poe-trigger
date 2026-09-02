@@ -1,5 +1,10 @@
 # PCBWay new order, rev E
 
+> **✅ SUPERSEDED BY EVENTS 2026-09-02 — order placed, quoted, paid, in fabrication as
+> YB1800644.** The full order record, the quote and the engineering question are in
+> `pcbway-order-YB1800644.md`. This file stays for the submission mechanics and the traps
+> in PCBWay's form, which are the part worth having next time.
+
 ## SUBMITTED 2026-08-31 - status and the form's traps
 
 Submitted as a fresh inquiry. Both cart line items are **"Subject to audit"**,
@@ -52,11 +57,17 @@ not be - it sits beside the new file under a nearly identical name.
 Build gotcha: the mounted folder blocks unlink, so `zip` fails with "Operation
 not permitted" on its write-then-replace. Build outside the mount, then copy in.
 
-### Still owed on the requote
+### Still owed on the requote — ✅ ALL DELIVERED 2026-09-02
 
 Components priced on all 20 lines including F1, R6 and R7; C1 priced against
 GRM31CR61H106KA12L or the TDK alternate explicitly; 28 hand-soldered joints not
 44; total lead time.
+
+Every one of those came back on the 2026-09-02 sheet: 20 lines priced, F1 at
+`1206L010/60WR`, C1 at the Murata MPN with **no substitution taken**, R6 and R7
+as separate lines, and a 26-28 day lead time. Component $78.96 + assembly $29.00
++ PCB $5.00 = **$112.96**, paid at $169.95 with shipping and tax. See
+`pcbway-order-YB1800644.md`.
 
 ---
 
@@ -162,11 +173,19 @@ needed.
 
 ---
 
-## Part 3. Checklist
+## Part 3. Checklist — closed 2026-09-02
 
-- [ ] Submit new SMT quote at pcbway.com with `af4-trigger-hat-rev-E-PCBWay.zip`
-- [ ] Paste the remark text from Part 1
-- [ ] On the quote, check: assembly cost present, F1 priced, C1 priced against
+- [x] Submit new SMT quote at pcbway.com — submitted 2026-08-31 with
+      `af4-trigger-hat-rev-E-GERBERS.zip` on the fab item and the BOM/centroid
+      xlsx on the assembly item, **not** the all-in-one zip named in the original
+      line of this checklist
+- [x] Paste the remark text from Part 1 — in two ~590-character halves, per the
+      600-character limit recorded above
+- [x] On the quote, check: assembly cost present, F1 priced, C1 priced against
       GRM31CR61H106KA12L (or the TDK alternate, explicitly), R6 and R7 both
-      present, 28 joints not 44, total lead time
-- [ ] Confirm the new quote number and record it in project memory
+      present, 28 joints not 44, total lead time — **all confirmed**
+- [x] Confirm the new quote number and record it — order **YB1800644**, PCB item
+      W1125728AS3P5, assembly item T-3P6W1125728A, recorded in
+      `pcbway-order-YB1800644.md`
+- [x] Answer the engineering question on the slot widths — sent 2026-09-02 14:05
+- [x] Pay — $169.95, 2026-09-02

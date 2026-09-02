@@ -5,15 +5,23 @@ PoE trigger project, written to be *audited*. Every load-bearing claim carries a
 tag so a reviewer can tell what has been verified against a primary source and what is an
 assertion that has not. The assertions are the interesting part — attack those first.
 
-> ## ✅ BUILD BLOCKER FIXED AND CLOSED — 2026-08-28
+> ## 🏭 IN FABRICATION — order YB1800644, as of 2026-09-02
 >
-> U1 now sits on **Panasonic's own recommended mounting pad**, read off the dimension
-> drawing rather than matched to a library part (§A1). The package is regenerated and
-> re-verified, and no open item remains on the footprint. **PCBWay must be sent the new
-> files** — the ones they hold are still the invalid set. Independent audit findings are
-> folded in throughout and marked **[AUDIT]**.
+> Rev E is **ordered, quoted, paid and in fabrication** at PCBWay. Component quote came
+> back 2026-09-02 on all 20 lines; the engineer question on the J1/J2 slot widths was
+> answered the same day ("machine all 8 as drawn") and PCBWay restarts the fab clock from
+> the end of EQ. Nothing on the board is open. See `pcb/pcbway-order-YB1800644.md`.
+>
+> **The one thing still blocking working hardware is firmware, not the board:**
+> `af4-feeder.yaml` has never been pasted into the ESPHome Device Builder and flashed, so
+> the running device is still on GPIO13 with a 10 s pulse. Open item 11.
+>
+> Earlier blocker, closed 2026-08-28: U1 now sits on **Panasonic's own recommended mounting
+> pad**, read off the dimension drawing rather than matched to a library part (§A1).
+> Independent audit findings are folded in throughout and marked **[AUDIT]**.
 
-Generated 2026-08-28, revised after independent audit the same day. Canonical source for this file is the repo; the other project docs
+Generated 2026-08-28, revised after independent audit the same day, after the 2026-09-01
+bench and vendor-documentation passes, and after the 2026-09-02 order went to fabrication. Canonical source for this file is the repo; the other project docs
 (`aF4-reference.md`, `aF4-pcb-notes.md`, `aF4-esp32-trigger-BOM.md`,
 `aF4-enclosure-notes.md`, `aF4-assembly-guide.md`) remain authoritative in their own areas
 and go deeper. This document does not replace them; it makes the whole thing checkable in
@@ -192,10 +200,13 @@ The problem is that inD's own guides **disagree with each other**:
 The current Neptune **Apex** article no longer states a hold time at all, so the help
 centre appears to have been reorganised since August.
 
-**Design to the longest published figure.** R1 is therefore set to **≥ 15 s**. The 10 s
-firmware pulse satisfies the 6 s figure but **fails the 15 s one**, so the timing check's
+**Design to the longest published figure.** R1 is therefore set to **≥ 15 s**. The old 10 s
+firmware pulse satisfied the 6 s figure but **failed the 15 s one**, so the timing check's
 "67 % margin" was margin against only the most permissive of three numbers.
-**Fix: 20 s pulse / 280 s tail — that clears all three.** See open item 11.
+✅ **Fixed in the repo 2026-09-01: 20 s pulse, tail left at 290 s** — a 310 s cycle, which
+clears all three hold times *and* closes the separate zero-margin-at-300 s audit item. The
+280 s tail first sketched here would have kept the cycle at exactly 300 s; keeping the
+290 s was free. **Still needs flashing** — open item 11.
 
 `[MEAS] 2026-09-01` closes the obvious escape route: the OEM dongle **passes the toggle
 through** rather than emitting a fixed-width pulse, so inD's "10 seconds" describes the
@@ -384,7 +395,7 @@ Consequences:
 Both inside the recommended 5–30 mA band, with 36 % margin at worst case. ESP32 GPIO source
 current of 9 mA is well within its ~20 mA recommended / 40 mA absolute limit.
 
-Switching time (1.3 ms typ) is irrelevant against a 10 s pulse.
+Switching time (1.3 ms typ) is irrelevant against a 20 s pulse.
 
 ### 2.4 The GPIO13 problem — why the trigger is on GPIO32
 
@@ -559,9 +570,14 @@ construction. **Edit the script, not the board file.**
 
 ### Verification status of the board
 
-`[ASSERT]` — the following is reported in `aF4-pcb-notes.md` and was **not re-run**
-during this audit pass. DRC via `pcbnew.WriteDRCReport` (KiCad 7): clearance 0, courtyard
+✅ **Independently re-run 2026-08-31** (`aF4-prefab-review-2026-08-31.md`), on KiCad
+7.0.11 with the zones filled from scratch — the counts below are confirmed, not reported.
+DRC via `pcbnew.WriteDRCReport` (KiCad 7): clearance 0, courtyard
 overlaps 0, hole clearance 0, hole-to-hole 0, copper-to-edge 0, unconnected 0, mask bridges 0.
+That review also swept clearance at multiple rules on the filled board: **zero violations at
+0.2032 mm (8 mil) and at 0.24 mm; first hits at 0.25 mm**, so the real minimum copper gap is
+0.24–0.25 mm and the 0.20 mm carried in these docs is the KiCad netclass default, not the
+geometry. The shipped Gerbers were re-exported and diffed against the board — identical.
 Remaining flags are silkscreen cosmetics and "library footprint differs", both expected for
 programmatically placed footprints.
 
@@ -608,27 +624,29 @@ presses one button and can do nothing else.
 | `script.do_feed` with `mode: single` | re-entrant presses are **dropped**, not queued |
 | `button.af4_feed` template button | the sole exposed control |
 | `binary_sensor.af4_lockout` | exposes lockout state for dashboards and automation conditions |
+| `globals.feed_in_flight`, `restore_value: yes` | **flash-persisted**, so a reboot inside a cycle is detected on boot |
+| `script.boot_recovery` off `on_boot` | serves a 300 s lockout when that flag comes back true |
+| `web_server: auth:` | the local control page is no longer an anonymous second control path |
 
 ### Timing check against the spec `[CALC]`
 
 ```
-  10 s pulse   ≥ 15 s threshold hold       ✗  SHORT BY 5 s  <-- as shipped
-  20 s pulse   ≥ 15 s threshold hold       ✓  (33 % margin) <-- after item 11
- 280 s off tail ≥ 60 s re-arm             ✓  (367 % margin)
- 20 + 280 = 300 s total cycle ≥ 5 min      ⚠ EXACTLY at the limit, not above
+  20 s pulse    ≥ 15 s threshold hold      ✓  (33 % margin)   <-- as written in the repo
+ 290 s off tail ≥ 60 s re-arm              ✓  (383 % margin)
+ 20 + 290 = 310 s total cycle ≥ 5 min      ✓  (10 s of margin, was exactly 0)
 ```
 
-⚠️ `[VENDOR] 2026-09-01` **The old version of this block read `≥ 6 s` and claimed a
-67 % margin. Against inD's actual figures the 10 s pulse has none.** Widen the *pulse*
-to 20 s and take it out of the tail, keeping the 300 s cycle intact.
+✅ **RESOLVED in the repo 2026-09-01 — but NOT YET FLASHED.** Two separate problems were
+closed in one edit. The old block read `≥ 6 s` and claimed a 67 % margin; against inD's
+actual figures the 10 s pulse had none, so the pulse went to **20 s**. And the audit's
+zero-margin complaint — R3 requires feeds ≥ 5 min apart and the cycle was exactly 300 s —
+was closed by keeping the **290 s tail** rather than trimming it to 280 s, which buys the
+310 s cycle for free.
 
-⚠️ **Audit item.** R3 requires feeds ≥ 5 minutes apart and the script's cycle is exactly
-300 s. There is zero margin. Any rounding in ESPHome's `delay` handling, or a press arriving
-the instant the lockout clears, lands on the boundary rather than inside it. Widening the
-tail to 300 s (giving a 310 s cycle) would cost nothing and remove the edge case. Not yet
-changed — flagged for decision.
+⚠️ The device on the tank is still running the old 10 s / GPIO13 build. Everything in this
+section describes `af4-feeder.yaml` **as committed**, not as flashed. See open item 11.
 
-### `[AUDIT]` The lockout does not survive a reboot
+### ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01
 
 `script.do_feed`'s state lives in RAM. Any reboot inside the 300 s cycle — OTA update,
 crash, brownout, power blip — clears the lockout silently. The switch comes back
@@ -640,18 +658,34 @@ OTA or crash at t+60 s → HA retry, second schedule slot, or a manual press →
 Low probability, but it is exactly the class of unattended edge this document exists to
 catch.
 
-**Fix:** an `on_boot` hook that runs a lockout-only script, so every boot starts locked
-out. That covers the power-blip case for free, and pairs naturally with widening the tail
-to 300 s. Not yet implemented.
+**Fix, implemented:** a `restore_value: yes` global, `feed_in_flight`, is set when the
+pulse starts and cleared when the lockout ends. It lives in flash, so a reboot mid-cycle is
+detected in `on_boot`, which runs `script.boot_recovery` — a 300 s lockout-only script. The
+Feed button checks `boot_recovery.is_running()` and ignores presses while it is, and
+`binary_sensor.af4_lockout` ORs both scripts so the state is visible. A clean boot leaves
+the flag false and costs nothing.
 
-### `[AUDIT]` The web server is a second, unauthenticated control path
+⚠️ One practical wrinkle, verified 2026-09-01: the `on_boot` log line fires while ethernet
+is still coming up, so **no log client ever sees it** and ESPHome does not replay it. Read
+the *state* instead — Feed Lockout on at a low uptime with nobody having pressed Feed is
+the recovery lockout. `aF4-assembly-guide.md` §6 says so at the point of use.
+
+### ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01
 
 `web_server: port: 80` exposes the Feed button to anything on the LAN, with no `auth:`
 block. The safety story above — "HA is scheduler only, it presses one button and can do
 nothing else" — is true of Home Assistant and **false of the network**. On a home LAN this
-is a judgment call rather than a defect, but the document should say so. Commissioning
-step 6.5 uses this page, so add `auth:` after commissioning rather than before. Related
-hygiene: the API encryption key and OTA password are committed in the repo in plaintext.
+was a judgment call rather than a defect, but the document should have said so.
+
+`web_server:` now carries an `auth:` block. Commissioning step 6.5 uses this page, so the
+assembly guide records the credential at the point of use; Home Assistant is unaffected
+because it talks over the API, not this page.
+
+🔴 **The related hygiene problem is now the worse one and is still open.** The API
+encryption key, the OTA password **and the new web_server password** are all committed in
+plaintext to a **public** GitHub repository. Adding web auth and publishing its password in
+the same commit closed nothing. All three need moving to a gitignored `secrets.yaml` **and
+rotating** — git history keeps the old values regardless. Open item 16.
 
 ### `[AUDIT]` Held-high failure modes are bounded — the design's best safety property
 
@@ -726,8 +760,14 @@ with zero intersection volume `[ASSERT]`, as reported by the script; not re-run 
 - The barrel-jack hole needs its **Ø13 × 1.8 mm counterbore on the outside**, thinning the
   wall to 1.2 mm locally. Without it, 3 mm of wall eats most of the jack's 9.5 mm insertion
   depth. As built the plug engages 6.9 mm.
-- The **two Ø3.5 mm LED sight holes** in the lid sit over D3 and D5. This is the entire
-  reason LED brightness is a real requirement rather than a cosmetic preference (§2.6).
+- The **four Ø3.5 mm LED sight holes** in the lid, each fitted with a 3 mm clear acrylic
+  **light pipe**, sit over D3 and D5 on the hat and PWR1 and LNK1 on the Olimex board. This
+  is the entire reason LED brightness is a real requirement rather than a cosmetic
+  preference (§2.6). The pipes exist because the Olimex LEDs are 21.2 mm below the lid — a
+  plain hole gives them a 4.7° viewing half-angle, visible only dead-on. ACT1 and CHRG1
+  deliberately have no hole: ACT1 sits 0.361 mm inside the hat footprint and is blindfolded
+  by opaque FR4. Full spec in `aF4-enclosure-notes.md`; cutting and fitting in
+  `aF4-assembly-guide.md` §1.
 
 Hat mounting holes at (123.0, −118.0) and (123.5, −147.0) are **forced by geometry** — the
 only X clearing the ESP32's right edge below (118.15) and the parts column above (from
@@ -773,26 +813,32 @@ datasheet was actually opened.
 
 ## 8. Open items
 
-Revised after the 2026-08-28 audit. Items 1–3 are new; item 4 (AQY212 operate current) is
-**closed** — see §2.4.
+Revised after the 2026-08-28 audit, the 2026-08-31 pre-fabrication review, the 2026-09-01
+bench and vendor-documentation passes, and the 2026-09-02 order going to fabrication.
+**Ten of the sixteen are closed.** The three that still gate working hardware are 11, 12
+and 15 — all of them on Kenny's side of the fence, none of them on the board.
 
 | # | Item | Blocking? |
 |---|---|---|
-| 1 | ~~U1 footprint~~ — **CLOSED.** Rebuilt from Panasonic's recommended mounting pad, regenerated and re-verified (§A1) | — |
-| 2 | **Tell PCBWay to hold.** They have invalid Gerbers and a README claiming 44 hand-soldered joints against a real count of 28 | **YES — do this first** |
-| 3 | `on_boot` lockout so the 290 s tail survives a reboot (§5) | No, but it is the only unattended-safety gap left |
+| 1 | ~~U1 footprint~~ — **CLOSED 2026-08-28.** Rebuilt from Panasonic's recommended mounting pad, regenerated and re-verified (§A1); independently re-checked 2026-08-31 | — |
+| 2 | ~~Tell PCBWay to hold~~ — **CLOSED.** The rev D quotation was deleted at the vendor; rev E went in as a fresh inquiry 2026-08-31 with the corrected files and the 28-joint count | — |
+| 3 | ~~`on_boot` lockout~~ — **CLOSED 2026-09-01.** Flash-persisted `feed_in_flight` + `script.boot_recovery`, 300 s (§5) | — |
 | 4 | ~~Verify AQY212 operate current~~ — **CLOSED.** 1.1 mA typ / 3 mA max, turn-off 0.3 mA min. The GPIO32 move was mandatory, not optional | — |
-| 5 | **Measure the 12 V supply's open-circuit voltage** against the 13 V TVS standoff. Narrowed: a ±5 % 12 V brick idles ≤ 12.6 V, and D2 sits downstream of D1, so it takes a >13.3 V-idling brick to make D2 warm | No |
-| 6 | **Widen the 300 s feed cycle** — confirmed at exactly the 5-minute minimum with zero margin. A 300 s tail costs nothing; do it with item 3 | No — cheap |
-| 7 | **Widen commissioning check 6.3** from 10.3–10.5 V to ~10.0–10.9 V, and note that 6.2 and 6.3 are inconsistent at their edges (§2.2) | No — but before commissioning |
-| 8 | **Measure the feeder trigger port's input current.** Never measured; the whole load budget silently assumes it draws ~nothing | No |
-| 9 | Decide whether to add `web_server: auth:` after commissioning (§5) | No |
-| 10 | Line up a current-production substitute for C1 — EOL at Murata, distributor stock only | No |
-| 11 | `af4-feeder.yaml` GPIO13 → GPIO32 still needs pasting into the ESPHome Device Builder + OTA | **YES** — the board does nothing until then |
+| 5 | ~~Measure the 12 V supply's open-circuit voltage~~ — **CLOSED `[MEAS] 2026-09-01`: 12.13 V**, stable, comfortably under the 13 V standoff. Loaded it sits at 11.84–11.86 V and dips to 11.77 V | — |
+| 6 | ~~Widen the 300 s feed cycle~~ — **CLOSED 2026-09-01.** 20 s + 290 s = 310 s; the tail was kept rather than trimmed, which buys the margin for free | — |
+| 7 | ~~Widen commissioning check 6.3~~ — **CLOSED 2026-09-01.** 6.3 is now 10.0–10.9 V and 6.2 is 11.4–12.0 V; A2 made this mandatory, not optional | — |
+| 8 | ~~Measure the trigger port's input current~~ — **CLOSED `[MEAS] 2026-09-01`: ~11 kΩ, about 0.95 mA at 10.4 V.** Negligible against the 18.7 mA budget; the load-budget assumption was right | — |
+| 9 | ~~`web_server: auth:`~~ — **CLOSED 2026-09-01**, and it created item 16 | — |
+| 10 | ~~C1 substitute~~ — **CLOSED 2026-08-31.** LCSC holds ~123 k of `GRM31CR61H106KA12L`; pre-approved alternate `C3216X5R1H106K160AB` (TDK) is in the order notes. PCBWay quoted the correct MPN 2026-09-02 and did not substitute | — |
+| 11 | **`af4-feeder.yaml` still needs pasting into the ESPHome Device Builder + OTA.** Carries GPIO13 → GPIO32, the 20 s pulse, the boot lockout and web auth in one go | **YES** — the board does nothing until then |
 | 12 | Solder two 1×10 male headers into EXT1/EXT2, pins up | **YES** — blocks assembly |
-| 13 | Confirm whether the feeder's internal 24 h timer runs while externally triggered | No |
+| 13 | ~~Confirm the internal 24 h timer under external triggering~~ — **CLOSED `[VENDOR]`: the built-in schedule is completely overridden while the link port is connected.** The old assumption was backwards; this is what item 17 exists to cover | — |
 | 14 | Resolve the LED viewing-angle conflict, 120° vs 160°/140° (§2.6) | No — cosmetic |
-| 15 | Commissioning steps 6.1–6.6 must all pass before the schedule toggle is enabled | **YES** — gates go-live |
+| 15 | Commissioning steps 6.1–6.8 must all pass before the schedule toggle is enabled | **YES** — gates go-live |
+| 16 | 🔴 **API key, OTA password and web_server password are committed in plaintext to a PUBLIC GitHub repo.** Move to a gitignored `secrets.yaml` **and rotate** — history keeps the old values | No, but it is the only live security defect |
+| 17 | **Missed-feed alert in HA** — fire when `counter.reef_af4_feeds_today` is still 0 past the scheduled time. The only wholly unmonitored failure direction, and it also covers over-temperature faults, which never self-clear | No — but it is the last unattended-safety gap |
+| 18 | **R5 runs at 77 % of an 0805's 125 mW rating.** A 0.25 W part is a drop-in; raising the divider impedance is NOT available, it is the minimum-load ballast. **Window has now closed for this run** — boards are in fabrication | No — note for a future rev |
+| 19 | Silkscreen on the fabbed rev E boards reads **"10.4V 10s pulse"**. Corrected in `gen_pcb.py` for any future rev; the five boards in fabrication will carry the old string | No — cosmetic, and unfixable now |
 
 ### Commissioning gate (from `aF4-assembly-guide.md` §6)
 
@@ -801,18 +847,27 @@ All voltages referenced to **TP4 (power ground)**, not the ESP32's ground.
 | # | Check | Expect |
 |---|---|---|
 | 6.1 | Splitter tap into J1 | D3 green lit |
-| 6.2 | TP1 (12 V) → TP4 | 11.6–12.2 V |
-| 6.3 | TP2 (10.4 V) → TP4 | **10.3–10.5 V** — the check that matters |
+| 6.2 | TP1 (12 V) → TP4 | **11.4–12.0 V** (12 V less the Schottky drop) |
+| 6.3 | TP2 (10.4 V) → TP4 | **10.0–10.9 V** — the check that matters |
 | 6.4 | TP3 (tip) → TP4 at rest | 0 V, D5 dark |
-| 6.5 | Press Feed on the ESPHome web page | D5 lights, TP3 ≈ 10.4 V for 10 s, returns to 0 V |
-| 6.6 | Feed Lockout binary sensor | On with the pulse, clears ~5 min later |
+| 6.5 | Press Feed on the ESPHome web page (login `af4`) | D5 lights, TP3 ≈ 10.4 V for **20 s**, returns to 0 V |
+| 6.6 | Feed Lockout binary sensor | On with the pulse, clears **310 s** later |
+| 6.7 | Plug the patch cable into J2 | aF4's **link LED goes solid** — the port sees the connection |
+| 6.8 | Press Feed again | aF4's **link LED flashes green** — the pulse was accepted (newer units; SN 130063 qualifies) |
 
 If 6.3 reads ~1.4 V, R4 and R5 are swapped. If it reads near 12 V, the divider is not
 connected. Either way **stop — do not connect the feeder.**
 
-⚠️ Note 6.3's stated band of 10.3–10.5 V is narrower than the calculated worst-case spread of
-10.08–10.88 V (§2.1). A board reading 10.7 V is within design tolerance but would fail this
-check as written. Consider widening the acceptance band to 10.0–10.9 V.
+✅ **Both bands widened 2026-09-01 on measured evidence, and this was mandatory rather than
+cosmetic: as originally written, 6.2 and 6.3 would each have failed a perfectly good board.**
+A2 measured the feeder's 12 V rail at 11.77 V under load, putting TP1 near 11.47 V, and a
+low-tolerance divider legitimately regulates at 10.08 V against a stated floor of 10.3 V.
+The two checks were also mutually inconsistent at their edges. **If 6.3 reads low, check 6.2
+first** — a low-but-passing 6.2 means the LM1117 is simply in dropout and following its
+input, where the output lands at ~10.5 V regardless of R4/R5, and the divider is innocent.
+
+⚠️ If 6.5 does nothing, suspect the boot-recovery lockout before the hardware — and read the
+*state*, not the log (§5).
 
 ---
 
@@ -831,7 +886,9 @@ check as written. Consider widening the acceptance band to 10.0–10.9 V.
 | `pcb/gen_pcb.py` | **Source of truth for the board.** Edit this, not the `.kicad_pcb` |
 | `pcb/post.py` | Fills copper pours, runs DRC |
 | `pcb/make_package.py` | Generates BOM, centroid, fab notes, zip |
-| `pcb/af4-trigger-hat-rev-E-PCBWay.zip` | The upload package |
+| `pcb/af4-trigger-hat-rev-E-GERBERS.zip` | **What was actually uploaded** to the PCB-fabrication line item |
+| `pcb/af4-trigger-hat-rev-E-PCBWay.zip` | The all-in-one package. Byte-identical fab data, but **not** the file that was uploaded |
+| `pcb/pcbway-order-YB1800644.md` | Order, quote, EQ and payment record |
 | `aF4-protoboard-*.svg`, `protoboard 20x20.stl` | **Rev C history — do not build from these** |
 
 ### Toolchain constraints worth knowing
@@ -874,10 +931,33 @@ readable.)*
 3. ~~Feeder's internal 24 h timer behaviour under external triggering~~ — **CLOSED
    `[VENDOR]`: the schedule is completely overridden while the link port is connected.
    The previous assumption was backwards. See §1.**
-4. DRC and the enclosure's 13+3 checks — reported, not re-run (no `pcbnew` available).
-5. **Panasonic's recommended SOP4 land pattern** — pitch (2.54 mm), pad size (0.5 × 1.0 mm)
-   and lead span (6.8 ± 0.4 mm) are confirmed; the pad-centre spacing in X still has to come
-   off the drawing before U1 can be rebuilt.
+4. ~~DRC and the enclosure's 13+3 checks — reported, not re-run~~ — **DRC CLOSED
+   2026-08-31**: independently re-run on KiCad 7.0.11 with zones refilled, 61 items, counts
+   identical, every class read rather than assumed cosmetic; the shipped Gerbers were also
+   re-exported and diffed against the board. The **enclosure's own checks remain
+   script-reported**, not independently re-run.
+5. ~~Panasonic's recommended SOP4 land pattern~~ — **CLOSED 2026-08-31.** Two independent
+   extractions of Panasonic's drawing put every footprint number on the printed
+   callout list (0.4, 1.2, 0.8, 2.54 ±0.1) against a package run ending 6.8 ±0.4, and only
+   the orientation actually used — 1.2 mm along the lead axis — keeps the toe on the pad
+   across the whole span tolerance. **Kenny confirmed the axis assignment visually against
+   the drawing on 2026-08-31.** That check is not re-derivable by tooling and must not be
+   quietly re-opened.
 6. LM1117 V_REF sub-bands — consistent with SNOS412 and every secondary source, but the
    exact table was not re-pulled from TI's PDF.
 7. LED viewing angle, 120° vs 160°/140°.
+8. **Murata's official EOL notice for C1** — corroborated only by the zero-stock pattern at
+   three authorised distributors and Octopart's lifecycle data. Moot in practice: PCBWay
+   quoted and sourced the correct MPN.
+9. **Stock depth on 18 of the 20 BOM lines** — existence was verified for all 20, but only
+   F1 and C1 had stock actually counted. Also moot now: all 20 are priced and on order.
+
+### Bench work still unrun (`aF4-meter-test-battery.md`)
+
+None of it blocks anything, and none of it can change the board any more.
+**A4** V_loaded and **A5**'s powered current confirmation are two minutes each with the rig
+already understood; **A6** (port decay time) would confirm R3 is harmless-but-redundant;
+**B1** (hold-time sweep) is confirmatory only, since 20 s clears all three of inD's
+published figures; **B2** is confounded by the 5-minute spacing rule; **B3** (held-high
+yields exactly one feed) is the one with real information value, because the design's best
+safety property currently rests on vendor documentation rather than on this unit.

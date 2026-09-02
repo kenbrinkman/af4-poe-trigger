@@ -345,7 +345,16 @@ text("GND = EXT1 pin 3", 105.00, 129.00, size=0.85)
 text("GPIO32 = EXT2 pin 6", 105.00, 131.50, size=0.85)
 text("J1 = 12V IN 5.5x2.5 CENTRE +", 105.00, 149.50, size=0.8)
 text("J2 = TRIGGER OUT 3.5mm TIP", 105.00, 152.00, size=0.8)
-text("10.4V 10s pulse, >=5 min apart", 105.00, 154.50, size=0.8)
+# NOTE: the five rev E boards fabricated on order YB1800644 carry the OLD string,
+# "10.4V 10s pulse" - the firmware moved to a 20 s pulse on 2026-09-01, after the
+# Gerbers had shipped. Cosmetic, not worth an engineering query (an EQ restarts
+# PCBWay's lead-time clock). Corrected here so any future revision is right.
+#
+# CONSEQUENCE: this script no longer reproduces af4-trigger-hat.kicad_pcb exactly.
+# The board file and the shipped Gerbers are the fabricated rev E and are correct
+# as they stand; do NOT regenerate them to close the gap. Re-running gen_pcb.py
+# starts the next revision, and this string is the only difference.
+text("10.4V 20s pulse, >=5 min apart", 105.00, 154.50, size=0.8)
 text("K. Brinkman 2026", 105.00, 157.00, size=0.8)
 
 # ==================================================================== EMIT

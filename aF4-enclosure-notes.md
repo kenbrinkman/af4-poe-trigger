@@ -26,7 +26,7 @@ used to be hand-wired inside it is gone.
 | PG7 gland in the output wall | **Gone.** The 3.5 mm jack is on the hat |
 | Both user connectors on opposite short walls | Both on **one long wall**, side by side |
 | — | **New:** two tall standoffs carrying the hat |
-| — | **New:** two LED sight holes in the lid |
+| — | **New:** four light-pipe LED sight holes in the lid, and an engraved label |
 
 ## Layout
 
