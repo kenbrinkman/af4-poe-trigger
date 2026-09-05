@@ -56,19 +56,19 @@ Everything below is in the folder root unless noted.
 |---|---|---|
 | 1 | `README.md` | Orientation and a file-by-file map. Five minutes |
 | 2 | **`aF4-MASTER-REFERENCE.md`** | **The single most important document.** 1,050 lines, consolidated, written to be *audited*: every load-bearing claim carries a provenance tag (`[MEAS]` measured / `[DS]` datasheet / `[CALC]` calculated / `[ASSERT]` asserted / `[VENDOR]` inD's own docs). The assertions are the interesting part — attack those first. §8 is the open-items ledger, §9 is a repository map, §10 is audit status |
-| 3 | `aF4-reference.md` | The *feeder* side: trigger port spec, measured values, design rationale, the two independent scheduling mechanisms. Shorter and more readable than the master reference; read it if the master's density is too much |
-| 4 | `af4-feeder.yaml` | The ESPHome config **as flashed**. Only 7 KB and it is where the actual safety behaviour lives. Read the `do_feed` and `boot_recovery` scripts |
+| 3 | `docs/aF4-reference.md` | The *feeder* side: trigger port spec, measured values, design rationale, the two independent scheduling mechanisms. Shorter and more readable than the master reference; read it if the master's density is too much |
+| 4 | `firmware/af4-feeder.yaml` | The ESPHome config **as flashed**. Only 7 KB and it is where the actual safety behaviour lives. Read the `do_feed` and `boot_recovery` scripts |
 
 ### Tier 2 — by subject, as needed
 
 | File | Subject |
 |---|---|
-| `aF4-pcb-notes.md` | Board design decisions, part-by-part equivalence review, PCBWay ordering procedure |
-| `aF4-esp32-trigger-BOM.md` | Parts list, split into *things you buy* (three of them) and *things that arrive soldered* |
-| `aF4-assembly-guide.md` | Build sequence: print, plug together, flash, meter, commission. Contains commissioning checks 6.1-6.8 |
-| `aF4-enclosure-notes.md` | Printed enclosure design notes, light-pipe spec, print settings |
-| `aF4-vendor-docs-notes.md` | All 40 inD help-centre articles read 2026-09-01. **§1 is the one that touches the design** — inD publishes three different hold times (6 s / 10 s / 15 s) for the same port |
-| `aF4-meter-test-battery.md` | Bench procedure and results, tests A1-A8 / B1-B3. Long. The "Status at a glance" table at the top is usually enough |
+| `docs/aF4-pcb-notes.md` | Board design decisions, part-by-part equivalence review, PCBWay ordering procedure |
+| `docs/aF4-esp32-trigger-BOM.md` | Parts list, split into *things you buy* (three of them) and *things that arrive soldered* |
+| `docs/aF4-assembly-guide.md` | Build sequence: print, plug together, flash, meter, commission. Contains commissioning checks 6.1-6.8 |
+| `docs/aF4-enclosure-notes.md` | Printed enclosure design notes, light-pipe spec, print settings |
+| `docs/aF4-vendor-docs-notes.md` | All 40 inD help-centre articles read 2026-09-01. **§1 is the one that touches the design** — inD publishes three different hold times (6 s / 10 s / 15 s) for the same port |
+| `docs/aF4-meter-test-battery.md` | Bench procedure and results, tests A1-A8 / B1-B3. Long. The "Status at a glance" table at the top is usually enough |
 | `pcb/pcbway-order-YB1800644.md` | What was bought, at what price, and what was answered along the way |
 | `pcb/pcbway-new-inquiry-2026-08-29.md` | Submission mechanics and the traps in PCBWay's order form |
 | `pcb/PCBWay-README.txt` | The fab notes actually shipped with the Gerbers |
@@ -81,27 +81,27 @@ records, and two of them describe superseded revisions on purpose.
 
 | File | Revision | Question it asked |
 |---|---|---|
-| `aF4-audit-2026-08-28.md` | **rev D** | Adversarial audit against primary sources. Found the build blocker (U1's footprint did not match the AQY212GS package). Historical — it still carries the old 6 s figure, correctly |
-| `aF4-prefab-review-2026-08-31.md` | rev E | Independent pass on the five items nobody but the author had checked. Cleared the order |
-| `aF4-review-2026-09-02.md` | rev E | Every file in the repo in one pass, taken *after* the design stopped moving. Asks what is left now that the board is out of our hands |
+| `archive/reviews/aF4-audit-2026-08-28.md` | **rev D** | Adversarial audit against primary sources. Found the build blocker (U1's footprint did not match the AQY212GS package). Historical — it still carries the old 6 s figure, correctly |
+| `archive/reviews/aF4-prefab-review-2026-08-31.md` | rev E | Independent pass on the five items nobody but the author had checked. Cleared the order |
+| `archive/reviews/aF4-review-2026-09-02.md` | rev E | Every file in the repo in one pass, taken *after* the design stopped moving. Asks what is left now that the board is out of our hands |
 
 ### Tier 4 — source, generated, and vendor files
 
 - **`pcb/gen_pcb.py` is the source of truth for the board.** It generates
-  `af4-trigger-hat.kicad_pcb` deterministically from named coordinates lifted
+  `pcb/af4-trigger-hat.kicad_pcb` deterministically from named coordinates lifted
   from the Olimex Rev N KiCad source, so the sockets line up by construction.
-  **Edit the script, not the board file**, then re-run it and `post.py` (fills
-  copper pours, runs DRC). `make_package.py` builds the PCBWay zip.
-- **`af4_enclosure_ocp.py` is the source of truth for the enclosure**
+  **Edit the script, not the board file**, then re-run it and `pcb/post.py` (fills
+  copper pours, runs DRC). `pcb/make_package.py` builds the PCBWay zip.
+- **`hardware/enclosure/af4_enclosure_ocp.py` is the source of truth for the enclosure**
   (Python/OCP, with built-in interference assertions). The `.step` / `.stl`
   files are exports.
-- `af4_hat_dummy_ocp.py` + `aF4-trigger-hat-dummy.*` — a printable rev E hat
+- `hardware/enclosure/af4_hat_dummy_ocp.py` + `aF4-trigger-hat-dummy.*` — a printable rev E hat
   stand-in for fit-checking before the real boards arrive.
 - `pcb/gerbers/` is **gitignored** — regenerate it, or unzip
   `pcb/af4-trigger-hat-rev-E-PCBWay.zip`.
-- `ESP32-PoE-ISO_Rev_N.*`, `PAN_AQY21-DIP4_PAN.step`, both inD PDFs — **vendor
+- `ESP32-PoE-ISO_Rev_N.*`, `reference/vendor/PAN_AQY21-DIP4_PAN.step`, both inD PDFs — **vendor
   files, gitignored, not redistributed.** Sources are listed in `README.md`.
-- `aF4-protoboard-*.svg`, `protoboard 20x20.stl` — **rev C history.** The
+- `aF4-protoboard-*.svg`, `archive/rev-c-protoboard/protoboard 20x20.stl` — **rev C history.** The
   hardware they describe no longer exists.
 
 ---
@@ -129,7 +129,7 @@ These are not hypotheticals. Every one of them has actually happened here.
    open-circuit; the board regulates to ~10.4 V to match. The port's ≥ 9 V
    threshold is a *window*, not a setpoint.
 6. **The Device Builder copy of the YAML is a separate copy and must be synced
-   by hand.** `af4-feeder.yaml` in this folder is the source of truth. Divergence
+   by hand.** `firmware/af4-feeder.yaml` in this folder is the source of truth. Divergence
    has bitten this project twice — once producing a false "bad model changes"
    scare, once leaving the board three firmware revisions behind the docs. The
    one exception ever found where the deployed copy was *ahead*: the ethernet
@@ -143,14 +143,14 @@ These are not hypotheticals. Every one of them has actually happened here.
    device never comes back and recovery is USB with the case open.
    **Verified in sync 2026-09-03**: the two copies are content-identical, both on
    `!secret`. Note the second, quieter divergence risk this exposed — the Device
-   Builder has its *own* `secrets.yaml`, which is a third copy that no diff of the
+   Builder has its *own* `firmware/secrets.yaml`, which is a third copy that no diff of the
    YAML will ever catch.
 7. **Once fab data leaves the building, the revision letter is spent** — whether
    or not copper was etched. That is the entire reason rev E exists; rev D's
    package had been sent to an outside party and was then found invalid.
    Renaming just the zip is the worst option, because the revision string is
    baked into the silkscreen and the KiCad title block.
-8. **Docs convention:** `aF4-pcb-notes.md` and the other topic docs are *living*
+8. **Docs convention:** `docs/aF4-pcb-notes.md` and the other topic docs are *living*
    documents that always describe the current board. When bumping a revision,
    change a mention **only where leaving it would misstate the current design**;
    leave every historical and comparative statement alone. The enclosure keeps
@@ -196,7 +196,7 @@ before pushing.** The wrong one has been pushed once.
   repo, as copy-paste blocks in order, each with one plain sentence saying what
   it does — including which remote is being pushed to, and that a commit is local
   until it is pushed.
-- **Secrets:** `secrets.yaml` and the `*secret*` wildcard are gitignored. The
+- **Secrets:** `firmware/secrets.yaml` and the `*secret*` wildcard are gitignored. The
   wildcard is deliberate — a hand-made backup once landed in the repo root and was
   one `git add -A` away from publication, right after a rotation had finished
   cleaning up the previous leak. Values that were in history before 2026-09-02
@@ -255,13 +255,13 @@ happened once, to 23 files in `pcb/`.
 | 10 | **Commissioning 6.1-6.8 all pass** before the schedule toggle goes on. Not gated on plumbing: only the automations carry the return interlock, `button.af4_feeder_feed` does not, so bench commissioning can proceed with the tank dry | **Yes** — gates go-live |
 | — | **Plumb the reef system.** Upstream of the scheduled-feed path and of commissioning's wet steps. **The real long pole** — the boards arrive early October | **Yes** |
 | 20 | Read the recalculated ship date off the PCBWay order page. Cosmetic | No |
-| — | **Rotate `af4_ota_password` DURING the item-3 serial flash.** The device still holds the old, publicly-exposed value and `secrets.yaml` (both copies) is deliberately pinned to it, because ESPHome authenticates the upload with the password already on the board — so this cannot be done over the air. The board is on the bench for the EXT1/EXT2 headers anyway; do both in one motion, then delete the old value from `secrets.yaml` and the Device Builder Secrets editor | No — but it is the last live remnant of the 2026-09-02 exposure |
-| 9 | `gen_pcb.py` stray "exclude from BOM/pos" flags on J2 | No |
+| — | **Rotate `af4_ota_password` DURING the item-3 serial flash.** The device still holds the old, publicly-exposed value and `firmware/secrets.yaml` (both copies) is deliberately pinned to it, because ESPHome authenticates the upload with the password already on the board — so this cannot be done over the air. The board is on the bench for the EXT1/EXT2 headers anyway; do both in one motion, then delete the old value from `firmware/secrets.yaml` and the Device Builder Secrets editor | No — but it is the last live remnant of the 2026-09-02 exposure |
+| 9 | `pcb/gen_pcb.py` stray "exclude from BOM/pos" flags on J2 | No |
 | 14 | **R5 to 0.25 W 0805 — deferred to the next revision.** Window closed when the order was placed. Failure mode is benign; R5 ships at 125 mW, ~77 % of rating | No — closed for this build |
 | — | Bench leftovers: A4's V_loaded half, A5 under power, A6 decay, B1/B2/B3. None can change the board | No |
 
 **Closed 2026-09-03:** the engineer question (answered, accepted, PCB in production).
-**Closed 2026-09-02:** order placed, plus items 8, 12, 16, 17, 18. **Item 8 verified 2026-09-03:** the Device Builder copy was diffed line by line against this folder's `af4-feeder.yaml` — content-identical, all four values on `!secret`, no plaintext credential lines. The Device Builder's own `secrets.yaml` resolves all four, proven by the build that flashed that night. `af4_ota_password` correctly still holds the OLD value; see the new open item above.
+**Closed 2026-09-02:** order placed, plus items 8, 12, 16, 17, 18. **Item 8 verified 2026-09-03:** the Device Builder copy was diffed line by line against this folder's `firmware/af4-feeder.yaml` — content-identical, all four values on `!secret`, no plaintext credential lines. The Device Builder's own `firmware/secrets.yaml` resolves all four, proven by the build that flashed that night. `af4_ota_password` correctly still holds the OLD value; see the new open item above.
 **Out of scope**, decided 2026-09-01: eWeLink → Home Assistant integration.
 
 ### Carried forward to the next board revision

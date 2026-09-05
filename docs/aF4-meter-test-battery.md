@@ -661,7 +661,7 @@ Tracked in project memory as open items 1–14.
 | 4 | `on_boot` lockout — `script.do_feed` state is RAM-only, so a reboot inside the 300 s cycle silently clears it |
 | 5 | Widen the feed cycle past exactly 300 s, and widen check 6.3 from 10.3–10.5 V to ~10.0–10.9 V. If widening the cycle, widen the **tail**, not the pulse |
 | 8 | `web_server: port: 80` has no `auth:`; API key and OTA password committed in plaintext |
-| 9 | `gen_pcb.py` stray "exclude from BOM/pos" flags on J2 |
+| 9 | `pcb/gen_pcb.py` stray "exclude from BOM/pos" flags on J2 |
 | 11 | ✅ **DONE 2026-09-01.** `R1` retagged `[VENDOR] ≥ 9 V held ≥ 15 s` with the three-way conflict documented, across `aF4-MASTER-REFERENCE.md`, `aF4-reference.md`, `aF4-esp32-trigger-BOM.md`, `README.md`, `aF4-pcb-notes.md`. **The YAML pulse change (item 2) is still outstanding.** |
 | 12 | ✅ **DONE — and it already existed when this line was written.** `automation.reef_tank_feeder_health_watchdog` runs a 23:45 counter-vs-elapsed-feed-times backstop plus a board-offline branch, and the scheduled-feed automation notifies on skip and on unacknowledged press. Verified against the live HA config 2026-09-02. **What it does NOT cover is an over-temperature fault** — the port is input-only, so a pulse can be confirmed while nothing dispenses. That is now master-reference item 20, and it needs a power-monitoring plug, not an automation |
 | 13 | Add link-LED checks as commissioning steps 6.7 / 6.8 |

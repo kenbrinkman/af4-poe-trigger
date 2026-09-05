@@ -21,7 +21,7 @@ supply, a trimmer tool.
 
 ## 1. Print the enclosure
 
-Print `aF4-trigger-case.stl` and `aF4-trigger-lid.stl` in PETG, orientations as
+Print `hardware/enclosure/aF4-trigger-case.stl` and `hardware/enclosure/aF4-trigger-lid.stl` in PETG, orientations as
 exported, no supports. 3 walls, 15–25 % infill, 0.2 mm layers.
 
 Before going further, test-fit into the +X long wall:
@@ -125,14 +125,14 @@ flat and perpendicular, then do the remaining nine.
 ## 4. Flash the ESP32
 
 There is no USB cutout in the case, so flash **before** final assembly if this is
-a fresh board. `af4-feeder.yaml` in this folder is the source of truth; paste it
+a fresh board. `firmware/af4-feeder.yaml` in this folder is the source of truth; paste it
 into the ESPHome Device Builder on the Unraid server (port 6052) and install.
 
 > **Do this once before any install.** The YAML no longer carries its credentials
 > inline — it reads them with `!secret`, and `!secret` resolves against the
-> `secrets.yaml` sitting beside the file being compiled, **not** against this repo.
+> `firmware/secrets.yaml` sitting beside the file being compiled, **not** against this repo.
 > Open the Device Builder's Secrets editor and create the four keys listed in this
-> folder's `secrets.yaml` (`af4_api_key`, `af4_ota_password`, `af4_web_username`,
+> folder's `firmware/secrets.yaml` (`af4_api_key`, `af4_ota_password`, `af4_web_username`,
 > `af4_web_password`). Without them the build fails at compile time with an
 > unresolved-secret error, which is the safe way to fail.
 >
@@ -202,7 +202,7 @@ in dropout and following its input — the divider is innocent. In dropout the o
 lands at ~10.5 V regardless of R4/R5, which is why the widened range is the correct
 test rather than a loosened one.
 
-**The ESPHome web page requires a login** — username and password are in `secrets.yaml`,
+**The ESPHome web page requires a login** — username and password are in `firmware/secrets.yaml`,
 which is gitignored and not in the repo. Added 2026-09-01 to close an unauthenticated LAN
 control path; the credentials were rotated 2026-09-02. Home Assistant is unaffected — it
 uses the API, not this page.
@@ -237,6 +237,6 @@ Only once 6.1–6.6 all pass, connect the 3.5 mm patch cable from J2 to the aF4'
 The rev C protoboard build sequence — cutting and drilling the board, standing
 the resistors vertically, sleeving the LM1117's crossed pin 1, splicing the
 polyfuse into the jack pigtail and the TVS behind the 3.5 mm plug — is preserved
-in git history along with `aF4-protoboard-layout.svg` and
-`aF4-protoboard-solder-side.svg`. None of it applies to rev D, and the two
+in git history along with `archive/rev-c-protoboard/aF4-protoboard-layout.svg` and
+`archive/rev-c-protoboard/aF4-protoboard-solder-side.svg`. None of it applies to rev D, and the two
 protoboard SVGs describe hardware that no longer exists.

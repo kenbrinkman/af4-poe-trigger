@@ -17,7 +17,7 @@ electronics BOM is therefore two lists: **things you buy** (three of them) and
 | 1 × 10 male headers | 2.54 mm, 2 off | pennies | Solder into EXT1/EXT2 **pins up**. Olimex ships these loose; Sullins PRPC010SAAN-RC is equivalent |
 | 12 V DC splitter | Barrel Y-splitter, **5.5 × 2.5 mm, centre-positive (confirmed)** | $6 | Taps the feeder's 12 V. Many cheap splitters are 5.5 × 2.1 — buy 2.5 specifically |
 | 3.5 mm patch cable | Male–male, mono or stereo, ~0.5 m | $5 | Hat jack → aF4 0-10 V port. Stereo is fine; the aF4's jack shorts ring to sleeve |
-| Enclosure | `aF4-trigger-case.stl` + `aF4-trigger-lid.stl` (PETG) | filament | 65.2 × 117.0 × 38.4 mm. See `aF4-enclosure-notes.md` |
+| Enclosure | `hardware/enclosure/aF4-trigger-case.stl` + `hardware/enclosure/aF4-trigger-lid.stl` (PETG) | filament | 65.2 × 117.0 × 38.4 mm. See `aF4-enclosure-notes.md` |
 | Screws | 4× M3 × 12 self-tapping (lid), 3× M2 × 6–8 (ESP32), 2× M3 × 8–10 (hat) | — | |
 
 **Total: roughly $60–70 for the one-off parts, plus the board order.**
@@ -57,7 +57,7 @@ tripping. The LDO's own current limit plus the polyfuse handle a shorted tip.
 
 ## The GPIO13 trap
 
-`af4-feeder.yaml` drives **GPIO32**, not GPIO13. The Olimex board carries a
+`firmware/af4-feeder.yaml` drives **GPIO32**, not GPIO13. The Olimex board carries a
 factory 2.2 kΩ pull-up to 3.3 V on GPIO13 (R35, the I²C SDA pull-up, confirmed in
 the Rev N KiCad source). While the ESP32 is in reset, that pull-up feeds the
 PhotoMOS LED through R1 with only R2 opposing it — about 0.6–0.7 mA into a part

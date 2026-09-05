@@ -30,7 +30,7 @@ the 2026-08-28 audit quoted it verbatim from inD's Neptune Systems page. But inD
 disagree: 6 s there, 10 s for inD Connect, 15 s for Hydros, and none at all in the current
 Apex article. **Design to the longest.**
 
-`af4-feeder.yaml` fires a **10 s** pulse and the audit credits it with a
+`firmware/af4-feeder.yaml` fires a **10 s** pulse and the audit credits it with a
 "67 % margin" over 6 s. Against the vendor figures that margin is gone:
 10 s exactly equals inD's own dongle minimum and is **5 s short of the
 15 s Hydros requires**. The margin is not 67 % — it is zero or negative
@@ -43,7 +43,7 @@ the port). That is a reason to distrust 6 s, not a reason to keep it.
 
 **Recommended change — cheap, and it costs nothing else.** ✅ **IMPLEMENTED 2026-09-01**,
 though with a 290 s tail rather than the 280 s sketched below: the shipped
-`af4-feeder.yaml` runs 20 s + 290 s = **310 s**, which also closes the
+`firmware/af4-feeder.yaml` runs 20 s + 290 s = **310 s**, which also closes the
 zero-margin-at-exactly-300 s audit item. The block below is the original
 recommendation, kept for its reasoning:
 

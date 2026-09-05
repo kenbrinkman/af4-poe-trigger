@@ -58,9 +58,9 @@ Record results here:
 
 ## Replacement design (summary)
 
-Olimex ESP32-POE-ISO → GPIO32 → 220Ω → **AQY212GS PhotoMOS** (pin 1 LED+, pin 2 LED− to GND) → output pins 3/4 switch the feeder's own 12V (via barrel splitter) onto the 3.5mm tip; sleeve to supply GND. (Rev C used GPIO13 and the DIP AQY212GH; see the rev D note above.) ESP32 fully isolated behind the PhotoMOS; PoE isolated from Ethernet (3000V). HA automations press an ESPHome template button (ON 20s → OFF). See `aF4-wiring-diagram.svg`.
+Olimex ESP32-POE-ISO → GPIO32 → 220Ω → **AQY212GS PhotoMOS** (pin 1 LED+, pin 2 LED− to GND) → output pins 3/4 switch the feeder's own 12V (via barrel splitter) onto the 3.5mm tip; sleeve to supply GND. (Rev C used GPIO13 and the DIP AQY212GH; see the rev D note above.) ESP32 fully isolated behind the PhotoMOS; PoE isolated from Ethernet (3000V). HA automations press an ESPHome template button (ON 20s → OFF). See `reference/diagrams/aF4-wiring-diagram.svg`.
 
-ESPHome guardrails (all baked on-device — HA is scheduler only): `restore_mode: ALWAYS_OFF` + `internal: true` on the GPIO switch (HA cannot touch the raw line), `mode: single` feed script with 20s pulse + 290s lockout tail (a 310s cycle — enforces 5-min spacing and >60s 0V re-arm with margin; re-entrant requests dropped), a **flash-persisted `feed_in_flight` flag** so a reboot mid-cycle serves a 300s recovery lockout instead of silently clearing it, template button as the sole exposed control, lockout state exposed as a binary_sensor for dashboard/notify, and `web_server: auth:` on the local control page. As-flashed YAML: `af4-feeder.yaml` (source of truth), live on the device since 2026-09-01 18:54 and re-flashed 2026-09-02 18:15 for the credential rotation; concept sketch in `aF4-esp32-trigger-BOM.md`.
+ESPHome guardrails (all baked on-device — HA is scheduler only): `restore_mode: ALWAYS_OFF` + `internal: true` on the GPIO switch (HA cannot touch the raw line), `mode: single` feed script with 20s pulse + 290s lockout tail (a 310s cycle — enforces 5-min spacing and >60s 0V re-arm with margin; re-entrant requests dropped), a **flash-persisted `feed_in_flight` flag** so a reboot mid-cycle serves a 300s recovery lockout instead of silently clearing it, template button as the sole exposed control, lockout state exposed as a binary_sensor for dashboard/notify, and `web_server: auth:` on the local control page. As-flashed YAML: `firmware/af4-feeder.yaml` (source of truth), live on the device since 2026-09-01 18:54 and re-flashed 2026-09-02 18:15 for the credential rotation; concept sketch in `aF4-esp32-trigger-BOM.md`.
 
 ## 10.4V regulator selection
 
@@ -89,16 +89,16 @@ The underlying problems were structural, not just QC: (a) the load is ~5mA/50mW,
 
 ## CAD / 3D models (in this folder)
 
-- `ESP32-PoE-ISO_Rev_N.step` / `.stl` — full Olimex ESP32-POE-ISO board model (Rev.N, latest), extracted from the [Olimex KiCad hardware files](https://github.com/OLIMEX/ESP32-POE-ISO): board solid + 124 component models, all through-holes. Board ~28 × 98 mm plus antenna and RJ45 overhang; overall envelope ~29.4 × 112.5 × 25.3 mm. Hole positions verified against factory drill files. Not included: RM1–RM3 resistor arrays (no STEP source). STEP for enclosure CAD, STL for printing/viewing.
-- `PAN_AQY21-DIP4_PAN.step` — Panasonic AQY212GH PhotoMOS, DIP-4 package.
-- `aF4-trigger-case.stl/.step` + `aF4-trigger-lid.stl/.step` — printed enclosure, **rev D** (PETG, 65.2 x 117.0 x 38.4 mm): flush RJ45 on the input wall; the trigger hat's barrel jack and 3.5 mm jack exit one long wall; two tall standoffs carry the hat; four light-pipe LED sight holes in the lid (D3, D5 on the hat; PWR1, LNK1 on the Olimex board). The rev C protoboard bay, buck pocket, DC-099 hole and PG7 gland are all gone. Details in `aF4-enclosure-notes.md`; parametric source `af4_enclosure_ocp.py`, which asserts its own fit checks before exporting.
-- `aF4-protoboard-layout.svg`, `aF4-protoboard-solder-side.svg` — **rev C history.** They describe the hand-wired protoboard, which rev D replaces with a PCB. Kept for the record; do not build from them.
+- `reference/vendor/ESP32-PoE-ISO_Rev_N.step` / `.stl` — full Olimex ESP32-POE-ISO board model (Rev.N, latest), extracted from the [Olimex KiCad hardware files](https://github.com/OLIMEX/ESP32-POE-ISO): board solid + 124 component models, all through-holes. Board ~28 × 98 mm plus antenna and RJ45 overhang; overall envelope ~29.4 × 112.5 × 25.3 mm. Hole positions verified against factory drill files. Not included: RM1–RM3 resistor arrays (no STEP source). STEP for enclosure CAD, STL for printing/viewing.
+- `reference/vendor/PAN_AQY21-DIP4_PAN.step` — Panasonic AQY212GH PhotoMOS, DIP-4 package.
+- `hardware/enclosure/aF4-trigger-case.stl` (+ `.step`) + `hardware/enclosure/aF4-trigger-lid.stl` (+ `.step`) — printed enclosure, **rev D** (PETG, 65.2 x 117.0 x 38.4 mm): flush RJ45 on the input wall; the trigger hat's barrel jack and 3.5 mm jack exit one long wall; two tall standoffs carry the hat; four light-pipe LED sight holes in the lid (D3, D5 on the hat; PWR1, LNK1 on the Olimex board). The rev C protoboard bay, buck pocket, DC-099 hole and PG7 gland are all gone. Details in `aF4-enclosure-notes.md`; parametric source `hardware/enclosure/af4_enclosure_ocp.py`, which asserts its own fit checks before exporting.
+- `archive/rev-c-protoboard/aF4-protoboard-layout.svg`, `archive/rev-c-protoboard/aF4-protoboard-solder-side.svg` — **rev C history.** They describe the hand-wired protoboard, which rev D replaces with a PCB. Kept for the record; do not build from them.
 - `pcb/` — rev E KiCad project, the generator script that produces it, and the PCBWay upload package. See `aF4-pcb-notes.md`.
 - `aF4-assembly-guide.md` — full build sequence: print, protoboard build (incl. on-board regulator), wiring, flash, commissioning checks.
 
 ## Home Assistant notes
 
-Device adopted 2026-07-18. Config in `af4-feeder.yaml`; built on the ESPHome
+Device adopted 2026-07-18. Config in `firmware/af4-feeder.yaml`; built on the ESPHome
 container on the Unraid server (port 6052), not an HA add-on.
 
 **Entities (ESPHome):** `button.af4_feeder_feed` (sole control),
@@ -106,7 +106,7 @@ container on the Unraid server (port 6052), not an HA add-on.
 (connectivity, for the Reef Command dashboard), `sensor.af4_feeder_ip_address`,
 `sensor.af4_feeder_uptime`, `button.af4_feeder_restart`.
 
-Build/flash workflow: `af4-feeder.yaml` in this folder is the **source of
+Build/flash workflow: `firmware/af4-feeder.yaml` in this folder is the **source of
 truth**. The ESPHome Device Builder (Docker on the Unraid server, port 6052)
 holds its own copy — paste changes there manually, then Install → Wirelessly.
 First flash was USB via web.esphome.io (factory .bin); everything since is OTA
@@ -159,5 +159,5 @@ override `af4-feeder`, no client identifier — MAC match only).
 - [aF4 product page](https://www.indaquatics.com/products/af4)
 - [0-10V Setup Guide: Neptune Systems](https://www.indaquatics.com/pages/0-10v-setup-guide-neptune-systems) — trigger rules
 - [0-10V Setup Guide: Hydros](https://www.indaquatics.com/pages/0-10v-setup-guide-coralvue-hydros)
-- [inD connect product page](https://www.indaquatics.com/collections/af4-accessories) — see `inD connect.pdf` in this folder
+- [inD connect product page](https://www.indaquatics.com/collections/af4-accessories) — see `reference/vendor/inD connect.pdf` in this folder
 - Manual page photo (feed time offset) — conversation, 2026-07-10

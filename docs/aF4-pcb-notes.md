@@ -5,8 +5,8 @@ PCBWay turn-key assembly. The mechanism is unchanged: PoE ESP32 → GPIO → Pho
 → 10.4 V from the feeder's own supply onto the 3.5 mm trigger jack. What changed
 is everything that existed only because the board was being built by hand.
 
-Files live in `pcb/`. `gen_pcb.py` is the source of truth — it generates
-`af4-trigger-hat.kicad_pcb` deterministically from named coordinates. Edit the
+Files live in `pcb/`. `pcb/gen_pcb.py` is the source of truth — it generates
+`pcb/af4-trigger-hat.kicad_pcb` deterministically from named coordinates. Edit the
 script, not the board file.
 
 ## Form factor: a hat, not a separate board
@@ -58,7 +58,7 @@ firmware runs.
 function, not shared with UEXT. GPIO33 is nearly as clean (one unpopulated
 resistor). Rev D onward uses GPIO32.
 
-> **Action required in `af4-feeder.yaml`:** change the feed switch pin from
+> **Action required in `firmware/af4-feeder.yaml`:** change the feed switch pin from
 > `GPIO13` to `GPIO32`, then OTA. The board will not work until this is done.
 
 ## Circuit changes beyond the package swap
@@ -109,11 +109,11 @@ with no copper, which is free real estate.
 Upload `pcb/af4-trigger-hat-rev-E-PCBWay.zip`. It contains:
 
 - `gerbers/` — RS-274X, all layers, plus Excellon drill and a drill map
-- `af4-trigger-hat-BOM.csv` — PCBWay's turn-key column set, keyed by manufacturer
+- `pcb/af4-trigger-hat-BOM.csv` — PCBWay's turn-key column set, keyed by manufacturer
   part number
-- `af4-trigger-hat-centroid.csv` — SMD parts only, per PCBWay's rule; origin at
+- `pcb/af4-trigger-hat-centroid.csv` — SMD parts only, per PCBWay's rule; origin at
   the board's lower-left corner, Y up
-- `PCBWay-README.txt` — stack-up, finish, and the five things an assembler could
+- `pcb/PCBWay-README.txt` — stack-up, finish, and the five things an assembler could
   get wrong
 
 Order shape: 5 pieces, 2 layers, 1.6 mm, top side only, full turn-key.
@@ -123,7 +123,7 @@ Expect a parts-availability review email before they quote firm.
 
 ## Verification status
 
-`gen_pcb.py` → KiCad 7 → DRC via `pcbnew.WriteDRCReport`:
+`pcb/gen_pcb.py` → KiCad 7 → DRC via `pcbnew.WriteDRCReport`:
 
 - clearance: 0
 - courtyard overlaps: 0
@@ -140,7 +140,7 @@ placed programmatically with nets attached.
 SJ1-3523N footprint specifies **0.40 mm-wide plated slots** for the jack's blade
 terminals, and the PJ-079BH's shield tabs ask for 0.60 mm. Both are below what a
 fab will route — PCBWay's minimum is around 1.0 mm milled / 0.5 mm drilled — so
-the order would have come back as an engineering query at best. `gen_pcb.py` now
+the order would have come back as an engineering query at best. `pcb/gen_pcb.py` now
 enforces `MIN_SLOT = 0.70 mm` on every plated slot and prints what it widened:
 
 ```
@@ -168,7 +168,7 @@ right, which is where plug insertion force actually lands.
 
 ## The enclosure
 
-Regenerated in `af4_enclosure_ocp.py`, which now asserts its own fit before it
+Regenerated in `hardware/enclosure/af4_enclosure_ocp.py`, which now asserts its own fit before it
 exports — thirteen dimensional checks plus three solid-interference tests (case
 against the hat envelope, case against the ESP32 envelope, lid against the hat).
 All pass with zero intersection volume.
@@ -190,16 +190,16 @@ have eaten most of the jack's 9.5 mm insertion depth. As built the plug engages
 
 ## Open items
 
-1. ~~**`af4-feeder.yaml` moves GPIO13 → GPIO32.**~~ **Done 2026-09-01** — pasted into
+1. ~~**`firmware/af4-feeder.yaml` moves GPIO13 → GPIO32.**~~ **Done 2026-09-01** — pasted into
    the ESPHome Device Builder and installed the same evening; the running device
    reports GPIO32 firmware built 18:54 that day. Re-flashed 2026-09-02 for the
    credential rotation.
 2. Solder two 1 × 10 male headers into EXT1/EXT2, pointing up.
 3. Distributor part numbers are intentionally blank in the BOM — PCBWay sources by
    MPN. Fill them in only if you want to buy any of it yourself.
-4. The two protoboard SVGs and `protoboard 20x20.stl` describe hardware that no
+4. The two protoboard SVGs and `archive/rev-c-protoboard/protoboard 20x20.stl` describe hardware that no
    longer exists. Kept as rev C history; don't build from them.
-5. **`gen_pcb.py` and `af4-trigger-hat.kicad_pcb` now differ by one silkscreen
+5. **`pcb/gen_pcb.py` and `pcb/af4-trigger-hat.kicad_pcb` now differ by one silkscreen
    string.** The script says "10.4V 20s pulse"; the fabricated boards say 10s,
    because the firmware timing changed on 2026-09-01 after the Gerbers shipped.
    The board file and the Gerbers are the fabricated rev E and are correct as
@@ -211,4 +211,4 @@ have eaten most of the jack's 9.5 mm insertion depth. As built the plug engages
 Rev E is in fabrication at PCBWay as order **YB1800644**, placed and paid
 2026-09-02, $169.95 all-in for five assembled boards. The engineering question on
 the J1/J2 slot widths was answered the same day. Full record, quote and per-line
-pricing: `pcbway-order-YB1800644.md`.
+pricing: `pcb/pcbway-order-YB1800644.md`.

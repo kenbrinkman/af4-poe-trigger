@@ -143,7 +143,7 @@ as the README declares. Through-hole parts and test points correctly absent.
 J1 = 5, J2 = 3, J3 = 10, J4 = 10, total **28**. The shipped drill file independently agrees:
 three 0.8 mm slots plus two 0.7 mm slots at J1, three 0.7 mm slots at J2, and twenty 1.0 mm
 holes across J3 and J4. The "44" fiction appears nowhere in the shipped README — only in the
-inquiry text that explicitly repudiates it. `make_package.py` now computes the count from the
+inquiry text that explicitly repudiates it. `pcb/make_package.py` now computes the count from the
 board and asserts BOM-to-board reference equality.
 
 The three package files in `pcb/` are byte-identical to the zip's contents, and the zip holds
@@ -158,7 +158,7 @@ the 15 files the inquiry text promises.
    fail. Harmless, but reword before sending.
 2. **J2 carries "exclude from BOM / exclude from pos" flags in the board file.** Metadata
    inconsistency only. The shipped BOM lists J2 correctly and the generator cross-checks by
-   reference name, so there is no fab effect. Worth fixing in `gen_pcb.py` eventually.
+   reference name, so there is no fab effect. Worth fixing in `pcb/gen_pcb.py` eventually.
 3. **R5 arithmetic confirmed.** 9.22 V across 887 ohms is about 96 mW in a 125 mW 0805, or
    77%. Vout = 1.25 x (1 + 887/121) + Iadj x 887, about 10.47 V, as claimed. In spec, runs
    hot. A thin-film 0.25 W part is a future nicety, not a change to make now.

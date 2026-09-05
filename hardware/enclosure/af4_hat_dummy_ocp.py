@@ -273,13 +273,20 @@ if os.path.exists(CASE) and os.path.exists(LID):
     chk_zero("5.5 mm plug path clears the case wall bore",
              volume(common(plug, case)))
 else:
-    print("  [--] case/lid STEP not found beside the script; solid checks skipped")
+    print("  [--] case/lid STEP not found beside the script; solid checks SKIPPED")
 
 # Does either socket bar foul anything on the ESP32? Read the vendor mesh
 # directly -- it is already in the enclosure frame -- and take the tallest
 # vertex under each bar footprint. The bar underside is the top of the male
 # header plastic the sockets will sit on (z = 4.118).
-ESP = os.path.join(here, "ESP32-PoE-ISO_Rev_N.stl")
+# The vendor mesh is gitignored and lives in reference/vendor/ since the
+# 2026-09-05 reorganisation. Look there first, then beside the script, so
+# the check keeps running from either layout.
+ESP = next((c for c in (
+    os.environ.get("AF4_ESP32_STL", ""),
+    os.path.join(here, "..", "..", "reference", "vendor", "ESP32-PoE-ISO_Rev_N.stl"),
+    os.path.join(here, "ESP32-PoE-ISO_Rev_N.stl"),
+) if c and os.path.exists(c)), os.path.join(here, "ESP32-PoE-ISO_Rev_N.stl"))
 if os.path.exists(ESP):
     import struct
     with open(ESP, "rb") as fh:
@@ -298,8 +305,9 @@ if os.path.exists(ESP):
         chk("%s bar clears the ESP32 below it" % nm,
             (HAT_Z - SOCKET_H) - tall[bi], 0.5)
 else:
-    print("  [--] ESP32-PoE-ISO_Rev_N.stl not found beside the script; "
-          "socket-bar clearance check skipped")
+    print("  [--] ESP32-PoE-ISO_Rev_N.stl not found in reference/vendor/ or "
+          "beside the script; socket-bar clearance check SKIPPED -- this is a "
+          "silently reduced check, not a pass")
 
 print("  all checks pass" if ok else "  *** CHECKS FAILED ***")
 print("  volume: board %.1f cm3, each bar %.2f cm3"

@@ -83,7 +83,7 @@ the old thread is closed. The former Part 2 letter below is retained for
 history only and must not be sent.
 
 Pre-fab review status (2026-08-31): independent review found nothing that
-blocks the order. Full report in `aF4-prefab-review-2026-08-31.md`. Both
+blocks the order. Full report in `archive/reviews/aF4-prefab-review-2026-08-31.md`. Both
 residuals the review left explicitly open are now closed, with provenance:
 
 - **U1 pad axis assignment - CONFIRMED BY KENNY, 2026-08-31, visually**,

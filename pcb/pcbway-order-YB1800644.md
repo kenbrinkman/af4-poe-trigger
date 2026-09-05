@@ -2,7 +2,7 @@
 
 **Status 2026-09-02: ordered, quoted, paid, in fabrication.** This file is the record of
 what was bought, at what price, and what was answered along the way. The design-side story
-lives in `aF4-pcb-notes.md`; the submission mechanics and the traps in PCBWay's form live in
+lives in `docs/aF4-pcb-notes.md`; the submission mechanics and the traps in PCBWay's form live in
 `pcbway-new-inquiry-2026-08-29.md`.
 
 | | |
@@ -74,7 +74,7 @@ Movement against the rev D sheet: D1 down ($0.242 → $0.192), J2 down ($2.10 �
 D5 down ($0.403 → $0.242 on the corrected `SYCK` part), and **C1 up 66 %** ($1.459 →
 $2.417). The C1 rise is the one worth recording, because the requote was requested on the
 grounds that the corrected part is a stocked commodity — LCSC lists it around $0.23
-(`aF4-prefab-review-2026-08-31.md`). Reviewed and accepted: at $22.59/board for a five-piece
+(`archive/reviews/aF4-prefab-review-2026-08-31.md`). Reviewed and accepted: at $22.59/board for a five-piece
 prototype run the absolute number does not justify another round trip. **Noted, not
 disputed.**
 

@@ -1,7 +1,7 @@
 # aF4 Trigger Enclosure — rev D print & assembly notes
 
 Case for the ESP32-POE-ISO plus the rev E trigger hat. Modelled against the
-measured `ESP32-PoE-ISO_Rev_N.step` and against the hat's own KiCad geometry;
+measured `reference/vendor/ESP32-PoE-ISO_Rev_N.step` and against the hat's own KiCad geometry;
 fit verified digitally (zero interference — the build script asserts it).
 
 **External: 65.2 × 117.0 × 38.4 mm** (rev C was 59.7 × 155 × 38.9). 38 mm shorter,
@@ -10,9 +10,9 @@ used to be hand-wired inside it is gone.
 
 ## Files
 
-- `aF4-trigger-case.stl` / `.step` — case body
-- `aF4-trigger-lid.stl` / `.step` — lid, exported print-side down (flat top on bed)
-- `af4_enclosure_ocp.py` — parametric source (Python/OpenCascade); every dimension
+- `hardware/enclosure/aF4-trigger-case.stl` / `.step` — case body
+- `hardware/enclosure/aF4-trigger-lid.stl` / `.step` — lid, exported print-side down (flat top on bed)
+- `hardware/enclosure/af4_enclosure_ocp.py` — parametric source (Python/OpenCascade); every dimension
   is a named constant and the script runs a geometry + solid-interference check
   before it exports
 
@@ -82,7 +82,7 @@ The Olimex LEDs are **21.2 mm** down and the same hole gives **4.7°** — visib
 only dead-on. Widening does not rescue it (Ø4.5 only reaches 6.1°). The air gap
 is the limiter, not the aperture.
 
-**Where the Olimex LED positions came from.** `ESP32-PoE-ISO_Rev_N.step` is
+**Where the Olimex LED positions came from.** `reference/vendor/ESP32-PoE-ISO_Rev_N.step` is
 authored in this same frame, so its component placements are enclosure
 coordinates directly — no mapping, and the Rev N Eagle files were not needed.
 All four of its LEDs sit in one column at x = 91.567 on a 5.715 mm pitch:
@@ -93,7 +93,7 @@ CHRG1 −176.784, PWR1 −171.069, LNK1 −165.354, ACT1 −159.639.
 - **ACT1** sits **0.361 mm inside the hat footprint** (`HAT_Y0` = −160.0) and is
   blindfolded by 1.6 mm of opaque FR4. Nothing in the lid can see it, and no
   amount of hole moving fixes it. The `light pipes intersect hat PCB` solid test
-  in `af4_enclosure_ocp.py` is what enforces this — it will fail the build if a
+  in `hardware/enclosure/af4_enclosure_ocp.py` is what enforces this — it will fail the build if a
   future hole is placed over anything the hat covers.
 - **CHRG1** is the LiPo charge LED and there is no battery in this build. U3
   (SOT-23-5) is also only 2.9 mm away, which a 3 mm pipe would foul.
@@ -128,7 +128,7 @@ This is the dimension that governs everything, so it is worth stating plainly:
 ```
 
 If you substitute a different 1 × 10 socket, its **body height is the parameter
-that moves the whole hat** — change `HAT_Z` in `af4_enclosure_ocp.py` and re-run;
+that moves the whole hat** — change `HAT_Z` in `hardware/enclosure/af4_enclosure_ocp.py` and re-run;
 the script will tell you if anything now collides.
 
 ## Print settings (PETG, P1S)
@@ -168,9 +168,9 @@ soldered to a board.
 
 ## The fitment dummy (2026-08-31)
 
-`aF4-trigger-hat-dummy.stl` is a printable stand-in for the rev E hat, so the
+`hardware/enclosure/aF4-trigger-hat-dummy.stl` is a printable stand-in for the rev E hat, so the
 enclosure can be proven before the real board comes back from PCBWay. Generated
-by `af4_hat_dummy_ocp.py`, which — like the enclosure script — asserts its own
+by `hardware/enclosure/af4_hat_dummy_ocp.py`, which — like the enclosure script — asserts its own
 fit before it exports, and does it against the exported case and lid solids
 rather than against a bounding box:
 
@@ -186,17 +186,17 @@ Checks, all passing: zero intersection with the case solid and with the lid
 solid; an M3 shank passes both mounting holes; a 5.5 mm plug pushed through the
 wall bore reaches the J1 bore; and each socket bar clears the tallest ESP32
 feature under it by 1.17 mm, taken from the vertices of
-`ESP32-PoE-ISO_Rev_N.stl` rather than assumed.
+`reference/vendor/ESP32-PoE-ISO_Rev_N.stl` rather than assumed.
 
 Bodies come from the **F.Fab outlines actually placed in the .kicad_pcb**,
 transformed into the board frame — not from the datasheets a second time. One
 discrepancy surfaced doing that: F.Fab puts the J2 nose tip at x = 147.95, while
-`af4_enclosure_ocp.py` carries `J2_NOSE_X = 148.45`. The enclosure constant is
+`hardware/enclosure/af4_enclosure_ocp.py` carries `J2_NOSE_X = 148.45`. The enclosure constant is
 the conservative one (recess 1.20 vs 1.70 mm inside the outer face), so nothing
 needs changing — but they should not be allowed to drift further apart.
 
 **What the dummy cannot prove.** The J2 barrel axis at hat top + 2.50 is an
-assumed number in `af4_enclosure_ocp.py`, and the dummy is built from the same
+assumed number in `hardware/enclosure/af4_enclosure_ocp.py`, and the dummy is built from the same
 assumption, so it cannot catch an error in it. The Ø6.6 wall hole leaves only
 0.3 mm per side around a Ø6.0 nose, so a 0.5 mm error in that axis height is an
 interference. **Measure the real jack's barrel axis above its seating plane when
