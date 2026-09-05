@@ -141,6 +141,10 @@ These are not hypotheticals. Every one of them has actually happened here.
    ```
    Getting ethernet wrong on a PoE-only board with no `wifi:` fallback means the
    device never comes back and recovery is USB with the case open.
+   **Verified in sync 2026-09-03**: the two copies are content-identical, both on
+   `!secret`. Note the second, quieter divergence risk this exposed — the Device
+   Builder has its *own* `secrets.yaml`, which is a third copy that no diff of the
+   YAML will ever catch.
 7. **Once fab data leaves the building, the revision letter is spent** — whether
    or not copper was etched. That is the entire reason rev E exists; rev D's
    package had been sent to an outside party and was then found invalid.
@@ -251,13 +255,13 @@ happened once, to 23 files in `pcb/`.
 | 10 | **Commissioning 6.1-6.8 all pass** before the schedule toggle goes on. Not gated on plumbing: only the automations carry the return interlock, `button.af4_feeder_feed` does not, so bench commissioning can proceed with the tank dry | **Yes** — gates go-live |
 | — | **Plumb the reef system.** Upstream of the scheduled-feed path and of commissioning's wet steps. **The real long pole** — the boards arrive early October | **Yes** |
 | 20 | Read the recalculated ship date off the PCBWay order page. Cosmetic | No |
-| 8 | API key, OTA password and `web_server` password still committed in plaintext in the Device Builder copy. Moving all three to `!secret` needs a `secrets.yaml` in the Device Builder | No |
+| — | **Rotate `af4_ota_password` DURING the item-3 serial flash.** The device still holds the old, publicly-exposed value and `secrets.yaml` (both copies) is deliberately pinned to it, because ESPHome authenticates the upload with the password already on the board — so this cannot be done over the air. The board is on the bench for the EXT1/EXT2 headers anyway; do both in one motion, then delete the old value from `secrets.yaml` and the Device Builder Secrets editor | No — but it is the last live remnant of the 2026-09-02 exposure |
 | 9 | `gen_pcb.py` stray "exclude from BOM/pos" flags on J2 | No |
 | 14 | **R5 to 0.25 W 0805 — deferred to the next revision.** Window closed when the order was placed. Failure mode is benign; R5 ships at 125 mW, ~77 % of rating | No — closed for this build |
 | — | Bench leftovers: A4's V_loaded half, A5 under power, A6 decay, B1/B2/B3. None can change the board | No |
 
 **Closed 2026-09-03:** the engineer question (answered, accepted, PCB in production).
-**Closed 2026-09-02:** order placed, plus items 12, 16, 17, 18.
+**Closed 2026-09-02:** order placed, plus items 8, 12, 16, 17, 18. **Item 8 verified 2026-09-03:** the Device Builder copy was diffed line by line against this folder's `af4-feeder.yaml` — content-identical, all four values on `!secret`, no plaintext credential lines. The Device Builder's own `secrets.yaml` resolves all four, proven by the build that flashed that night. `af4_ota_password` correctly still holds the OLD value; see the new open item above.
 **Out of scope**, decided 2026-09-01: eWeLink → Home Assistant integration.
 
 ### Carried forward to the next board revision
