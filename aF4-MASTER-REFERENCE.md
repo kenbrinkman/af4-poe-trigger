@@ -936,15 +936,15 @@ become true looks identical to one that has not.
 
 ## 8. Open items
 
+> 🚫 **This table is not current state.** It is the **numbering registry** — item 12 means
+> the headers, item 16 means the OTA password, permanently — plus the dated record of what
+> closed each item and why. **For what is actually still open, read `STATUS.md`.**
+> When an item closes, record *how* it closed here; change the open/closed picture in
+> `STATUS.md`. Never renumber a row.
+
 Revised after the 2026-08-28 audit, the 2026-08-31 pre-fabrication review, the 2026-09-01
 bench and vendor-documentation passes, the 2026-09-02 order going to fabrication, and the
 2026-09-02 read of the live Home Assistant config.
-
-**Thirteen of the twenty are closed.** Only two still gate working hardware — **12** (two
-headers) and **15** (commissioning) — and both wait on the boards, not on a decision. Of
-the rest, 14 and 19 are cosmetic, 18 is deferred to a future revision because the
-fabrication window has closed, **16 leaves one live exposure until the next serial flash**,
-and **20 is the one real remaining hole in unattended safety**.
 
 ⚠️ Item 17 is a caution about this table itself: it was opened by the 2026-09-02 review and
 closed the same day on discovering the work had existed in Home Assistant since 08-27 and

@@ -1,6 +1,7 @@
 # PCBWay order YB1800644 — aF4 trigger hat rev E
 
-**Status 2026-09-02: ordered, quoted, paid, in fabrication.** This file is the record of
+**Status as of 2026-09-02: ordered, quoted, paid, in fabrication.** *Current progress lives
+in `STATUS.md`, not here.* This file is the record of
 what was bought, at what price, and what was answered along the way. The design-side story
 lives in `docs/aF4-pcb-notes.md`; the submission mechanics and the traps in PCBWay's form live in
 `pcbway-new-inquiry-2026-08-29.md`.

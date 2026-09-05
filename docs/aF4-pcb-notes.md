@@ -188,13 +188,18 @@ the outside**, thinning the wall to 1.2 mm locally. Without it, 3 mm of wall wou
 have eaten most of the jack's 9.5 mm insertion depth. As built the plug engages
 6.9 mm.
 
-## Open items
+## Board notes and standing cautions
+
+> 🚫 **Not an open-items ledger.** These are durable notes about the board. The live ledger
+> is `STATUS.md`, and item numbers there are `aF4-MASTER-REFERENCE.md` §8 numbers — the
+> numbers below are local to this list and mean nothing outside it.
+
 
 1. ~~**`firmware/af4-feeder.yaml` moves GPIO13 → GPIO32.**~~ **Done 2026-09-01** — pasted into
    the ESPHome Device Builder and installed the same evening; the running device
    reports GPIO32 firmware built 18:54 that day. Re-flashed 2026-09-02 for the
    credential rotation.
-2. Solder two 1 × 10 male headers into EXT1/EXT2, pointing up.
+2. Solder two 1 × 10 male headers into EXT1/EXT2, pointing up. (§8 item 12 — see `STATUS.md`.)
 3. Distributor part numbers are intentionally blank in the BOM — PCBWay sources by
    MPN. Fill them in only if you want to buy any of it yourself.
 4. The two protoboard SVGs and `archive/rev-c-protoboard/protoboard 20x20.stl` describe hardware that no
@@ -206,9 +211,11 @@ have eaten most of the jack's 9.5 mm insertion depth. As built the plug engages
    they stand — **do not regenerate them to close the gap.** Re-running the
    script starts the next revision.
 
-## Order status
+## The order
 
-Rev E is in fabrication at PCBWay as order **YB1800644**, placed and paid
+*Order progress is live state and lives in `STATUS.md`; this section records what was bought.*
+
+Rev E went to PCBWay as order **YB1800644**, placed and paid
 2026-09-02, $169.95 all-in for five assembled boards. The engineering question on
 the J1/J2 slot widths was answered the same day. Full record, quote and per-line
 pricing: `pcb/pcbway-order-YB1800644.md`.

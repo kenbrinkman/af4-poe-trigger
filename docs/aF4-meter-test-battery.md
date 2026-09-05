@@ -6,6 +6,8 @@ stays intact.
 
 ## Status at a glance
 
+*Bench results below are the record. For what is still owed overall, see `STATUS.md`.*
+
 | Test | What it settles | State |
 |---|---|---|
 | **A1** brick open-circuit | Open item 7, TVS standoff | ✅ **DONE — PASS**, headroom amber |
@@ -652,7 +654,10 @@ guardrails — strictly worse than the board already designed.
 
 # Carry-forward to-dos — not meter work
 
-Tracked in project memory as open items 1–14.
+> ⚠️ **Historical numbering, superseded.** The numbers below are a 2026-09-01 scheme that
+> does not match `aF4-MASTER-REFERENCE.md` §8 — this list's item 1 (the PCBWay requote) was
+> done on 2026-09-02. **Read `STATUS.md` for what is open.** Kept because the reasoning in
+> each row is still useful.
 
 | # | Item |
 |---|---|
