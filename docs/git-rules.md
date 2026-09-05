@@ -151,4 +151,4 @@ open(p, "w", encoding="utf-8").write("\n".join(new))
 ```
 
 🚫 **Never renumber an existing `§N.N`.** Docs, commits and conversations cite them. Add
-`§11.x`; do not renumber `§2.4`.
+a new section numbered after the highest that exists (10 today, so the next is 11); do not renumber `§2.4`.

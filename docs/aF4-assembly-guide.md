@@ -5,7 +5,7 @@ Companion docs: `aF4-esp32-trigger-BOM.md` (parts), `aF4-pcb-notes.md`
 (board design and PCBWay ordering), `aF4-enclosure-notes.md` (print details),
 `aF4-reference.md` (feeder specs and measured values).
 
-Rev D is a much shorter build than rev C. There is no protoboard to cut, drill,
+Rev E is a much shorter build than rev C. There is no protoboard to cut, drill,
 populate or wire; no resistors to stand on end; no splices to heatshrink; no
 regulator pin to sleeve; and nothing to set at the bench. The circuit arrives
 assembled and tested. What is left is: print, plug together, flash, meter, enable.
@@ -238,5 +238,5 @@ The rev C protoboard build sequence — cutting and drilling the board, standing
 the resistors vertically, sleeving the LM1117's crossed pin 1, splicing the
 polyfuse into the jack pigtail and the TVS behind the 3.5 mm plug — is preserved
 in git history along with `archive/rev-c-protoboard/aF4-protoboard-layout.svg` and
-`archive/rev-c-protoboard/aF4-protoboard-solder-side.svg`. None of it applies to rev D, and the two
+`archive/rev-c-protoboard/aF4-protoboard-solder-side.svg`. None of it applies to rev E, and the two
 protoboard SVGs describe hardware that no longer exists.

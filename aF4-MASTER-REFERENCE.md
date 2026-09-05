@@ -50,40 +50,40 @@ one pass.
   - §1.2 Measured facts about the port — L216
   - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L233
   - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L273
-- **§2 Circuit** — L292
-  - §2.1 Regulator — the calculation that matters — L339
-  - §2.2 Load on the 10.4 V rail — L372
-  - §2.3 PhotoMOS drive — L423
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L448
-  - §2.5 Protection — L490
-  - §2.6 Indicator LEDs — L513
-- **§3 Bill of materials — with verification status** — L547
-  - §3.1 Sourcing traps recorded — L576
-  - §3.2 Bought separately (not on the board) — L584
-- **§4 Board** — L592
-  - §4.1 Geometry from vendor CAD `[CAD]` — L609
-  - §4.2 Verification status of the board — L619
-  - §4.3 Isolation — L641
-- **§5 Firmware** — L656
-  - §5.1 The safety architecture — L662
-  - §5.2 Timing check against the spec `[CALC]` — L679
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L699
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L723
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L734
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L752
-  - §5.7 Home Assistant integration — L763
-- **§6 Enclosure** — L835
-  - §6.1 The vertical stack — the governing dimension — L842
-  - §6.2 Two details that are easy to lose — L863
-- **§7 Errors already found and fixed** — L883
-  - §7.1 The inverse failure mode, named 2026-09-02 — L917
-- **§8 Open items** — L937
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L977
-- **§9 Repository map** — L1008
-  - §9.1 Toolchain constraints worth knowing — L1028
-- **§10 Audit status** — L1039
-  - §10.1 Still unverified after the audit — L1055
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1089
+- **§2 Circuit** — L302
+  - §2.1 Regulator — the calculation that matters — L349
+  - §2.2 Load on the 10.4 V rail — L382
+  - §2.3 PhotoMOS drive — L433
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L458
+  - §2.5 Protection — L500
+  - §2.6 Indicator LEDs — L523
+- **§3 Bill of materials — with verification status** — L557
+  - §3.1 Sourcing traps recorded — L586
+  - §3.2 Bought separately (not on the board) — L594
+- **§4 Board** — L602
+  - §4.1 Geometry from vendor CAD `[CAD]` — L619
+  - §4.2 Verification status of the board — L629
+  - §4.3 Isolation — L651
+- **§5 Firmware** — L666
+  - §5.1 The safety architecture — L672
+  - §5.2 Timing check against the spec `[CALC]` — L689
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L709
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L733
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L744
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L762
+  - §5.7 Home Assistant integration — L773
+- **§6 Enclosure** — L845
+  - §6.1 The vertical stack — the governing dimension — L852
+  - §6.2 Two details that are easy to lose — L873
+- **§7 Errors already found and fixed** — L893
+  - §7.1 The inverse failure mode, named 2026-09-02 — L927
+- **§8 Open items** — L947
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L989
+- **§9 Repository map** — L1020
+  - §9.1 Toolchain constraints worth knowing — L1040
+- **§10 Audit status** — L1051
+  - §10.1 Still unverified after the audit — L1067
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1101
 
 <!-- /SECTION-INDEX -->
 
@@ -111,7 +111,7 @@ Every pin missed its pad by ~0.635 mm along the pin row.
 
 ### A1.1 FIXED — a project-local footprint built from Panasonic's drawing
 
-**Final answer: `footprints/aF4.pretty/AQY212GS_SOP4_Panasonic.kicad_mod`**, authored from the
+**Final answer: `pcb/footprints/aF4.pretty/AQY212GS_SOP4_Panasonic.kicad_mod`**, authored from the
 "Recommended mounting pad (TOP VIEW)" drawing in `semi_eng_gu_sop4_1a.pdf`:
 
 | Panasonic recommended pad | Value |
@@ -281,11 +281,21 @@ connected** — Hydros words it as *connection*, not signalling.
 a mid-OTA reboot, or `input_boolean.reef_af4_schedule_enabled` left OFF means the fish
 are **silently not fed**.
 
-Every guardrail in this design prevents an *extra* feed. This is the opposite direction
-and has **no detection at all**; the automation's "unavailable ≠ off" lockout guard does
-not cover it. Over-temperature faults are equally invisible and never self-clear.
-**Mitigation: alert when `counter.reef_af4_feeds_today` is still 0 past the scheduled
-time.** Open item 12.
+Every guardrail in this design prevents an *extra* feed. This is the opposite direction.
+
+⚠️ **Corrected 2026-09-05.** This paragraph previously read "has **no detection at all**"
+and proposed alerting when `counter.reef_af4_feeds_today` is still 0 past the scheduled
+time, citing "open item 12". Both were wrong, and the wrongness is the point: **that alert
+already existed** when this was written — `automation.reef_tank_feeder_health_watchdog` has
+run a 23:45 counter-vs-elapsed-feed-times backstop and a board-offline branch since
+2026-08-27 (§5.7). It was opened as **item 17** — not item 12, which is the headers — and
+**withdrawn the same day**. See §7.1.
+
+**What is actually detected:** an offline board (watchdog, 15 min), a missed scheduled feed
+(watchdog, 23:45), and a skipped or unacknowledged press (the scheduled-feed automation).
+**What is not:** whether food physically came out — §8 item 20, the one real remaining gap.
+An over-temperature fault stops the feeder, never self-clears, and is invisible to every
+mechanism above.
 
 ---
 
@@ -973,6 +983,8 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 18 | **R5 runs at 77 % of an 0805's 125 mW rating.** A 0.25 W part is a drop-in; raising the divider impedance is NOT available, it is the minimum-load ballast. **Window has now closed for this run** — boards are in fabrication | No — note for a future rev |
 | 19 | Silkscreen on the fabbed rev E boards reads **"10.4V 10s pulse"**. Corrected in `pcb/gen_pcb.py` for any future rev; the five boards in fabrication will carry the old string | No — cosmetic, and unfixable now |
 | 20 | **No dispense confirmation.** Everything in §5 confirms the pulse was *sent*; nothing confirms food came out. An over-temperature fault would be invisible and never self-clears. A power-monitoring smart plug on the 12 V supply is the only fix short of opening the unit | No — the last unmonitored failure direction |
+| 21 | Read the recalculated ship date off the PCBWay order page. Added to the registry 2026-09-05; it had been carried only in the handoff, which numbered it 20 — a number already spent on dispense confirmation | No — cosmetic |
+| 22 | `pcb/gen_pcb.py` stray "exclude from BOM/pos" flags on J2. Added to the registry 2026-09-05; the handoff numbered it 9, a number already spent on the closed `web_server: auth:` item | No |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
 

@@ -71,7 +71,7 @@ Items were read in every class rather than assumed cosmetic. lib_footprint_issue
 "clipped by solder mask" (the fab clips it); silk_edge items are overhanging connector
 outlines; text_height is 0.75 mm against a 0.8 mm minimum. Genuinely cosmetic.
 
-**Drill file** (`gerbers/af4-trigger-hat.drl`, read directly): tool list exactly
+**Drill file** (`pcb/gerbers/af4-trigger-hat.drl`, read directly): tool list exactly
 0.45 / 0.70 / 0.80 / 1.00 / 1.20 / 2.13 / 3.20 mm, 47 entries. All 8 slots (G85) are plated
 tools T2 = **0.70 mm** and T3 = **0.80 mm**. The 0.70 mm floor was actually enforced in the
 shipped file; no 0.60 or 0.40 mm slots survived from the stock footprints.

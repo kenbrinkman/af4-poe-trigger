@@ -44,8 +44,9 @@ The next external event worth acting on is the shipping notification.
   withdrawn the same day: `automation.reef_tank_feeder_health_watchdog` has done the job since
   2026-08-27. Work that exists in reality but not in the repo reads as an open item. → §7.1
 - 🚫 **Item 11 (flash the firmware) is closed.** Done 2026-09-01; the row was stale for a day.
-- 🚫 **Item 8 (plaintext credentials in the Device Builder) is closed**, verified 2026-09-03.
-  What remains is the OTA password, tracked below as part of item 16 — not as item 8.
+- 🚫 **Plaintext credentials in the Device Builder are gone**, verified 2026-09-03. The
+  archived handoff called this "item 8"; in §8's registry item 8 is a closed measurement and
+  this work is part of **item 16**. What remains is the OTA password, tracked below as 16.
 - 🚫 **The U1 land-pattern axis assignment was confirmed visually by Kenny on 2026-08-31.**
   It is not re-derivable by tooling and must not be quietly re-opened. → §A1.1
 - ⚠️ **Item numbers are `aF4-MASTER-REFERENCE.md` §8 numbers.** The archived handoff used a
@@ -62,8 +63,8 @@ The next external event worth acting on is the shipping notification.
 | 15 | **Commissioning 6.1–6.8 all pass** before the schedule toggle goes on. Not gated on plumbing: only the automations carry the return interlock, `button.af4_feeder_feed` does not, so bench commissioning can proceed with the tank dry | **Go-live** |
 | 16 | **Rotate `af4_ota_password` during the item-12 serial flash.** The device still holds the value published in git history; ESPHome authenticates the upload with the password already on the board, so it cannot rotate over the air. The board is on the bench for the headers anyway — do both in one motion, then delete the old value from `firmware/secrets.yaml` **and** the Device Builder Secrets editor. **The last live remnant of the 2026-09-02 exposure** | No — but it is a live exposure |
 | 20 | **No dispense confirmation.** Everything in §5 confirms the pulse was *sent*; nothing confirms food came out. An over-temperature fault would be invisible and never self-clears. A power-monitoring smart plug on the 12 V supply is the only fix short of opening the unit | No — the last unmonitored failure direction |
-| 19 | Read the recalculated ship date off the PCBWay order page | No — cosmetic |
-| 9 | `pcb/gen_pcb.py` stray "exclude from BOM/pos" flags on J2 | No |
+| 21 | Read the recalculated ship date off the PCBWay order page | No — cosmetic |
+| 22 | `pcb/gen_pcb.py` stray "exclude from BOM/pos" flags on J2 | No |
 | 14 | LED viewing-angle conflict, 120° vs 160°/140° → §2.6 | No — cosmetic |
 | 18 | R5 to 0.25 W 0805 — **deferred, window closed** when the order was placed. Ships at 125 mW, ~77 % of rating; failure mode is benign | No — closed for this build |
 | — | Bench leftovers: A4's V_loaded half, A5 under power, A6 decay, B1/B2/B3. **None can change the board.** B3 has the real information value | No |

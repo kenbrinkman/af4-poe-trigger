@@ -13,7 +13,7 @@ Reply by email to Ivy Yang, service33@pcbway.com, subject line carrying **YB1800
 
 ---
 
-## 1. The drill table, verified against `af4-trigger-hat.drl`
+## 1. The drill table, verified against `gerbers/af4-trigger-hat.drl`
 
 The Excellon is a single **mixed-plating** file (`TF.FileFunction,MixedPlating,1,2`) with
 per-tool `TA.AperFunction` attributes. Those attributes are Excellon comments (`; #@!`), so
