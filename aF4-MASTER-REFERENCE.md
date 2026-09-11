@@ -14,7 +14,8 @@ assertion that has not. The assertions are the interesting part — attack those
 > ledger of record for **what is still open**.
 
 Generated 2026-08-28, revised after independent audit the same day, after the 2026-09-01
-bench and vendor-documentation passes, and after the 2026-09-02 order went to fabrication. Canonical source for this file is the repo; the other project docs
+bench and vendor-documentation passes, after the 2026-09-02 order went to fabrication, and
+after the 2026-09-11 assembly-sample EQ found J3 and J4 built on the wrong face (§A3). Canonical source for this file is the repo; the other project docs
 (`docs/aF4-reference.md`, `docs/aF4-pcb-notes.md`, `docs/aF4-esp32-trigger-BOM.md`,
 `docs/aF4-enclosure-notes.md`, `docs/aF4-assembly-guide.md`) remain authoritative in their own areas
 and go deeper. This document does not replace them; it makes the whole thing checkable in
@@ -31,6 +32,7 @@ one pass.
 | `[SPEC]` | From inD aquatics' published 0-10 V setup guide |
 | `[CALC]` | Derived. Inputs and working shown so the arithmetic can be rechecked |
 | `[ASSERT]` | **Stated but not independently verified.** Treat as unproven |
+| `[EQ]` | Found in a PCBWay engineering-query exchange, from photographs of the built boards |
 
 ---
 
@@ -40,50 +42,51 @@ one pass.
 > 🔑 **Do not read this file whole.** Find the section here, then read only its
 > line range. Numbers drift — confirm with `grep -n "^### 2.4" <file>`.
 
-  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L94
-  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L112
-  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L135
-  - §A1.3 Isolation, re-derived `[AUDIT]` — L164
-  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L186
-- **§1 What the system must do** — L197
-  - §1.1 Requirements — L205
-  - §1.2 Measured facts about the port — L216
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L233
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L273
-- **§2 Circuit** — L302
-  - §2.1 Regulator — the calculation that matters — L349
-  - §2.2 Load on the 10.4 V rail — L382
-  - §2.3 PhotoMOS drive — L433
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L458
-  - §2.5 Protection — L500
-  - §2.6 Indicator LEDs — L523
-- **§3 Bill of materials — with verification status** — L557
-  - §3.1 Sourcing traps recorded — L586
-  - §3.2 Bought separately (not on the board) — L594
-- **§4 Board** — L602
-  - §4.1 Geometry from vendor CAD `[CAD]` — L619
-  - §4.2 Verification status of the board — L629
-  - §4.3 Isolation — L651
-- **§5 Firmware** — L666
-  - §5.1 The safety architecture — L672
-  - §5.2 Timing check against the spec `[CALC]` — L689
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L709
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L733
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L744
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L762
-  - §5.7 Home Assistant integration — L773
-- **§6 Enclosure** — L845
-  - §6.1 The vertical stack — the governing dimension — L852
-  - §6.2 Two details that are easy to lose — L873
-- **§7 Errors already found and fixed** — L893
-  - §7.1 The inverse failure mode, named 2026-09-02 — L927
-- **§8 Open items** — L947
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L989
-- **§9 Repository map** — L1020
-  - §9.1 Toolchain constraints worth knowing — L1040
-- **§10 Audit status** — L1051
-  - §10.1 Still unverified after the audit — L1067
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1101
+  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L97
+  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L115
+  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L138
+  - §A1.3 Isolation, re-derived `[AUDIT]` — L167
+  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L189
+  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L200
+- **§1 What the system must do** — L256
+  - §1.1 Requirements — L264
+  - §1.2 Measured facts about the port — L275
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L292
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L332
+- **§2 Circuit** — L361
+  - §2.1 Regulator — the calculation that matters — L408
+  - §2.2 Load on the 10.4 V rail — L441
+  - §2.3 PhotoMOS drive — L492
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L517
+  - §2.5 Protection — L559
+  - §2.6 Indicator LEDs — L582
+- **§3 Bill of materials — with verification status** — L616
+  - §3.1 Sourcing traps recorded — L645
+  - §3.2 Bought separately (not on the board) — L653
+- **§4 Board** — L661
+  - §4.1 Geometry from vendor CAD `[CAD]` — L679
+  - §4.2 Verification status of the board — L689
+  - §4.3 Isolation — L711
+- **§5 Firmware** — L726
+  - §5.1 The safety architecture — L732
+  - §5.2 Timing check against the spec `[CALC]` — L749
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L769
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L793
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L804
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L822
+  - §5.7 Home Assistant integration — L833
+- **§6 Enclosure** — L905
+  - §6.1 The vertical stack — the governing dimension — L912
+  - §6.2 Two details that are easy to lose — L940
+- **§7 Errors already found and fixed** — L960
+  - §7.1 The inverse failure mode, named 2026-09-02 — L995
+- **§8 Open items** — L1015
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1060
+- **§9 Repository map** — L1091
+  - §9.1 Toolchain constraints worth knowing — L1111
+- **§10 Audit status** — L1122
+  - §10.1 Still unverified after the audit — L1138
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1172
 
 <!-- /SECTION-INDEX -->
 
@@ -191,6 +194,63 @@ contradicted the BOM. **Fixed 2026-08-28:** the script now says SMAJ13A. If a 15
 standoff was ever the intent it was never propagated anywhere, and adopting it
 deliberately would close the open-circuit-voltage question in §2.5 by fiat
 (SMAJ15A breakdown 16.7–18.5 V still clamps far under the AQY212's 60 V rating).
+
+---
+
+### A3. J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]`
+
+**Found 2026-09-11 from PCBWay's assembly sample photographs.** Both 1 × 10 sockets are
+fitted on the **top** face with their openings pointing up. They belong on the **bottom**
+face: plastic body hanging below the board, solder joints on the top side.
+
+**This is our error, not PCBWay's.** They built exactly what the data said.
+
+Three project documents already fix the socket below the board, and they agree:
+
+| Source | What it says |
+|---|---|
+| §6.1 stack | `z = 4.12` top of the male header plastic, `z = 12.62` hat underside. The gap is **8.50 mm — the socket body height exactly.** With the socket on top, the hat underside would sit at 4.12 and every line below it moves |
+| `docs/aF4-pcb-notes.md` | "male header plastic 2.54 mm + socket body 8.5 mm ⇒ the hat's underside sits ~11.0 mm above the ESP32's top face" |
+| `docs/aF4-assembly-guide.md` §3, §5 | Male headers "pins pointing up" on the ESP32, then "**Hat down onto the two headers**". Openings must face down |
+| `hardware/enclosure/af4_hat_dummy_ocp.py` | The printed fitment dummy is the fourth witness and the most literal one. The plate is `box(..., HAT_Z, ..., HAT_TOP)` = 12.618→14.218. J1, J2, U1 and the LED bumps are all fused **above** `HAT_TOP`. The two socket bars are `box(bx0, BAR_Y0, HAT_Z - SOCKET_H, bx1, BAR_Y1, HAT_Z)` = **4.118→12.618, entirely below the plate**, and peg into holes cut in its underside. Its own comment: "The bar underside is the top of the male header plastic the sockets will sit on (z = 4.118)" |
+
+As built the Olimex pins reach ~8.5 mm above the ESP32's top face while the hat underside
+sits at 12.62 mm. **They never touch** — and a socket cannot be entered from below in any case.
+
+**Why nothing caught it.** The mounting side of a through-hole part is invisible in every
+machine-readable file in the package:
+
+1. `pcb/gen_pcb.py` places J3/J4 with the same `place(...)` call as everything else, so the
+   footprints sit on `F.Cu` with silkscreen on `F.SilkS`. Nothing says "fit from the reverse".
+2. `pcb/af4-trigger-hat-centroid.csv` carries **SMD rows only** — no J1, J2, J3 or J4, and no
+   side column. The side was never in machine-readable data at all.
+3. `pcb/PCBWay-README.txt` ASSEMBLY reads "**Sides populated: top only**". Critical note 5
+   already said J3/J4 "must be seated flush and square — they mate with a header on another
+   board" and stopped one sentence short of naming the face.
+
+Gerbers encode copper, mask and silk. **They do not encode which side a leaded part is
+inserted from.** For an SMD part the side is implied by the layer; for a THT part it is not
+implied by anything, because the holes are identical either way.
+
+**The rework is cheap and must be described that way to PCBWay:** same holes, same parts,
+plated through with pads on both faces, so **no PCB change and no BOM change**. Pin 1 stays
+in the hole it is in now — a 1 × 10 in-line connector does not mirror when flipped. The top
+silkscreen legend ends up on the opposite face from the part, which is cosmetic.
+
+> **Generalised lesson, and it is the §7 pattern in a new costume:** a fact that lives only
+> in prose is a fact the factory cannot act on. **Any part fitted from the non-standard face
+> must be named by designator in the fab note *and* have its footprint on that face in the
+> CAD.** Do not rely on an assembly drawing, and put the THT parts in the centroid with a
+> side column so the machine-readable package carries it too.
+
+Reply text and the full photo-by-photo check: `pcb/pcbway-EQ-2026-09-11-reply.md`.
+
+**Everything else in the sample photos was verified correct** against the BOM and the
+pad-level geometry in `pcb/af4-trigger-hat.kicad_pcb`: U1 pin 1 top-left, U2 tab left,
+D1 band bottom and D2 band top, C2 positive stripe right, all seven resistor codes,
+J1 5 soldered slots + 1 NPTH post, J2 3 soldered slots + 5 NPTH pegs, all 21 designators
+populated. **D3/D5 LED polarity is not resolvable at the photo's resolution** and was
+referred back to PCBWay to confirm against the centroid.
 
 ---
 
@@ -609,7 +669,8 @@ PETG for the enclosure · M2 / M3 self-tapping screws.
 | Min track / space | 0.35 mm / 0.20 mm |
 | Min drill | 0.45 mm (stitching vias) |
 | Plated slots | **0.70 mm minimum**, deliberately widened |
-| Placements | 17 SMD (top only) + 4 THT parts / **28** joints `[AUDIT]` |
+| Placements | 17 SMD (top face) + 4 THT parts / **28** joints `[AUDIT]` |
+| THT mounting side | J1, J2 bodies on the **top** face. **J3, J4 bodies on the BOTTOM face**, soldered on top — see §A3. The fab data does not express this; it must be stated by designator in the fab note |
 | Mounting | 2 × M3 at (123.0, 118.0) and (123.5, 147.0), board frame |
 
 `pcb/gen_pcb.py` is the source of truth — it generates the `.kicad_pcb` deterministically from
@@ -870,6 +931,13 @@ with zero intersection volume `[ASSERT]`, as reported by the script; not re-run 
 **The 1×10 socket's body height sets everything.** Substitute a different socket → change
 `HAT_Z` and re-run; the script reports what now collides.
 
+⚠️ **This table is also the proof that J3/J4 mount from the BOTTOM face.** The 8.50 mm
+between the header plastic (4.12) and the hat underside (12.62) *is* the socket body, and
+the pin at 9.22 is J1/J2's solder tail protruding 3.40 mm below the hat. Nothing in the
+stack sits between 12.62 and 14.22 except the board itself. Build the sockets on top and
+every line from 9.22 down is wrong. See §A3 — the boards were built that way and are in
+rework.
+
 ### 6.2 Two details that are easy to lose
 
 - The barrel-jack hole needs its **Ø13 × 1.8 mm counterbore on the outside**, thinning the
@@ -909,6 +977,7 @@ more useful than the individual items.
 | 2026-08-28 `[AUDIT]` | **"44 joints" was fiction; the real count is 28** — and PCBWay prices hand-soldered joints | A hard-coded count in a generated document, with the correct itemisation printed directly beneath it |
 | 2026-08-28 `[AUDIT]` | Circuit diagram showed D2 upstream of D1; the board wires it downstream | Diagram drawn from intent, not from the netlist |
 | 2026-08-28 `[AUDIT]` | "Dropout is far smaller at 20 mA" — false for a quasi-LDO | A PMOS-LDO intuition applied to an NPN pass device |
+| 2026-09-11 `[EQ]` | **J3/J4 built on the top face; they mount from the bottom** — found in PCBWay's assembly sample photos, boards in rework (§A3) | The mounting side of a THT part is not expressible in Gerbers, absent from an SMD-only centroid, and so survived only in prose — where `PCBWay-README.txt` then contradicted it with "sides populated: top only" |
 | earlier | KiCad footprints specified 0.40 / 0.60 mm plated slots, below fab minimum | DRC does not check slot widths |
 | earlier | Rev B: three buck modules failed in sequence | A trimpot existed only to hit a precision target the port does not require |
 
@@ -953,8 +1022,8 @@ become true looks identical to one that has not.
 > `STATUS.md`. Never renumber a row.
 
 Revised after the 2026-08-28 audit, the 2026-08-31 pre-fabrication review, the 2026-09-01
-bench and vendor-documentation passes, the 2026-09-02 order going to fabrication, and the
-2026-09-02 read of the live Home Assistant config.
+bench and vendor-documentation passes, the 2026-09-02 order going to fabrication, the
+2026-09-02 read of the live Home Assistant config, and the 2026-09-11 assembly-sample EQ.
 
 ⚠️ Item 17 is a caution about this table itself: it was opened by the 2026-09-02 review and
 closed the same day on discovering the work had existed in Home Assistant since 08-27 and
@@ -985,6 +1054,9 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 20 | **No dispense confirmation.** Everything in §5 confirms the pulse was *sent*; nothing confirms food came out. An over-temperature fault would be invisible and never self-clears. A power-monitoring smart plug on the 12 V supply is the only fix short of opening the unit | No — the last unmonitored failure direction |
 | 21 | Read the recalculated ship date off the PCBWay order page. Added to the registry 2026-09-05; it had been carried only in the handoff, which numbered it 20 — a number already spent on dispense confirmation | No — cosmetic |
 | 22 | `pcb/gen_pcb.py` stray "exclude from BOM/pos" flags on J2. Added to the registry 2026-09-05; the handoff numbered it 9, a number already spent on the closed `web_server: auth:` item | No |
+| 23 | **J3/J4 built on the wrong face — rework requested from PCBWay 2026-09-11** (§A3). Sockets belong on the bottom, body below the board, soldered on top. No PCB or BOM change; same holes, same parts. Opened and answered the same day. **Closes when a photo of one reworked board is received and confirmed** | **YES** — blocks shipping |
+| 24 | **Move the J3/J4 footprints to `B.Cu`** (silkscreen to `B.SilkS`) in `pcb/gen_pcb.py`, rewrite the `PCBWay-README.txt` ASSEMBLY line to name the face by designator, and add the THT parts to the centroid with a side column. The fix for the *cause* of item 23, as opposed to this run's rework | No — but it is the only thing that stops item 23 recurring |
+| 25 | **D3/D5 LED polarity is unverified on the built boards.** 0805 water-clear packages show no cathode mark at the sample photos' resolution. Referred to PCBWay 2026-09-11 to confirm against the centroid during the item-23 rework. Low consequence either way: a reversed indicator fails to light and does not touch the trigger path | No — confirm at commissioning 6.1 / 6.5 if PCBWay does not answer |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
 

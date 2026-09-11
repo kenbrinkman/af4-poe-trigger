@@ -102,8 +102,12 @@ board:
 - `docs/aF4-assembly-guide.md` section 5: "Hat down onto the two headers", after the
   ESP32 is already on its standoffs. The male pins point up, so the socket
   openings must point down.
-- The printable fitment dummy carries "two detachable 8.5 mm socket bars (J3/J4)
-  that peg into the underside" of the plate.
+- `hardware/enclosure/af4_hat_dummy_ocp.py`, the printable fitment dummy, is the most
+  literal witness. The plate is `box(..., HAT_Z, ..., HAT_TOP)`, 12.618 to 14.218. J1, J2, U1
+  and the LED bumps are fused **above** `HAT_TOP`. The two socket bars are
+  `box(bx0, BAR_Y0, HAT_Z - SOCKET_H, bx1, BAR_Y1, HAT_Z)`, **4.118 to 12.618, entirely below
+  the plate**, pegged into holes cut in its underside. So the dummy does NOT put everything on
+  one face: jacks and LEDs above, socket bars below.
 
 With the sockets on top, the Olimex male pins reach only about 8.5 mm above the
 ESP32's top face while the hat's underside sits at 11.04 mm. They would not reach
