@@ -15,8 +15,9 @@ assertion that has not. The assertions are the interesting part — attack those
 
 Generated 2026-08-28, revised after independent audit the same day, after the 2026-09-01
 bench and vendor-documentation passes, after the 2026-09-02 order went to fabrication, and
-after the 2026-09-11 assembly-sample EQ found J3 and J4 built on the wrong face (§A3), and after
-the reworked board was verified and accepted 2026-09-12 (§A3.1). Canonical source for this file is the repo; the other project docs
+after the 2026-09-11 assembly-sample EQ found J3 and J4 built on the wrong face (§A3), after
+the reworked board was verified and accepted 2026-09-12 (§A3.1), and after the order shipped
+2026-09-14 (§A3.2). Canonical source for this file is the repo; the other project docs
 (`docs/aF4-reference.md`, `docs/aF4-pcb-notes.md`, `docs/aF4-esp32-trigger-BOM.md`,
 `docs/aF4-enclosure-notes.md`, `docs/aF4-assembly-guide.md`) remain authoritative in their own areas
 and go deeper. This document does not replace them; it makes the whole thing checkable in
@@ -43,52 +44,53 @@ one pass.
 > 🔑 **Do not read this file whole.** Find the section here, then read only its
 > line range. Numbers drift — confirm with `grep -n "^### 2.4" <file>`.
 
-  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L99
-  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L117
-  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L140
-  - §A1.3 Isolation, re-derived `[AUDIT]` — L169
-  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L191
-  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L202
-  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L259
-- **§1 What the system must do** — L307
-  - §1.1 Requirements — L315
-  - §1.2 Measured facts about the port — L326
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L343
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L383
-- **§2 Circuit** — L412
-  - §2.1 Regulator — the calculation that matters — L459
-  - §2.2 Load on the 10.4 V rail — L492
-  - §2.3 PhotoMOS drive — L543
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L568
-  - §2.5 Protection — L610
-  - §2.6 Indicator LEDs — L633
-- **§3 Bill of materials — with verification status** — L667
-  - §3.1 Sourcing traps recorded — L696
-  - §3.2 Bought separately (not on the board) — L704
-- **§4 Board** — L712
-  - §4.1 Geometry from vendor CAD `[CAD]` — L730
-  - §4.2 Verification status of the board — L740
-  - §4.3 Isolation — L762
-- **§5 Firmware** — L777
-  - §5.1 The safety architecture — L783
-  - §5.2 Timing check against the spec `[CALC]` — L800
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L820
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L844
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L855
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L873
-  - §5.7 Home Assistant integration — L884
-- **§6 Enclosure** — L956
-  - §6.1 The vertical stack — the governing dimension — L963
-  - §6.2 Two details that are easy to lose — L991
-- **§7 Errors already found and fixed** — L1011
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1046
-- **§8 Open items** — L1066
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1113
-- **§9 Repository map** — L1144
-  - §9.1 Toolchain constraints worth knowing — L1164
-- **§10 Audit status** — L1175
-  - §10.1 Still unverified after the audit — L1191
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1225
+  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L101
+  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L119
+  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L142
+  - §A1.3 Isolation, re-derived `[AUDIT]` — L171
+  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L193
+  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L204
+  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L261
+  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L309
+- **§1 What the system must do** — L355
+  - §1.1 Requirements — L363
+  - §1.2 Measured facts about the port — L374
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L391
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L431
+- **§2 Circuit** — L460
+  - §2.1 Regulator — the calculation that matters — L507
+  - §2.2 Load on the 10.4 V rail — L540
+  - §2.3 PhotoMOS drive — L591
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L616
+  - §2.5 Protection — L658
+  - §2.6 Indicator LEDs — L681
+- **§3 Bill of materials — with verification status** — L715
+  - §3.1 Sourcing traps recorded — L744
+  - §3.2 Bought separately (not on the board) — L752
+- **§4 Board** — L760
+  - §4.1 Geometry from vendor CAD `[CAD]` — L778
+  - §4.2 Verification status of the board — L788
+  - §4.3 Isolation — L810
+- **§5 Firmware** — L825
+  - §5.1 The safety architecture — L831
+  - §5.2 Timing check against the spec `[CALC]` — L848
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L868
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L892
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L903
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L921
+  - §5.7 Home Assistant integration — L932
+- **§6 Enclosure** — L1004
+  - §6.1 The vertical stack — the governing dimension — L1011
+  - §6.2 Two details that are easy to lose — L1039
+- **§7 Errors already found and fixed** — L1059
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1094
+- **§8 Open items** — L1114
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1161
+- **§9 Repository map** — L1192
+  - §9.1 Toolchain constraints worth knowing — L1212
+- **§10 Audit status** — L1223
+  - §10.1 Still unverified after the audit — L1239
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1273
 
 <!-- /SECTION-INDEX -->
 
@@ -301,6 +303,52 @@ than assuming board 1 is the one to fit. Reflow the two pin-10 joints and clean 
 before the item-12 header work. Tracked as item 26.
 
 Reply text and the accept/reject reasoning: `pcb/pcbway-EQ-2026-09-12-rework-accepted.md`.
+
+---
+
+### A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14`
+
+PCBWay order `YB1800644` reads **"This order was Shipped (Awaiting delivery)"** as of
+2026-09-14, with the Logistics Information table giving **DHL (DTP)**, shipping time
+**2026-09-14**, and the tracking-number column **blank**. That ends the A3 thread: the
+acceptance reply released the rework, the remaining four boards were built, and all five left
+the factory. Nothing is owed to PCBWay and nothing on this project waits on them.
+
+**Shipped 12 days after the order was placed**, against a quoted 26–28 day lead time — and that
+is *with* two engineer questions, each of which restarts the build clock (§7). The J3/J4 rework
+round cost nothing against the quote. **Treat PCBWay's quoted lead time as a ceiling, not an
+estimate**, and do not plan the next run's schedule around it.
+
+⚠️ **The "Estimated Finish Time" reminder on the order page is not maintained.** It still read
+`2026-09-29` on the day the boards shipped — it is the pre-EQ fabrication estimate and was never
+recalculated, not by the 09-02 EQ, not by the 09-11 one, and not by the shipment. **The status
+line and the Logistics Information table are the live fields; the reminder line is decoration.**
+This is what item 21 was written to chase, and the answer is that there is nothing there to read.
+**No delivery date is published anywhere on the order page.** DHL Express out of China typically
+runs 3–6 business days to the US east coast, which puts arrival loosely in the 09-18 to 09-23
+window — a working band, not a commitment, and not to be quoted as one.
+
+**The blank tracking number is normal** within a day or two either side of a status flip.
+Kenny's call on 2026-09-14 was **not to chase the waybill** and to let it appear. If it has not
+by roughly 09-18, the order page is still the place to look before mailing anyone: PCBWay's
+email is not a reliable signal for order events, which is why the page is the source of truth.
+
+**DHL (DTP)** is understood to be PCBWay's duties-and-taxes-prepaid service, i.e. the $56.99 of
+shipping, tax and handling taken at checkout should cover import charges and nothing should be
+collected at the door. ⚠️ **Not verified against PCBWay's own published terms.** If DHL presents
+a duty invoice on delivery, check it against the order before paying it rather than assuming it
+is owed.
+
+**What this changes for the build:**
+
+- **Item 21 closes**, overtaken by events rather than answered (see above).
+- **Item 26 stops being a note and becomes the next action.** The arrival inspection is now the
+  top of the open-item list, ahead of items 12 and 16, all three in one bench session.
+- ⚠️ **Only board 1 has ever been seen.** The other four were built after the 09-12 acceptance
+  and were never photographed. They are *expected* to carry J3/J4 on the bottom face because the
+  reworked sample was accepted as the pattern, but that is an inference, not an observation.
+  **Check the mounting face on every board before selecting one** — the same defect that A3
+  caught is exactly the one that a second build run can reproduce silently.
 
 ---
 
@@ -1073,8 +1121,8 @@ become true looks identical to one that has not.
 
 Revised after the 2026-08-28 audit, the 2026-08-31 pre-fabrication review, the 2026-09-01
 bench and vendor-documentation passes, the 2026-09-02 order going to fabrication, the
-2026-09-02 read of the live Home Assistant config, the 2026-09-11 assembly-sample EQ, and the
-2026-09-12 acceptance of the reworked board.
+2026-09-02 read of the live Home Assistant config, the 2026-09-11 assembly-sample EQ, the
+2026-09-12 acceptance of the reworked board, and the 2026-09-14 shipment.
 
 ⚠️ Item 17 is a caution about this table itself: it was opened by the 2026-09-02 review and
 closed the same day on discovering the work had existed in Home Assistant since 08-27 and
@@ -1103,12 +1151,12 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 18 | **R5 runs at 77 % of an 0805's 125 mW rating.** A 0.25 W part is a drop-in; raising the divider impedance is NOT available, it is the minimum-load ballast. **Window has now closed for this run** — boards are in fabrication | No — note for a future rev |
 | 19 | Silkscreen on the fabbed rev E boards reads **"10.4V 10s pulse"**. Corrected in `pcb/gen_pcb.py` for any future rev; the five boards in fabrication will carry the old string | No — cosmetic, and unfixable now |
 | 20 | **No dispense confirmation.** Everything in §5 confirms the pulse was *sent*; nothing confirms food came out. An over-temperature fault would be invisible and never self-clears. A power-monitoring smart plug on the 12 V supply is the only fix short of opening the unit | No — the last unmonitored failure direction |
-| 21 | Read the recalculated ship date off the PCBWay order page. Added to the registry 2026-09-05; it had been carried only in the handoff, which numbered it 20 — a number already spent on dispense confirmation | No — cosmetic |
+| 21 | ~~Read the recalculated ship date off the PCBWay order page~~ — **CLOSED 2026-09-14, overtaken rather than answered.** The page never published a recalculated date: the "Estimated Finish Time" reminder still read 2026-09-29 on the day the order shipped, because that field is not maintained. The boards shipped 2026-09-14, 12 days after the order was placed against a 26–28 day quote (§A3.2). Added to the registry 2026-09-05; it had been carried only in the handoff, which numbered it 20 — a number already spent on dispense confirmation | — |
 | 22 | `pcb/gen_pcb.py` stray "exclude from BOM/pos" flags on J2. Added to the registry 2026-09-05; the handoff numbered it 9, a number already spent on the closed `web_server: auth:` item | No |
 | 23 | ~~J3/J4 built on the wrong face~~ — **CLOSED 2026-09-12.** Rework requested 2026-09-11 (§A3), reply sent 08:17 the same day, one reworked board photographed and verified 2026-09-12: bodies on the bottom face, joints on top, pin 1 unchanged, both seated flush and square (§A3.1). Two workmanship defects were left open deliberately and rolled into item 26 rather than reworked again | — |
 | 24 | **Move the J3/J4 footprints to `B.Cu`** (silkscreen to `B.SilkS`) in `pcb/gen_pcb.py`, rewrite the `PCBWay-README.txt` ASSEMBLY line to name the face by designator, and add the THT parts to the centroid with a side column. The fix for the *cause* of item 23, as opposed to this run's rework | No — but it is the only thing that stops item 23 recurring |
 | 25 | **D3/D5 LED polarity is unverified on the built boards.** 0805 water-clear packages show no cathode mark at either photo set's resolution. Referred to PCBWay 2026-09-11, then **explicitly released on 2026-09-12** so the question could not hold the EQ open. It now falls to commissioning 6.1 / 6.5. Low consequence either way: a reversed indicator fails to light and does not touch the trigger path | No — resolves at commissioning |
-| 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1. Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
+| 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1, and **check the J3/J4 mounting face on every board**: only the reworked sample was ever photographed (§A3.2). Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
 

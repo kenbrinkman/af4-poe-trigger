@@ -1,7 +1,7 @@
 # PCBWay order YB1800644 — aF4 trigger hat rev E
 
-**Status as of 2026-09-02: ordered, quoted, paid, in fabrication.** *Current progress lives
-in `STATUS.md`, not here.* This file is the record of
+**Status as of 2026-09-14: shipped, DHL (DTP), awaiting delivery.** *Current progress lives
+in `STATUS.md`, not here; the shipment record is `aF4-MASTER-REFERENCE.md` §A3.2.* This file is the record of
 what was bought, at what price, and what was answered along the way. The design-side story
 lives in `docs/aF4-pcb-notes.md`; the submission mechanics and the traps in PCBWay's form live in
 `pcbway-new-inquiry-2026-08-29.md`.
@@ -12,7 +12,8 @@ lives in `docs/aF4-pcb-notes.md`; the submission mechanics and the traps in PCBW
 | Placed | 2026-09-02 18:32:27 |
 | Sales rep | Ivy Yang, `service33@pcbway.com` |
 | Order amount paid | **$169.95** |
-| Order status | **In fabrication** (PCB line item), Engineering Question raised and answered |
+| Order status | **Shipped 2026-09-14** (awaiting delivery). Two engineer questions raised and answered |
+| Shipped | **2026-09-14**, DHL (DTP), tracking number not posted at the time of reading |
 
 ## The two line items
 
@@ -112,11 +113,24 @@ have cost another day.
 Full text of both the question and the reply: `pcbway-EQ-2026-09-02-reply.md`, with the
 wider prepared-answer sheet in `pcbway-EQ-2026-09-02-prepared-answers.md`.
 
+## Shipment, 2026-09-14
+
+| | |
+|---|---|
+| Status line | This order was Shipped (Awaiting delivery) |
+| Carrier | **DHL (DTP)** — understood to be duties-and-taxes-prepaid, covered by the $56.99 taken at checkout. Not verified against PCBWay's terms |
+| Shipping time | **2026-09-14** — 12 days after the order was placed, against a quoted 26–28 days, with two engineer questions along the way |
+| Tracking number | **Blank** on the page at the time of reading. Deliberately not chased |
+| "Estimated Finish Time" | Still read `2026-09-29`. ⚠️ **That field is never recalculated and is not a delivery date.** It is what closed item 21 without answering it |
+
+Full record, including what it changes for the build: `aF4-MASTER-REFERENCE.md` §A3.2.
+
 ## What is still owed, on either side
 
-- **PCBWay:** deliver. Lead time restarts from the EQ answer, so 26–28 days from 2026-09-02.
-- **Us:** nothing on the board. The remaining work is firmware (open item 11), two male
-  headers into EXT1/EXT2 (item 12), and commissioning (item 15).
+- **PCBWay:** nothing. The boards shipped 2026-09-14 and the EQ thread is closed.
+- **Us:** nothing on the board, and nothing to the vendor. The remaining work is the arrival
+  inspection (item 26), two male headers into EXT1/EXT2 (item 12), the OTA password rotation
+  at that same serial flash (item 16), and commissioning (item 15).
 
 One thing that cannot now be fixed: the silkscreen on these five boards reads
 **"10.4V 10s pulse"**. The firmware moved to a 20 s pulse on 2026-09-01, after the Gerbers
