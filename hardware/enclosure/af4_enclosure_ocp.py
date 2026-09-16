@@ -23,7 +23,14 @@ MEASURED FACTS
   pins         to z=-8.59 below board;  RJ45 top z=16.70
   antenna tip  y=-83.69
   M2 mounts    (97.79,-185.42) (92.71,-117.47) (115.57,-117.47)
-  UEXT box hdr 4.40 mm tall (vendor 3D model) — clears the hat easily
+  TALL PARTS under the hat, calipered 2026-09-16 from the board's BOTTOM face
+  (z = 0 here, the plane the M2 standoffs stop at):
+    electrolytic cap beside DCDC1  13.4   (vendor model 13.15)
+    DCDC1 isolated power module     11.5   (vendor model 11.99)
+    UEXT1 box header                11.2   (vendor model 11.53)
+  Until 2026-09-16 this line read "UEXT box hdr 4.40 mm tall — clears the hat
+  easily". It was wrong by ~7 mm, and it left the cap 0.78 mm INTO the hat.
+  The hat was raised 1.5 mm (HAT_LIFT) to fix it. See §6.3 of the master ref.
 """
 import math
 import numpy as np
@@ -53,9 +60,28 @@ WALL, FLOOR, LID_T = 3.0, 2.4, 3.0
 HAT_X0, HAT_X1 = 89.15, 146.15          # 57.0 mm wide
 HAT_Y0, HAT_Y1 = -160.00, -110.00       # 50.0 mm long (kicad y 110..160)
 HAT_T = 1.6
-# stack: ESP32 top 1.578 + male header plastic 2.54 + socket body 8.5
-HAT_Z = 1.578 + 2.54 + 8.50             # 12.618 -> hat underside
-HAT_TOP = HAT_Z + HAT_T                 # 14.218 -> hat top face
+# stack: ESP32 top 1.578 + male header plastic 2.54 + socket body 8.5 + lift.
+# HAT_LIFT floats the sockets 1.5 mm above the header plastic so the hat clears
+# the electrolytic cap beside DCDC1 (top z 13.4, measured). The hat is carried
+# by its two M3 standoffs, not by the header plastic, so nothing needs to bear
+# on the gap. Cost: pin engagement drops from ~5.8 to ~4.3 mm.
+HAT_LIFT = 1.50
+HAT_Z = 1.578 + 2.54 + 8.50 + HAT_LIFT  # 14.118 -> hat underside
+HAT_TOP = HAT_Z + HAT_T                 # 15.718 -> hat top face
+HDR_PLASTIC_TOP = 1.578 + 2.54          # 4.118
+HDR_PIN_ABOVE = 5.84                    # standard 0.1" header mating length
+SOCKET_H = 8.50
+
+# Tall parts on the Olimex top face that sit under (or beside) the hat.
+# x/y from ESP32-PoE-ISO_Rev_N.stl, enclosure frame; top z MEASURED 2026-09-16
+# from the ESP32's bottom face with calipers. Measured values govern.
+TALL_PARTS = [
+    # name,                          x0,     y0,      x1,     y1,     top z
+    ("UEXT1 box header",             94.00, -129.00, 114.50, -119.50, 11.2),
+    ("DCDC1 power module",           98.70, -155.00, 118.10, -148.00, 11.5),
+    ("electrolytic cap by DCDC1",   111.50, -161.50, 118.50, -155.00, 13.4),
+]
+TALL_MAX_Z = max(t[5] for t in TALL_PARTS)
 HAT_PIN_DROP = 3.4                      # THT pin protrusion below the hat
 
 # jack axes, from the vendor 3D models (see aF4-pcb-notes.md)
@@ -70,7 +96,7 @@ IX1 = 146.65                             # 0.50 clear of the hat's right edge
 IY0 = -193.00                            # RJ45 flush plane at OY0 = -196.0
 IY1 = -82.00                             # 1.7 past the antenna tip (-83.69)
 IZ0 = -9.50                              # under-board clearance for THT leads
-IZ1 = 23.50                              # 2.1 above the barrel jack's crown
+IZ1 = 25.00                              # 2.1 above the barrel jack's crown (23.50 before HAT_LIFT)
 OX0, OX1 = IX0 - WALL, IX1 + WALL
 OY0, OY1 = IY0 - WALL, IY1 + WALL
 OZ0 = IZ0 - FLOOR
@@ -421,7 +447,13 @@ ok &= clear("hat front edge to interior wall", HAT_Y0 - IY0, 1.0)
 ok &= clear("hat back edge to interior wall", IY1 - HAT_Y1, 1.0)
 ok &= clear("barrel jack crown to lid underside", IZ1 - (HAT_TOP + 7.2), 1.0)
 ok &= clear("hat underside pins to ESP32 top", (HAT_Z - HAT_PIN_DROP) - 1.578, 2.0)
-ok &= clear("hat underside pins to UEXT header top", (HAT_Z - HAT_PIN_DROP) - (1.578 + 4.40), 1.0)
+# Measured tall parts vs the hat's bare underside. Nothing on the hat hangs
+# below its underside over the ESP32: J3/J4 pins solder on the top face, and the
+# J1/J2 tails are outboard of the ESP32's right edge (x 118.15).
+for nm, x0, y0, x1, y1, tz in TALL_PARTS:
+    ok &= clear("hat underside to %s (meas.)" % nm, HAT_Z - tz, 0.5)
+ok &= clear("header pin engagement in the sockets",
+            (HDR_PLASTIC_TOP + HDR_PIN_ABOVE) - (HAT_Z - SOCKET_H), 3.5)
 ok &= clear("RJ45 crown to lid underside", IZ1 - 16.70, 2.0)
 ok &= clear("interior past antenna tip", IY1 - (-83.69), 1.0)
 for bx, by in BOSSES_HAT:
@@ -460,13 +492,21 @@ print("  all geometry checks pass" if ok else "  *** CHECKS FAILED ***")
 # the plane each board sits on: anything above that is a real collision.
 hat_env = box(HAT_X0, HAT_Y0, HAT_Z, HAT_X1, HAT_Y1, HAT_TOP + 7.2)
 v1 = volume(common(case, hat_env))
-esp_env = box(90.15, -188.15, 0.0, 118.15, -90.0, 1.578 + 4.40)
+esp_env = box(90.15, -188.15, 0.0, 118.15, -90.0, TALL_MAX_Z)
 v2 = volume(common(case, esp_env))
 print("  [%s] case intersects hat envelope        %8.3f mm3 (want 0)"
       % ("OK " if v1 < 1e-6 else "FAIL", v1))
 print("  [%s] case intersects ESP32 envelope      %8.3f mm3 (want 0)"
       % ("OK " if v2 < 1e-6 else "FAIL", v2))
 lid_env = box(IX0, IY0, IZ1, IX1, IY1, IZ1 + LID_T)
+# the hat's board slab against the measured tall parts, each grown 0.5 mm up
+tall = None
+for nm, x0, y0, x1, y1, tz in TALL_PARTS:
+    t = box(x0, y0, 1.578, x1, y1, tz + 0.5)
+    tall = t if tall is None else fuse(tall, t)
+v6 = volume(common(box(HAT_X0, HAT_Y0, HAT_Z, HAT_X1, HAT_Y1, HAT_TOP), tall))
+print("  [%s] hat PCB intersects tall parts +0.5  %8.3f mm3 (want 0)"
+      % ("OK " if v6 < 1e-6 else "FAIL", v6))
 v3 = volume(common(lid_env, hat_env))
 print("  [%s] lid volume intersects hat envelope  %8.3f mm3 (want 0)"
       % ("OK " if v3 < 1e-6 else "FAIL", v3))

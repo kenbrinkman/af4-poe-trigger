@@ -17,7 +17,7 @@ electronics BOM is therefore two lists: **things you buy** (three of them) and
 | 1 × 10 male headers | 2.54 mm, 2 off | pennies | Solder into EXT1/EXT2 **pins up**. Olimex ships these loose; Sullins PRPC010SAAN-RC is equivalent |
 | 12 V DC splitter | Barrel Y-splitter, **5.5 × 2.5 mm, centre-positive (confirmed)** | $6 | Taps the feeder's 12 V. Many cheap splitters are 5.5 × 2.1 — buy 2.5 specifically |
 | 3.5 mm patch cable | Male–male, mono or stereo, ~0.5 m | $5 | Hat jack → aF4 0-10 V port. Stereo is fine; the aF4's jack shorts ring to sleeve |
-| Enclosure | `hardware/enclosure/aF4-trigger-case.stl` + `hardware/enclosure/aF4-trigger-lid.stl` (PETG) | filament | 65.2 × 117.0 × 38.4 mm. See `aF4-enclosure-notes.md` |
+| Enclosure | `hardware/enclosure/aF4-trigger-case.stl` + `hardware/enclosure/aF4-trigger-lid.stl` (PETG) | filament | 65.2 × 117.0 × 39.9 mm. See `aF4-enclosure-notes.md` |
 | Screws | 4× M3 × 12 self-tapping (lid), 3× M2 × 6–8 (ESP32), 2× M3 × 8–10 (hat) | — | |
 
 **Total: roughly $60–70 for the one-off parts, plus the board order.**

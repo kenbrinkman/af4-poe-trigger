@@ -113,6 +113,11 @@ Every one of these has actually cost time here.
     board. When bumping a revision, change a mention **only where leaving it would misstate the
     current design**; leave historical and comparative statements alone. The enclosure keeps its
     own rev D identity on purpose.
+13. **A clearance check is only as good as the number it checks against.** The enclosure
+    script tested the hat against a hand-typed 4.40 mm UEXT height for three weeks; the real
+    part is ~9.6 mm and an Olimex capacitor beside DCDC1 sat 0.78 mm *into* the hat. Caught by
+    Kenny dry-fitting headers, not by any check. **Check against the part or its own model,
+    never a transcribed dimension.** → §6.3
 
 ## 5. What is not in this folder
 
@@ -153,7 +158,7 @@ Every one of these has actually cost time here.
 | Bill of materials, sourcing traps | §3 · §3.1 · `docs/aF4-esp32-trigger-BOM.md` |
 | Board geometry, isolation, DRC | §4.1 · §4.2 · §4.3 |
 | Commissioning checks 6.1–6.8 | §8.1 |
-| Enclosure, the vertical stack | §6.1 · `docs/aF4-enclosure-notes.md` |
+| Enclosure, the vertical stack | §6.1 · §6.3 · `docs/aF4-enclosure-notes.md` |
 | The PCBWay order, the engineer question | `pcb/pcbway-order-YB1800644.md` |
 | Bench tests, what is measured vs asserted | `docs/aF4-meter-test-battery.md` · §10.2 |
 | What the audit did and did not confirm | §10 · §10.1 |

@@ -44,53 +44,54 @@ one pass.
 > 🔑 **Do not read this file whole.** Find the section here, then read only its
 > line range. Numbers drift — confirm with `grep -n "^### 2.4" <file>`.
 
-  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L101
-  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L119
-  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L142
-  - §A1.3 Isolation, re-derived `[AUDIT]` — L171
-  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L193
-  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L204
-  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L261
-  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L309
-- **§1 What the system must do** — L355
-  - §1.1 Requirements — L363
-  - §1.2 Measured facts about the port — L374
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L391
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L431
-- **§2 Circuit** — L460
-  - §2.1 Regulator — the calculation that matters — L507
-  - §2.2 Load on the 10.4 V rail — L540
-  - §2.3 PhotoMOS drive — L591
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L616
-  - §2.5 Protection — L658
-  - §2.6 Indicator LEDs — L681
-- **§3 Bill of materials — with verification status** — L715
-  - §3.1 Sourcing traps recorded — L744
-  - §3.2 Bought separately (not on the board) — L752
-- **§4 Board** — L760
-  - §4.1 Geometry from vendor CAD `[CAD]` — L778
-  - §4.2 Verification status of the board — L788
-  - §4.3 Isolation — L810
-- **§5 Firmware** — L825
-  - §5.1 The safety architecture — L831
-  - §5.2 Timing check against the spec `[CALC]` — L848
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L868
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L892
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L903
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L921
-  - §5.7 Home Assistant integration — L932
-- **§6 Enclosure** — L1004
-  - §6.1 The vertical stack — the governing dimension — L1011
-  - §6.2 Two details that are easy to lose — L1039
-- **§7 Errors already found and fixed** — L1059
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1094
-- **§8 Open items** — L1114
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1161
-- **§9 Repository map** — L1192
-  - §9.1 Toolchain constraints worth knowing — L1212
-- **§10 Audit status** — L1223
-  - §10.1 Still unverified after the audit — L1239
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1273
+  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L102
+  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L120
+  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L143
+  - §A1.3 Isolation, re-derived `[AUDIT]` — L172
+  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L194
+  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L205
+  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L262
+  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L310
+- **§1 What the system must do** — L356
+  - §1.1 Requirements — L364
+  - §1.2 Measured facts about the port — L375
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L392
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L432
+- **§2 Circuit** — L461
+  - §2.1 Regulator — the calculation that matters — L508
+  - §2.2 Load on the 10.4 V rail — L541
+  - §2.3 PhotoMOS drive — L592
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L617
+  - §2.5 Protection — L659
+  - §2.6 Indicator LEDs — L682
+- **§3 Bill of materials — with verification status** — L716
+  - §3.1 Sourcing traps recorded — L745
+  - §3.2 Bought separately (not on the board) — L753
+- **§4 Board** — L761
+  - §4.1 Geometry from vendor CAD `[CAD]` — L779
+  - §4.2 Verification status of the board — L789
+  - §4.3 Isolation — L811
+- **§5 Firmware** — L826
+  - §5.1 The safety architecture — L832
+  - §5.2 Timing check against the spec `[CALC]` — L849
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L869
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L893
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L904
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L922
+  - §5.7 Home Assistant integration — L933
+- **§6 Enclosure** — L1005
+  - §6.1 The vertical stack — the governing dimension — L1013
+  - §6.2 Two details that are easy to lose — L1048
+  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1066
+- **§7 Errors already found and fixed** — L1139
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1174
+- **§8 Open items** — L1194
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1243
+- **§9 Repository map** — L1274
+  - §9.1 Toolchain constraints worth knowing — L1294
+- **§10 Audit status** — L1305
+  - §10.1 Still unverified after the audit — L1321
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1355
 
 <!-- /SECTION-INDEX -->
 
@@ -1003,38 +1004,46 @@ opening the unit: feed-motor current is the sole dispense evidence available. Op
 
 ## 6. Enclosure
 
-**External 65.2 × 117.0 × 38.4 mm**, PETG, printed with no supports.
-`hardware/enclosure/af4_enclosure_ocp.py` is the parametric source and runs 13 dimensional checks plus 3
-solid-interference tests (case vs hat, case vs ESP32, lid vs hat) before exporting — all pass
-with zero intersection volume `[ASSERT]`, as reported by the script; not re-run in this pass.
+**External 65.2 × 117.0 × 39.9 mm**, PETG, printed with no supports. (38.4 mm until the
+1.5 mm hat lift of 2026-09-16, §6.3.)
+`hardware/enclosure/af4_enclosure_ocp.py` is the parametric source and runs dimensional checks plus
+solid-interference tests before exporting. Since 2026-09-16 the scalar checks pass at the lifted
+height; ⚠️ the solid tests and exports have **not** been re-run (§6.3, item 27).
 
 ### 6.1 The vertical stack — the governing dimension
 
 ```
   z = -11.90   case floor, outside
   z =  -9.50   case floor, inside
-  z =   0.00   top of the three ESP32 standoffs
+  z =   0.00   top of the three ESP32 standoffs = ESP32 bottom face
   z =   1.58   ESP32 top face
   z =   4.12   top of the male header plastic on EXT1/EXT2
-  z =   5.98   top of the UEXT box header   ← tallest thing under the hat
-  z =   9.22   lowest hat through-hole pin  → 3.24 mm clear
-  z =  12.62   hat underside
-  z =  14.22   hat top face
-  z =  16.72   3.5 mm jack axis
-  z =  17.82   barrel jack axis
-  z =  21.42   barrel jack crown            → 2.08 mm clear of the lid
-  z =  23.50   lid underside
+  z =   5.62   socket bottoms — float 1.50 mm above the plastic (HAT_LIFT)
+  z =   9.96   male pin tips → ~4.3 mm into the sockets
+  z =  11.20   top of UEXT1 box header   [MEAS]  → 2.92 mm clear
+  z =  11.50   top of DCDC1 power module  [MEAS]  → 2.62 mm clear
+  z =  13.40   top of the electrolytic cap beside DCDC1  [MEAS]  ← tallest thing under the hat
+  z =  14.12   hat underside                       → 0.72 mm clear of the cap
+  z =  15.72   hat top face
+  z =  18.22   3.5 mm jack axis
+  z =  19.32   barrel jack axis
+  z =  22.92   barrel jack crown            → 2.08 mm clear of the lid
+  z =  25.00   lid underside
 ```
 
-**The 1×10 socket's body height sets everything.** Substitute a different socket → change
-`HAT_Z` and re-run; the script reports what now collides.
+**Revised 2026-09-16 — see §6.3.** The table this replaced put the UEXT box header at 5.98 and
+called it the tallest thing under the hat. Calipers put it at 11.20, and put an electrolytic
+cap at 13.40 — **0.78 mm into the hat as then designed.** The hat now sits 1.50 mm higher.
 
-⚠️ **This table is also the proof that J3/J4 mount from the BOTTOM face.** The 8.50 mm
-between the header plastic (4.12) and the hat underside (12.62) *is* the socket body, and
-the pin at 9.22 is J1/J2's solder tail protruding 3.40 mm below the hat. Nothing in the
-stack sits between 12.62 and 14.22 except the board itself. Build the sockets on top and
-every line from 9.22 down is wrong. See §A3 — the boards were built that way and are in
-rework.
+**The socket body height plus `HAT_LIFT` sets everything.** Substitute a different socket →
+change `HAT_Z` and re-run; the script reports what now collides. The three `[MEAS]` rows are
+`TALL_PARTS` in the script and are the check that matters.
+
+⚠️ **This table is also the proof that J3/J4 mount from the BOTTOM face.** The 10.00 mm
+between the header plastic (4.12) and the hat underside (14.12) is the 8.50 mm socket body
+plus the 1.50 mm lift. Nothing in the stack sits between 14.12 and 15.72 except the board
+itself. Build the sockets on top and the hat cannot reach the pins at all. See §A3.
+(Before 2026-09-16 the same argument read 8.50 mm between 4.12 and 12.62.)
 
 ### 6.2 Two details that are easy to lose
 
@@ -1053,6 +1062,77 @@ rework.
 Hat mounting holes at (123.0, −118.0) and (123.5, −147.0) are **forced by geometry** — the
 only X clearing the ESP32's right edge below (118.15) and the parts column above (from
 126.45). Not free choices.
+
+### 6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16`
+
+**Found 2026-09-16 while dry-fitting headers to a spare ESP32-POE-ISO**, before any rev E
+board had arrived. Kenny could force the header plastic in beside DCDC1 but was worried about
+the hat's clearance in that corner. The worry was well founded.
+
+**What the design had assumed.** `hardware/enclosure/af4_enclosure_ocp.py` read *"UEXT box hdr
+4.40 mm tall (vendor 3D model) — clears the hat easily"*, and §6.1 put the box header's top at
+z 5.98 as the tallest thing under the hat. Both checks that could have caught a tall part were
+built on that number: the scalar clearance used `1.578 + 4.40`, and the "case vs ESP32" solid
+test capped the ESP32's envelope at the same height. **Nothing taller than 5.98 on the Olimex
+board was ever tested against the hat.** The vendor mesh was never the problem: parsed on
+2026-09-16, it puts UEXT1 at 11.53, DCDC1 at 11.99 and the cap at 13.15.
+
+**Measured, calipers, from the ESP32's bottom face** (= z 0 in the stack, the plane the M2
+standoffs stop at). A 5.0 mm reading across the board plus the WROVER can matched the model's
+1.58 + ~3.3, which validates the reference face.
+
+| Part | Measured top z | Vendor model | Clearance to hat underside at 12.62 (as designed) | At 14.12 (as fixed) |
+|---|---|---|---|---|
+| Electrolytic cap beside DCDC1 | **13.4** | 13.15 | **−0.78 — collision** | +0.72 |
+| DCDC1 isolated power module | 11.5 | 11.99 | +1.12 | +2.62 |
+| UEXT1 box header | 11.2 | 11.53 | +1.42 | +2.92 |
+
+About 5 mm of the cap's diameter sits inside the hat outline (enclosure x 111.5–118.5,
+y −161.5 to −155.0, hat edge at −160.0).
+
+**Decision: raise the hat 1.50 mm** (`HAT_LIFT`). `HAT_Z` 12.618 → 14.118 and `IZ1` (lid
+underside) 23.50 → 25.00; the standoffs, jack holes, lid bosses and light-pipe lengths all
+follow. External height 38.4 → 39.9 mm. The sockets now float 1.5 mm above the header plastic;
+the hat is carried by its two M3 standoffs, so nothing bears on that gap. Cost: pin
+engagement ~5.8 → **~4.3 mm** (pin tip 9.96, socket bottom 5.62). 1.0 mm was rejected: it
+leaves the cap 0.22 mm, inside the tolerance of a leaded cap sitting slightly crooked.
+Rejected alternative: swap the cap for a Ø6.3 × 7.7 low-profile part — keeps the case but is
+rework on the Olimex board.
+
+⚠️ **Consequence for assembly:** the hat must never be pressed fully home on the headers with
+the ESP32 out of the case. Without the standoffs it bottoms on the header plastic at the old
+height and lands on the cap. `docs/aF4-assembly-guide.md` §5 says so.
+
+**What changed in the script.** `TALL_PARTS` carries the three measured heights with their
+footprints; each gets a ≥ 0.5 mm scalar clearance check, the hat's board slab gets a solid
+intersection test against the parts grown 0.5 mm, a pin-engagement check (≥ 3.5 mm) was
+added, and the "case vs ESP32" envelope now rises to the tallest measured part. Light pipes:
+PoE pair 22.7 → **24.2 mm**, hat pair unchanged at 10.1 mm. `af4_hat_dummy_ocp.py` carries the
+same lift.
+
+**Two things this finding does not settle:**
+
+- **The STEP/STL exports were not regenerated in the session that made the change.** Neither
+  the Mac's session shell nor the cloud workspace could reach PyPI for `cadquery-ocp`, so only
+  the scalar checks were re-run (all pass); the solid tests have not been. The printed case
+  and lid in hand are the 38.4 mm version. → item 27
+- **DCDC1 sits ~0.65 mm past the pin-10 end of EXT2 in the vendor model, but the real header
+  plastic had to be forced in there.** The hat's J4 socket body is the same length and meets
+  the same face. Shave the last half-segment of header plastic rather than force it, and
+  dry-fit the hat before soldering. Not asserted by the script, because the model disagrees
+  with the part in hand.
+
+**Rejected on the way: mounting the ESP32 bottom side up** so standard Olimex headers point
+at the hat. Olimex puts EXT1/EXT2 on `B.Cu`, and flipping the board mirrors the pinout. The
+hat's two live pins are EXT1 pin 3 (GND — the only ground on either row) and EXT2 pin 6
+(GPIO32); across every flip-and-rotate combination they land on EXT2-3 / EXT1-6,
+EXT1-8 / EXT2-5, or EXT2-8 / EXT1-5. **No orientation puts hat ground on a ground pin.** Pin
+assignments read from Olimex's `ESP32-PoE-ISO_Rev_N.kicad_pcb` on GitHub.
+
+> **Generalised lesson:** a clearance check is only as good as the number it is checked
+> against. This one tested the hat against a hand-typed height instead of the vendor mesh
+> that was already in `reference/vendor/`, so it passed for three weeks while wrong by 7 mm.
+> **Check against the part, or the part's own model — never against a transcribed dimension.**
 
 ---
 
@@ -1122,7 +1202,8 @@ become true looks identical to one that has not.
 Revised after the 2026-08-28 audit, the 2026-08-31 pre-fabrication review, the 2026-09-01
 bench and vendor-documentation passes, the 2026-09-02 order going to fabrication, the
 2026-09-02 read of the live Home Assistant config, the 2026-09-11 assembly-sample EQ, the
-2026-09-12 acceptance of the reworked board, and the 2026-09-14 shipment.
+2026-09-12 acceptance of the reworked board, the 2026-09-14 shipment, and the 2026-09-16
+clearance measurement.
 
 ⚠️ Item 17 is a caution about this table itself: it was opened by the 2026-09-02 review and
 closed the same day on discovering the work had existed in Home Assistant since 08-27 and
@@ -1157,6 +1238,7 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 24 | **Move the J3/J4 footprints to `B.Cu`** (silkscreen to `B.SilkS`) in `pcb/gen_pcb.py`, rewrite the `PCBWay-README.txt` ASSEMBLY line to name the face by designator, and add the THT parts to the centroid with a side column. The fix for the *cause* of item 23, as opposed to this run's rework | No — but it is the only thing that stops item 23 recurring |
 | 25 | **D3/D5 LED polarity is unverified on the built boards.** 0805 water-clear packages show no cathode mark at either photo set's resolution. Referred to PCBWay 2026-09-11, then **explicitly released on 2026-09-12** so the question could not hold the EQ open. It now falls to commissioning 6.1 / 6.5. Low consequence either way: a reversed indicator fails to light and does not touch the trigger path | No — resolves at commissioning |
 | 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1, and **check the J3/J4 mounting face on every board**: only the reworked sample was ever photographed (§A3.2). Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
+| 27 | **Re-run `hardware/enclosure/af4_enclosure_ocp.py` and `af4_hat_dummy_ocp.py`, then reprint case and lid** for the 1.5 mm hat lift (§6.3). The scripts were edited 2026-09-16 and their scalar checks pass, but the solid tests were not run and the STEP/STL exports are still the 38.4 mm version, because no session shell could install `cadquery-ocp`. Also cut the two PoE light pipes to 24.2 mm, and move the hat up 1.5 mm in the Tinkercad model | **YES** — the printed case in hand puts the hat into the cap |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
 

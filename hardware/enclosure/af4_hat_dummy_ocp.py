@@ -17,7 +17,7 @@ WHAT IT REPRODUCES (and therefore what it can prove)
     to check the vertical stack over the ESP32 and the UEXT header
 
 WHAT IT CANNOT PROVE
-  The J2 axis height (14.218 + 2.50) is an assumed number carried over from
+  The J2 axis height (HAT_TOP + 2.50) is an assumed number carried over from
   af4_enclosure_ocp.py, not a measured one, and this dummy is built from the
   same assumption -- so it cannot catch an error in it. Measure the real jack's
   barrel axis above its seating plane when the parts arrive.
@@ -51,9 +51,10 @@ from OCP.BRep import BRep_Builder
 # ============================================================ the z stack
 # from aF4-enclosure-notes.md; every one of these is also a constant in
 # af4_enclosure_ocp.py, and they must not drift apart.
-HAT_Z = 1.578 + 2.54 + 8.50      # 12.618  hat underside
+HAT_LIFT = 1.50                  # 2026-09-16: clears the cap beside DCDC1, see §6.3
+HAT_Z = 1.578 + 2.54 + 8.50 + HAT_LIFT   # 14.118  hat underside
 HAT_T = 1.6
-HAT_TOP = HAT_Z + HAT_T          # 14.218  hat top face
+HAT_TOP = HAT_Z + HAT_T          # 15.718  hat top face
 SOCKET_H = 8.50                  # 1x10 socket body height -- sets everything
 
 # ---- board outline (gen_pcb.py BX0/BX1, BY0/BY1) ---------------------------
@@ -277,8 +278,8 @@ else:
 
 # Does either socket bar foul anything on the ESP32? Read the vendor mesh
 # directly -- it is already in the enclosure frame -- and take the tallest
-# vertex under each bar footprint. The bar underside is the top of the male
-# header plastic the sockets will sit on (z = 4.118).
+# vertex under each bar footprint. Since HAT_LIFT the bar underside floats
+# 1.5 mm above the male header plastic (z = 4.118), at z = 5.618.
 # The vendor mesh is gitignored and lives in reference/vendor/ since the
 # 2026-09-05 reorganisation. Look there first, then beside the script, so
 # the check keeps running from either layout.

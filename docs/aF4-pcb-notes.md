@@ -33,10 +33,12 @@ by construction.
 soldered into them **pointing up** before the hat can be fitted (Olimex supplies
 these loose; Sullins PRPC010SAAN-RC is equivalent).
 
-**Stack height:** male header plastic 2.54 mm + socket body 8.5 mm ⇒ the hat's
-underside sits ~11.0 mm above the ESP32's top face. The tallest thing underneath
-is the UEXT box header; its vendor 3D model tops out at 4.40 mm, so clearance is
-ample. Note the hat covers UEXT — that connector is unusable while it is fitted,
+**Stack height:** male header plastic 2.54 mm + socket body 8.5 mm + a 1.5 mm lift ⇒
+the hat's underside sits ~12.5 mm above the ESP32's top face. **The tallest thing
+underneath is the electrolytic cap beside the Olimex DCDC1 module, 13.4 mm measured from
+the board's bottom face**; the lift exists to clear it by 0.72 mm. This paragraph used to
+say the UEXT box header was the tallest at 4.40 mm — it is ~9.6 mm above the top face, and
+the cap would have hit the hat. Master reference §6.3. Note the hat covers UEXT — that connector is unusable while it is fitted,
 which is fine, nothing uses it.
 
 ## The GPIO13 problem, and why the trigger moved to GPIO32
@@ -173,14 +175,14 @@ exports — thirteen dimensional checks plus three solid-interference tests (cas
 against the hat envelope, case against the ESP32 envelope, lid against the hat).
 All pass with zero intersection volume.
 
-**External: 65.2 × 117.0 × 38.4 mm**, against rev C's 59.7 × 155 × 38.9. Same
-height, 5.5 mm wider, 38 mm shorter. Gone: the protoboard bay, the buck pocket,
+**External: 65.2 × 117.0 × 39.9 mm** (38.4 before the 2026-09-16 hat lift), against rev C's
+59.7 × 155 × 38.9. 1 mm taller, 5.5 mm wider, 38 mm shorter. Gone: the protoboard bay, the buck pocket,
 the DC-099 hole, the PG7 gland, and every wire that used to run between them.
 
 The vertical stack is the governing dimension and is tabulated in
-`aF4-enclosure-notes.md`. The short version: the socket body height sets where the
-hat sits, the hat sits 12.62 mm above the ESP32, and the barrel jack's crown ends
-up 2.08 mm below the lid. If you ever substitute a different 1 × 10 socket, change
+`aF4-enclosure-notes.md`. The short version: the socket body height plus a 1.5 mm
+lift sets where the hat sits — its underside at z 14.12 (12.62 before the lift) — and the
+barrel jack's crown ends up 2.08 mm below the lid. If you ever substitute a different 1 × 10 socket, change
 `HAT_Z` and re-run — the script will tell you what now collides.
 
 One detail worth knowing: the barrel-jack hole has a **Ø13 × 1.8 mm counterbore on

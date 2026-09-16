@@ -2,10 +2,13 @@
 
 Case for the ESP32-POE-ISO plus the rev E trigger hat. Modelled against the
 measured `reference/vendor/ESP32-PoE-ISO_Rev_N.step` and against the hat's own KiCad geometry;
-fit verified digitally (zero interference — the build script asserts it).
+fit verified digitally (zero interference — the build script asserts it). ⚠️ **Since the
+2026-09-16 hat lift the script's scalar checks have been re-run but its solid tests and exports
+have not** — the STEP/STL files here are still the 38.4 mm version. Master reference item 27.
 
-**External: 65.2 × 117.0 × 38.4 mm** (rev C was 59.7 × 155 × 38.9). 38 mm shorter,
-5.5 mm wider, same height. Interior volume drops about 18 %, and everything that
+**External: 65.2 × 117.0 × 39.9 mm** (rev C was 59.7 × 155 × 38.9). 38 mm shorter,
+5.5 mm wider, 1 mm taller — 38.4 mm until the hat was raised 1.5 mm on 2026-09-16 to clear
+an Olimex capacitor (master reference §6.3). Interior volume drops about 18 %, and everything that
 used to be hand-wired inside it is gone.
 
 ## Files
@@ -45,8 +48,8 @@ used to be hand-wired inside it is gone.
 - **Output wall (+Y):** blank. Nothing exits that end any more.
 - **ESP32 board:** three Ø6 standoffs, tops at z = 0, M2 self-tappers into 1.7 mm
   pilots — unchanged from rev C.
-- **Hat:** two Ø7 standoffs rising from the floor to z = 12.62 (the hat's underside),
-  M3 self-tappers into 2.5 mm pilots, each with a conical foot so a 22 mm post is
+- **Hat:** two Ø7 standoffs rising from the floor to z = 14.12 (the hat's underside),
+  M3 self-tappers into 2.5 mm pilots, each with a conical foot so a 24 mm post is
   not a cantilever. They sit at (123.0, −118.0) and (123.5, −147.0) — the only X
   that clears the ESP32's right edge below **and** the hat's parts column above.
   Those two, plus twenty socket pins on the left and two jack noses captured in the
@@ -70,10 +73,10 @@ four holes that were previously open to a sump room.
 |---|---|---|---|
 | hat D3 | 139.50, −139.00 | rail live, green | 10.1 mm |
 | hat D5 | 128.20, −150.80 | feed pulsing, yellow | 10.1 mm |
-| PWR1 | 91.567, −171.069 | Olimex 3V3 rail, red | 22.7 mm |
-| LNK1 | 91.567, −165.354 | Olimex ethernet link, green | 22.7 mm |
+| PWR1 | 91.567, −171.069 | Olimex 3V3 rail, red | 24.2 mm |
+| LNK1 | 91.567, −165.354 | Olimex ethernet link, green | 24.2 mm |
 
-Rods seat at z = 25.60 and stop 0.6 mm short of each LED. **They must never touch
+Rods seat at z = 27.10 and stop 0.6 mm short of each LED. **They must never touch
 the LED.**
 
 **Why pipes and not plain holes.** The hat's LEDs sit on `HAT_TOP`, 8.5 mm under
@@ -114,21 +117,28 @@ This is the dimension that governs everything, so it is worth stating plainly:
 ```
   z = -11.90   case floor, outside
   z =  -9.50   case floor, inside
-  z =   0.00   top of the three ESP32 standoffs
+  z =   0.00   top of the three ESP32 standoffs = ESP32 bottom face
   z =   1.58   ESP32 top face
   z =   4.12   top of the male header plastic on EXT1/EXT2
-  z =   5.98   top of the UEXT box header  (the tallest thing under the hat)
-  z =   9.22   lowest point of the hat's through-hole pins   -> 3.24 mm clear
-  z =  12.62   hat underside  (= socket body height above the header plastic)
-  z =  14.22   hat top face
-  z =  16.72   3.5 mm jack axis
-  z =  17.82   barrel jack axis
-  z =  21.42   barrel jack crown  -> 2.08 mm clear of the lid
-  z =  23.50   lid underside
+  z =   5.62   socket bottoms, floating 1.5 mm above the plastic
+  z =   9.96   male pin tips  (about 4.3 mm into the sockets)
+  z =  11.20   top of UEXT1 box header           measured
+  z =  11.50   top of DCDC1 power module          measured
+  z =  13.40   top of the cap beside DCDC1        measured  (the tallest thing under the hat)
+  z =  14.12   hat underside  (socket body 8.5 + 1.5 lift above the header plastic)
+  z =  15.72   hat top face
+  z =  18.22   3.5 mm jack axis
+  z =  19.32   barrel jack axis
+  z =  22.92   barrel jack crown  -> 2.08 mm clear of the lid
+  z =  25.00   lid underside
 ```
 
-If you substitute a different 1 × 10 socket, its **body height is the parameter
-that moves the whole hat** — change `HAT_Z` in `hardware/enclosure/af4_enclosure_ocp.py` and re-run;
+**Until 2026-09-16 this table put the UEXT box header at 5.98 as the tallest part.** It is
+11.20, and the cap beside DCDC1 is 13.40 — 0.78 mm into the hat as it was then designed. The
+three measured heights now live in `TALL_PARTS` in the script. Master reference §6.3.
+
+If you substitute a different 1 × 10 socket, its **body height plus `HAT_LIFT` is what
+moves the whole hat** — change `HAT_Z` in `hardware/enclosure/af4_enclosure_ocp.py` and re-run;
 the script will tell you if anything now collides.
 
 ## Print settings (PETG, P1S)
@@ -163,7 +173,10 @@ soldered to a board.
    3 × M2. **This has to happen first** — the hat covers two of its screws.
 3. Solder two 1 × 10 male headers into EXT1/EXT2, pins up, if not already done.
 4. Drop the hat on: sockets onto the headers, both jack noses into their wall
-   holes, then 2 × M3 into the standoffs. Seat the sockets before the screws.
+   holes, until the hat **rests on its two standoffs** — the sockets stop 1.5 mm short of
+   the header plastic by design. Then 2 × M3. **Never press the hat fully home on the
+   headers outside the case:** without the standoffs it would bottom on the plastic and
+   land on the cap beside DCDC1.
 5. Lid on, 4 × M3 × 12.
 
 ## The fitment dummy (2026-08-31)

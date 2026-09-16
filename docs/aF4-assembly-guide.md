@@ -42,11 +42,11 @@ with half of it left over; a 4" rod is also enough.
 
 | Pipe | Over | Cut length | Should stand proud of the lid's INNER face by |
 |---|---|---|---|
-| ×2 | PWR1 (red), LNK1 (green) — Olimex | **22.7 mm** | 20.6 mm |
+| ×2 | PWR1 (red), LNK1 (green) — Olimex | **24.2 mm** | 22.1 mm |
 | ×2 | D3 (green), D5 (yellow) — hat | **10.1 mm** | 8.0 mm |
 
-The rod occupies 2.10 mm inside the lid (seat at z 25.60 down to the lid
-underside at 23.50), which is where that second column comes from. **That is the
+The rod occupies 2.10 mm inside the lid (seat at z 27.10 down to the lid
+underside at 25.00), which is where that second column comes from. **That is the
 check to trust** — seat a pipe dry in the lid and measure the protrusion with
 calipers. It verifies the length against the part in your hand, with no board
 involved.
@@ -165,12 +165,15 @@ into the ESPHome Device Builder on the Unraid server (port 6052) and install.
 Order matters — the hat covers two of the ESP32's mounting screws.
 
 1. ESP32-POE-ISO onto its three standoffs, RJ45 into the wall opening, 3 × M2.
-2. Hat down onto the two headers. Both jack noses should drop into their wall
-   holes as the sockets seat; if they do not line up, the sockets are not fully
-   home. Press evenly along the socket rows, not on the jacks.
+2. Hat down onto the two headers until it **rests on its two tall standoffs**. Both
+   jack noses should drop into their wall holes on the way. The sockets stop about
+   1.5 mm above the header plastic — that gap is deliberate, it lifts the hat clear of
+   the capacitor beside the Olimex power module. Press evenly along the socket rows,
+   not on the jacks. ⚠️ **Never press the hat fully home on the headers with the board
+   out of the case** — it would bottom on the plastic and land on that capacitor.
 3. 2 × M3 self-tappers through the hat's mounting holes into the two tall
-   standoffs. Snug, not tight — the sockets locate the board, the screws just
-   stop it lifting.
+   standoffs. Snug, not tight — the standoffs set the height and the sockets locate
+   the board sideways.
 4. Leave the lid off for §6.
 
 ## 6. Commissioning checks
