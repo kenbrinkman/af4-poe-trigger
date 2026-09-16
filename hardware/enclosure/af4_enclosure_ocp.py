@@ -185,12 +185,16 @@ LED_Z_POE = 2.30             # emitting face of an 0603 on the Olimex board
 LED_PIPE_GAP = 0.60          # pipe tip to LED: close, never touching
 
 # --- engraved lid label ----------------------------------------------------
-# Reads along the lid's long axis (landscape), in the clear +Y half, away from
-# every sight hole and boss counterbore. The lid prints top-face-down
-# (rot_x180 at export), so this recess lands on the bed and comes out crisp.
+# Upright with the box held PORTRAIT: RJ45 end away from you, the two jacks on
+# the left (Kenny's mockup, 2026-09-16). In the enclosure frame, looking down
+# on the lid, that is text reading along -X with its top toward -Y (the RJ45
+# end), i.e. LID_LABEL_ROT = 180. It read along +Y (ROT 90, landscape with the
+# cable end on the left) until then. In the clear +Y half, away from every
+# sight hole and boss counterbore. The lid prints top-face-down (rot_x180 at
+# export), so this recess lands on the bed and comes out crisp.
 LID_LINES = ["aF4 PoE", "Feed Trigger"]
-LID_LABEL_SIZE = 6.5         # "Feed Trigger" is 45.4 mm here. 8.0 would make it
-                             # 55.8 and leave no margin against D3 and the +Y edge.
+LID_LABEL_ROT = 180          # degrees CCW from +X: the direction the text reads
+LID_LABEL_SIZE = 6.5         # "Feed Trigger" is 45.4 mm here, across a 65.2 mm lid
 LID_LABEL_DEPTH = 0.8
 LID_LABEL_WEIGHT = "bold"
 LID_LABEL_LEADING = 1.30
@@ -337,10 +341,17 @@ def _glyph_loops(lines, size, leading):
     holes = [p for p in loops if signed_area(p) >= 0]
     return outers, holes
 
-def _loop_prism(pts, cx, cy, z0, h, rot90=True):
-    """Extrude one closed loop. rot90 turns the reading direction onto +Y."""
+def _rot_label(p, rot):
+    """Glyph space (+x reads, +y up) -> lid plan, rotated `rot` degrees CCW."""
+    c = round(math.cos(math.radians(rot)), 12)
+    s_ = round(math.sin(math.radians(rot)), 12)
+    return (c * p[0] - s_ * p[1], s_ * p[0] + c * p[1])
+
+def _loop_prism(pts, cx, cy, z0, h, rot=None):
+    """Extrude one closed loop, text reading `rot` degrees CCW from +X."""
+    rot = LID_LABEL_ROT if rot is None else rot
     mw = BRepBuilderAPI_MakeWire()
-    q = [(-p[1], p[0]) if rot90 else (p[0], p[1]) for p in pts]
+    q = [_rot_label(p, rot) for p in pts]
     q = [(x + cx, y + cy) for x, y in q]
     if math.hypot(q[0][0] - q[-1][0], q[0][1] - q[-1][1]) < 1e-9:
         q = q[:-1]
@@ -501,6 +512,22 @@ for lx, ly in LED_HOLES:
     d = min(math.hypot(lx - bx, ly - by) for bx, by, _ in LID_BOSSES)
     ok &= clear("sight hole %.1f,%.1f clear of lid boss" % (lx, ly),
                 d - LED_PIPE_D / 2 - 6.8 / 2, 1.00)
+# the label block, as engraved, must sit clear of the lid edge, every boss
+# counterbore (6.8) and every sight-hole mouth (aperture + 0.8 chamfer)
+_o, _h = _glyph_loops(LID_LINES, LID_LABEL_SIZE, LID_LABEL_LEADING)
+_pts = np.array([_rot_label(p, LID_LABEL_ROT) for lp in _o for p in lp])
+LBX0, LBY0 = _pts.min(0) + (LID_LABEL_CX, LID_LABEL_CY)
+LBX1, LBY1 = _pts.max(0) + (LID_LABEL_CX, LID_LABEL_CY)
+print("  lid label block x %.1f..%.1f  y %.1f..%.1f  (%.1f x %.1f mm)"
+      % (LBX0, LBX1, LBY0, LBY1, LBX1 - LBX0, LBY1 - LBY0))
+ok &= clear("lid label to lid edge", min(LBX0 - OX0, OX1 - LBX1, LBY0 - OY0, OY1 - LBY1), 4.0)
+def _box_circle(cx, cy, r):
+    dx = max(LBX0 - cx, 0, cx - LBX1); dy = max(LBY0 - cy, 0, cy - LBY1)
+    return math.hypot(dx, dy) - r
+ok &= clear("lid label clear of boss counterbores",
+            min(_box_circle(bx, by, 6.8 / 2) for bx, by, _ in LID_BOSSES), 2.0)
+ok &= clear("lid label clear of sight holes",
+            min(_box_circle(lx, ly, LED_APERTURE_D / 2 + 0.40) for lx, ly in LED_HOLES), 2.0)
 print("  light pipes: 3 mm rod, %d x %.1f mm (hat) + %d x %.1f mm (PoE),"
       " seat z=%.2f" % (len(LED_HOLES_HAT), PIPE_LEN_HAT,
                         len(LED_HOLES_POE), PIPE_LEN_POE, PIPE_SEAT_Z))

@@ -44,54 +44,55 @@ one pass.
 > 🔑 **Do not read this file whole.** Find the section here, then read only its
 > line range. Numbers drift — confirm with `grep -n "^### 2.4" <file>`.
 
-  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L102
-  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L120
-  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L143
-  - §A1.3 Isolation, re-derived `[AUDIT]` — L172
-  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L194
-  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L205
-  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L262
-  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L310
-- **§1 What the system must do** — L356
-  - §1.1 Requirements — L364
-  - §1.2 Measured facts about the port — L375
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L392
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L432
-- **§2 Circuit** — L461
-  - §2.1 Regulator — the calculation that matters — L508
-  - §2.2 Load on the 10.4 V rail — L541
-  - §2.3 PhotoMOS drive — L592
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L617
-  - §2.5 Protection — L659
-  - §2.6 Indicator LEDs — L682
-- **§3 Bill of materials — with verification status** — L716
-  - §3.1 Sourcing traps recorded — L745
-  - §3.2 Bought separately (not on the board) — L753
-- **§4 Board** — L761
-  - §4.1 Geometry from vendor CAD `[CAD]` — L779
-  - §4.2 Verification status of the board — L789
-  - §4.3 Isolation — L811
-- **§5 Firmware** — L826
-  - §5.1 The safety architecture — L832
-  - §5.2 Timing check against the spec `[CALC]` — L849
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L869
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L893
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L904
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L922
-  - §5.7 Home Assistant integration — L933
-- **§6 Enclosure** — L1005
-  - §6.1 The vertical stack — the governing dimension — L1013
-  - §6.2 Two details that are easy to lose — L1048
-  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1066
-- **§7 Errors already found and fixed** — L1181
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1216
-- **§8 Open items** — L1236
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1285
-- **§9 Repository map** — L1316
-  - §9.1 Toolchain constraints worth knowing — L1337
-- **§10 Audit status** — L1353
-  - §10.1 Still unverified after the audit — L1369
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1403
+  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L103
+  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L121
+  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L144
+  - §A1.3 Isolation, re-derived `[AUDIT]` — L173
+  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L195
+  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L206
+  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L263
+  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L311
+- **§1 What the system must do** — L357
+  - §1.1 Requirements — L365
+  - §1.2 Measured facts about the port — L376
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L393
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L433
+- **§2 Circuit** — L462
+  - §2.1 Regulator — the calculation that matters — L509
+  - §2.2 Load on the 10.4 V rail — L542
+  - §2.3 PhotoMOS drive — L593
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L618
+  - §2.5 Protection — L660
+  - §2.6 Indicator LEDs — L683
+- **§3 Bill of materials — with verification status** — L717
+  - §3.1 Sourcing traps recorded — L746
+  - §3.2 Bought separately (not on the board) — L754
+- **§4 Board** — L762
+  - §4.1 Geometry from vendor CAD `[CAD]` — L780
+  - §4.2 Verification status of the board — L790
+  - §4.3 Isolation — L812
+- **§5 Firmware** — L827
+  - §5.1 The safety architecture — L833
+  - §5.2 Timing check against the spec `[CALC]` — L850
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L870
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L894
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L905
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L923
+  - §5.7 Home Assistant integration — L934
+- **§6 Enclosure** — L1006
+  - §6.1 The vertical stack — the governing dimension — L1014
+  - §6.2 Two details that are easy to lose — L1049
+  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1067
+  - §6.4 Lid label turned to read portrait `2026-09-16` — L1180
+- **§7 Errors already found and fixed** — L1200
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1235
+- **§8 Open items** — L1255
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1304
+- **§9 Repository map** — L1335
+  - §9.1 Toolchain constraints worth knowing — L1356
+- **§10 Audit status** — L1372
+  - §10.1 Still unverified after the audit — L1388
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1422
 
 <!-- /SECTION-INDEX -->
 
@@ -1176,6 +1177,24 @@ exports, re-run independently from the Mac-side session VM. Two things had to be
 > that was already in `reference/vendor/`, so it passed for three weeks while wrong by 7 mm.
 > **Check against the part, or the part's own model — never against a transcribed dimension.**
 
+### 6.4 Lid label turned to read portrait `2026-09-16`
+
+The first printed lid read along the long axis — upright only with the box landscape and the
+cable end on the left. Kenny wants it upright with the box **portrait, RJ45 end at the top and
+the two jacks on the left**, per a mockup. In the enclosure frame, looking down on the lid, that
+is text reading along −X with its top toward −Y: `LID_LABEL_ROT = 180` (the old layout was the
+equivalent of 90). Same size, depth and centre; the block now runs across the lid, and the script
+asserts its clearance to the lid edge (9.8 mm), the boss counterbores (11.6) and the sight holes
+(22.0). **The lid now needs reprinting as well as the case.** → item 27
+
+`verify_enclosure.py` gained check 6, which exists because a rotation is the kind of change
+nobody can verify by reading numbers: it rasterises the engraving out of the exported lid STL at
+0.4 mm and scores it against all eight rotations and mirrors of the intended text. On the
+existing lid export it reports **rot 90, IoU 0.72**, and 0.04 for the intended 180, which is
+the photographed part — so it tells a correct export from a wrong one, including a mirrored one.
+**Re-exported on the Mac the same day:** all checks pass, and check 6 reads the new lid as rot 180,
+IoU 0.72.
+
 ---
 
 ## 7. Errors already found and fixed
@@ -1280,7 +1299,7 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 24 | **Move the J3/J4 footprints to `B.Cu`** (silkscreen to `B.SilkS`) in `pcb/gen_pcb.py`, rewrite the `PCBWay-README.txt` ASSEMBLY line to name the face by designator, and add the THT parts to the centroid with a side column. The fix for the *cause* of item 23, as opposed to this run's rework | No — but it is the only thing that stops item 23 recurring |
 | 25 | **D3/D5 LED polarity is unverified on the built boards.** 0805 water-clear packages show no cathode mark at either photo set's resolution. Referred to PCBWay 2026-09-11, then **explicitly released on 2026-09-12** so the question could not hold the EQ open. It now falls to commissioning 6.1 / 6.5. Low consequence either way: a reversed indicator fails to light and does not touch the trigger path | No — resolves at commissioning |
 | 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1, and **check the J3/J4 mounting face on every board**: only the reworked sample was ever photographed (§A3.2). Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
-| 27 | **Reprint the case** for the 1.5 mm hat lift (§6.3), cut the two PoE light pipes to 24.2 mm, and move the hat up 1.5 mm in the Tinkercad model. The lid is unchanged and is not reprinted. **Exports regenerated and verified 2026-09-16** on Kenny's Mac: every script check, all six solid tests and `verify_enclosure.py` pass | **YES** — the printed case in hand puts the hat into the cap |
+| 27 | **Reprint the case and the lid.** The case for the 1.5 mm hat lift (§6.3); the lid for the portrait label (§6.4). Both re-exported on the Mac 2026-09-16 and verified: every script check, all six solid tests, and `verify_enclosure.py` including check 6 (label reads rot 180, IoU 0.72). Also cut the two PoE light pipes to 24.2 mm, and move the hat up 1.5 mm in the Tinkercad model | **YES** — the printed case in hand puts the hat into the cap |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
 

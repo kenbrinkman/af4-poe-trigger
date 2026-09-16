@@ -18,6 +18,9 @@ WHAT IT CHECKS
        tallest measured part (point-in-mesh by ray parity)
     4. both jack holes are open along their axes through the +X wall
     5. hat board slab against the measured TALL_PARTS, and against the vendor mesh
+    6. the lid label: rasterises the engraving out of the printed lid and matches it
+       against all eight rotations/mirrors of the intended text (needs matplotlib;
+       skipped, and said so, without it)
 
 USAGE (from hardware/enclosure/)
     python3 verify_enclosure.py
@@ -41,6 +44,7 @@ def load_params(path):
     g.setdefault("TAB_L", 12.0)
     g.setdefault("LIP_H", 2.0)
     g.setdefault("TALL_PARTS", [])
+    g.setdefault("LID_LABEL_ROT", 90)          # what the script did before the constant
     return g
 
 
@@ -203,6 +207,65 @@ def main():
             "tallest point %.2f, hat underside %.2f" % (zt, P["HAT_Z"]))
     else:
         print("  [--] vendor ESP32 mesh not found; check 5b SKIPPED (a reduced check, not a pass)")
+
+    # ---- 6. lid label orientation -----------------------------------------
+    try:
+        from matplotlib.textpath import TextPath
+        from matplotlib.font_manager import FontProperties
+        from matplotlib.path import Path as MPath
+        have_mpl = True
+    except ImportError:
+        have_mpl = False
+        print("  [--] matplotlib missing; lid label check SKIPPED (a reduced check, not a pass)")
+    if have_mpl and P.get("LID_LINES"):
+        # printed lid -> enclosure plan: export was rot_x180 then translate to origin,
+        # so x = x' + OX0, y = OY1 - y', and the top face is z' = 0.
+        lidm = load_stl(args.lid)
+        lidm = lidm - lidm.reshape(-1, 3).min(0)
+        fp = FontProperties(family="DejaVu Sans", weight=P.get("LID_LABEL_WEIGHT", "bold"))
+        size, lead = P["LID_LABEL_SIZE"], P["LID_LABEL_LEADING"]
+        step = size * lead; total = step * (len(P["LID_LINES"]) - 1)
+        paths = []
+        for i, t in enumerate(P["LID_LINES"]):
+            tp = TextPath((0, 0), t, size=size, prop=fp)
+            polys = [np.asarray(q) for q in tp.to_polygons() if len(q) >= 4]
+            allp = np.vstack(polys)
+            dx = -(allp[:, 0].min() + allp[:, 0].max()) / 2
+            paths += [q + (dx, total / 2 - i * step) for q in polys]
+        allp = np.vstack(paths)
+        paths = [q - (0, (allp[:, 1].min() + allp[:, 1].max()) / 2) for q in paths]
+        R = 32.0
+        gx, gy = np.meshgrid(np.arange(-R, R, 0.4), np.arange(-R, R, 0.4), indexing="ij")
+        rel = np.stack([gx.ravel(), gy.ravel()], 1) + JIT[:2]
+        # measured: a sample 0.4 mm under the top face that is NOT solid is engraved
+        q = np.column_stack([rel[:, 0] + P["LID_LABEL_CX"] - P["OX0"],
+                             P["OY1"] - (rel[:, 1] + P["LID_LABEL_CY"]),
+                             np.full(len(rel), P["LID_LABEL_DEPTH"] / 2)])
+        inb = (q[:, 0] > 0.5) & (q[:, 1] > 0.5) & (q[:, 0] < P["OX1"] - P["OX0"] - 0.5) \
+              & (q[:, 1] < P["OY1"] - P["OY0"] - 0.5)
+        meas = np.zeros(len(rel), bool)
+        meas[inb] = ~inside(lidm, q[inb])
+        # expected, for each of 8 orientations: parity of glyph polygons containing the point
+        def expected(rot, mirror):
+            c, s_ = round(math.cos(math.radians(rot))), round(math.sin(math.radians(rot)))
+            gxy = np.column_stack([c * rel[:, 0] + s_ * rel[:, 1], -s_ * rel[:, 0] + c * rel[:, 1]])
+            if mirror:
+                gxy[:, 0] = -gxy[:, 0]
+            cnt = np.zeros(len(rel), int)
+            for poly in paths:
+                cnt += MPath(poly).contains_points(gxy)
+            return (cnt % 2) == 1
+        scores = {}
+        for rot in (0, 90, 180, 270):
+            for mir in (False, True):
+                e = expected(rot, mir)
+                scores[(rot, mir)] = (e & meas).sum() / max((e | meas).sum(), 1)
+        best = max(scores, key=scores.get)
+        want = (int(P["LID_LABEL_ROT"]) % 360, False)
+        chk("lid label reads at %d deg, not mirrored" % want[0],
+            best == want and scores[best] > 0.6,
+            "best match rot %d%s (IoU %.2f); intended IoU %.2f"
+            % (best[0], " mirrored" if best[1] else "", scores[best], scores[want]))
 
     print("\nALL CHECKS PASSED" if not fails else "\n*** %d CHECK(S) FAILED ***" % len(fails))
     return 1 if fails else 0

@@ -116,11 +116,15 @@ CHRG1 −176.784, PWR1 −171.069, LNK1 −165.354, ACT1 −159.639.
   (SOT-23-5) is also only 2.9 mm away, which a 3 mm pipe would foul.
 
 **Engraved label.** `aF4 PoE` / `Feed Trigger`, DejaVu Sans Bold at **6.5 mm**,
-0.8 mm deep, block centred at (117.0, −108.0) and reading along +Y — upright when
-the box is held landscape with the cable end on the left. The block is
-45.4 × 14.6 mm; nearest obstruction is D3 at 16.8 mm, and there is 6.3 mm to the
-+Y edge. **8 mm was the first attempt and does not fit**: `Feed Trigger` runs
-55.8 mm at that size and leaves no margin against D3 or the edge. The lid exports top-face-down, so the recess lands on the bed and comes out
+0.8 mm deep, block centred at (117.0, −108.0). **Upright with the box held portrait —
+RJ45 end away from you, jacks on the left** (`LID_LABEL_ROT = 180`: reading along −X, top
+of the text toward the RJ45 end). Until 2026-09-16 it read along +Y, upright only with the
+box landscape and the cable end on the left; changed to match Kenny's mockup. The block is
+45.4 × 14.6 mm across the lid, x 94.3–139.7, y −115.3 to −100.7: 9.8 mm to the nearest lid
+edge, 11.6 mm to a boss counterbore, 22.0 mm to a sight hole — all asserted by the script.
+`verify_enclosure.py` rasterises the engraving out of the exported lid and checks it matches
+this orientation and not one of the other seven. 8 mm text was tried in the old landscape
+layout and did not fit. The lid exports top-face-down, so the recess lands on the bed and comes out
 crisp. Glyph outlines come from `matplotlib`'s TextPath, the same idiom as the
 Temp Junction Box scripts, so the build now needs `matplotlib` installed.
 

@@ -7,18 +7,18 @@ append to it. If it passes ~120 lines, something in it belongs in `aF4-MASTER-RE
 
 **🟡 Boards in transit since 2026-09-14. A design collision found on 2026-09-16 is fixed and the
 new enclosure is exported and verified — but the printed case in hand is the old one and puts the
-hat 0.78 mm into an Olimex capacitor. Reprint the case; the lid is unchanged.** → item 27, §6.3
+hat 0.78 mm into an Olimex capacitor, and the lid label now reads portrait. Both are exported and
+verified; reprint case and lid.** → item 27, §6.3, §6.4
 
 | | |
 |---|---|
 | Boards | PCBWay `YB1800644`, 5 pcs assembled, **shipped 2026-09-14, DHL (DTP)**. No delivery date is published; DHL Express out of China typically runs 3–6 business days, so *roughly* 09-18 to 09-23 — a band, not a commitment. Tracking number deliberately not chased → §A3.2 |
 | Firmware | **Complete and flashed**, bench-verified 2026-09-01 |
 | HA software | **Complete**, verified against the live instance 2026-09-02 |
-| Enclosure | **1.5 mm hat lift, 39.9 mm tall. Exported and verified 2026-09-16** — every script check, all six solid tests, `verify_enclosure.py` ALL CHECKS PASSED. **Case needs reprinting; lid does not** → item 27 |
+| Enclosure | **1.5 mm hat lift, 39.9 mm tall — exported and verified 2026-09-16.** Lid label turned to read portrait (`LID_LABEL_ROT = 180`), re-exported and verified the same day: every script check, all six solid tests, `verify_enclosure.py` ALL CHECKS PASSED including the label raster (rot 180, IoU 0.72). **Reprint both** → item 27 |
 | Go-live | `input_boolean.reef_af4_schedule_enabled` stays **OFF** until commissioning 6.1–6.8 pass |
 
-**The immediate thread:** reprint `hardware/enclosure/aF4-trigger-case.stl` and cut the two PoE
-light pipes to 24.2 mm. Both can happen before the boards land. When the box arrives, **one bench session still covers items 26, 12 and 16**.
+**The immediate thread:** reprint case and lid; cut the two PoE light pipes to 24.2 mm. Both can happen before the boards land. When the box arrives, **one bench session still covers items 26, 12 and 16**.
 
 ## The 2026-09-16 finding in one paragraph
 
@@ -39,8 +39,8 @@ pin in any orientation. Full record in **§6.3**.
 - **The scalar checks in `hardware/enclosure/af4_enclosure_ocp.py` at the new height** — all pass,
   re-run 2026-09-16 by executing the parameter and check sections without OCP.
 - **The regenerated enclosure exports** — Mac, OCP 8.0.1, 2026-09-16: all script checks and six
-  solid tests pass, and `verify_enclosure.py` passes them independently. The lid export matches the
-  old one to 0.0023 mm.
+  solid tests pass, and `verify_enclosure.py` passes them independently. (The lid export has since
+  been superseded by the label rotation, §6.4.)
 - **`hardware/enclosure/verify_enclosure.py`** — numpy only, runs in any shell. Validated against
   the old exports first: it passed them at the old parameters and independently found the cap
   collision from the vendor mesh (13.15 vs 12.62).
@@ -89,7 +89,7 @@ pin in any orientation. Full record in **§6.3**.
 
 | # | Item | Blocks |
 |---|---|---|
-| 27 | **Reprint the case** — exports regenerated and verified 2026-09-16; the lid is unchanged. Cut the PoE light pipes at 24.2 mm (hat pipes unchanged, 10.1). Move the hat up 1.5 mm in Tinkercad | **Assembly** — the case in hand collides |
+| 27 | **Reprint case and lid** — exported and verified 2026-09-16; §6.3 lift, §6.4 label. Cut the PoE light pipes at 24.2 mm (hat pipes unchanged, 10.1). Move the hat up 1.5 mm in Tinkercad | **Assembly** — the case in hand collides |
 | 26 | **Inspect all five on arrival and pick the best board** — check the J3/J4 face on each. Reflow the two pin-10 joints, clean with IPA, loupe the ten J3 joints | **The first thing when the box lands** |
 | 12 | **Solder two 1×10 male headers into EXT1/EXT2, pins up, plastic on the top face.** Shave the pin-10 end of the EXT2 plastic if it binds on DCDC1. Same bench session as 26 and 16 | **Assembly** |
 | 16 | **Rotate `af4_ota_password` during the item-12 serial flash**, then delete the old value from `firmware/secrets.yaml` **and** the Device Builder Secrets editor | No — but a live exposure |
@@ -124,4 +124,6 @@ docs, and opened **§6.3** and **item 27**. Exports could not be regenerated —
 in any session shell — so added `verify_enclosure.py`, a numpy-only check of the printed STLs, and
 proved it against the old exports. Kenny then ran the scripts on the Mac under OCP 8.0.1: fixed its
 API breaks and a second hand-typed lid height in the dummy script, and everything passed. The lid
-export matches the old one, so only the case is reprinted.
+export matched the old one — until Kenny asked for the lid text turned to read portrait (RJ45 at
+the top, jacks left): `LID_LABEL_ROT = 180`, clearance checks for the label, and a raster
+orientation check in `verify_enclosure.py`, which identifies the current lid as rot 90. **§6.4.**
