@@ -2,9 +2,9 @@
 
 Case for the ESP32-POE-ISO plus the rev E trigger hat. Modelled against the
 measured `reference/vendor/ESP32-PoE-ISO_Rev_N.step` and against the hat's own KiCad geometry;
-fit verified digitally (zero interference — the build script asserts it). ⚠️ **Since the
-2026-09-16 hat lift the script's scalar checks have been re-run but its solid tests and exports
-have not** — the STEP/STL files here are still the 38.4 mm version. Master reference item 27.
+fit verified digitally (zero interference — the build script asserts it). Regenerated at the
+1.5 mm hat lift on Kenny's Mac 2026-09-16 (`cadquery-ocp` 8.0.1): every script check, every solid
+test and `verify_enclosure.py` pass.
 
 **External: 65.2 × 117.0 × 39.9 mm** (rev C was 59.7 × 155 × 38.9). 38 mm shorter,
 5.5 mm wider, 1 mm taller — 38.4 mm until the hat was raised 1.5 mm on 2026-09-16 to clear

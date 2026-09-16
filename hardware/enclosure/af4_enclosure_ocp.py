@@ -45,6 +45,25 @@ from OCP.TopExp import TopExp_Explorer
 from OCP.TopAbs import TopAbs_ShapeEnum
 from OCP.TopoDS import TopoDS
 from OCP.BRep import BRep_Tool
+
+# ---- OCP 7.x / 8.x compatibility ------------------------------------------
+# cadquery-ocp 8 (OCCT 8) dropped the "_s" suffix on static methods, made
+# Bnd_Box.Get() return an unbound Limits struct, and removed
+# NCollection_Utf8String. Resolve each once here so the geometry code below
+# runs unchanged on either major version.
+def _static(cls, name):
+    f = getattr(cls, name + "_s", None)
+    return f if f is not None else getattr(cls, name)
+
+def _bbox6(b):
+    lo, hi = b.CornerMin(), b.CornerMax()
+    return (lo.X(), lo.Y(), lo.Z(), hi.X(), hi.Y(), hi.Z())
+
+def _stl_binary(sw):
+    try:
+        sw.ASCIIMode = False
+    except AttributeError:
+        sw.SetASCIIMode(False)
 from OCP.STEPControl import STEPControl_Writer, STEPControl_StepModelType
 from OCP.BRepMesh import BRepMesh_IncrementalMesh
 from OCP.StlAPI import StlAPI_Writer
@@ -230,11 +249,11 @@ def fillet_vertical_edges(shape, r):
     ex = TopExp_Explorer(shape, TopAbs_ShapeEnum.TopAbs_EDGE)
     seen = set()
     while ex.More():
-        e = TopoDS.Edge_s(ex.Current())
+        e = _static(TopoDS, 'Edge')(ex.Current())
         vx = TopExp_Explorer(e, TopAbs_ShapeEnum.TopAbs_VERTEX)
         pts = []
         while vx.More():
-            pts.append(BRep_Tool.Pnt_s(TopoDS.Vertex_s(vx.Current())))
+            pts.append(_static(BRep_Tool, 'Pnt')(_static(TopoDS, 'Vertex')(vx.Current())))
             vx.Next()
         if len(pts) == 2:
             p1, p2 = pts
@@ -248,12 +267,12 @@ def fillet_vertical_edges(shape, r):
     return mk.Shape()
 
 def volume(s):
-    p = GProp_GProps(); BRepGProp.VolumeProperties_s(s, p)
+    p = GProp_GProps(); _static(BRepGProp, 'VolumeProperties')(s, p)
     return p.Mass()
 
 def bbox(s):
-    b = Bnd_Box(); BRepBndLib.Add_s(s, b)
-    return b.Get()
+    b = Bnd_Box(); _static(BRepBndLib, 'Add')(s, b)
+    return _bbox6(b)
 
 def write_step(shape, path):
     w = STEPControl_Writer()
@@ -262,7 +281,7 @@ def write_step(shape, path):
 
 def write_stl(shape, path):
     BRepMesh_IncrementalMesh(shape, 0.02, False, 0.3, True)
-    sw = StlAPI_Writer(); sw.ASCIIMode = False
+    sw = StlAPI_Writer(); _stl_binary(sw)
     sw.Write(shape, path)
 
 def translate(shape, dx, dy, dz):

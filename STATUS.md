@@ -5,22 +5,20 @@ append to it. If it passes ~120 lines, something in it belongs in `aF4-MASTER-RE
 
 ## Phase
 
-**🟡 Boards in transit since 2026-09-14. A design collision was found on 2026-09-16 and fixed
-in the scripts, but the printed case in hand is now wrong: it puts the hat 0.78 mm into an
-Olimex capacitor. Re-export on the Mac, verify, reprint the case (the lid is unchanged).** → item 27, §6.3
+**🟡 Boards in transit since 2026-09-14. A design collision found on 2026-09-16 is fixed and the
+new enclosure is exported and verified — but the printed case in hand is the old one and puts the
+hat 0.78 mm into an Olimex capacitor. Reprint the case; the lid is unchanged.** → item 27, §6.3
 
 | | |
 |---|---|
 | Boards | PCBWay `YB1800644`, 5 pcs assembled, **shipped 2026-09-14, DHL (DTP)**. No delivery date is published; DHL Express out of China typically runs 3–6 business days, so *roughly* 09-18 to 09-23 — a band, not a commitment. Tracking number deliberately not chased → §A3.2 |
 | Firmware | **Complete and flashed**, bench-verified 2026-09-01 |
 | HA software | **Complete**, verified against the live instance 2026-09-02 |
-| Enclosure | **Scripts updated for a 1.5 mm hat lift, 39.9 mm tall. STEP/STL exports NOT regenerated; `verify_enclosure.py` fails them on five checks. The printed case is the old version; the lid is unaffected** → item 27 |
+| Enclosure | **1.5 mm hat lift, 39.9 mm tall. Exported and verified 2026-09-16** — every script check, all six solid tests, `verify_enclosure.py` ALL CHECKS PASSED. **Case needs reprinting; lid does not** → item 27 |
 | Go-live | `input_boolean.reef_af4_schedule_enabled` stays **OFF** until commissioning 6.1–6.8 pass |
 
-**The immediate thread:** on the Mac, `pip install cadquery-ocp` into the CAD venv if it is not
-there, run the two enclosure scripts, then `python3 verify_enclosure.py` → `ALL CHECKS PASSED`,
-and reprint the case. That can happen before the
-boards land. When the box arrives, **one bench session still covers items 26, 12 and 16**.
+**The immediate thread:** reprint `hardware/enclosure/aF4-trigger-case.stl` and cut the two PoE
+light pipes to 24.2 mm. Both can happen before the boards land. When the box arrives, **one bench session still covers items 26, 12 and 16**.
 
 ## The 2026-09-16 finding in one paragraph
 
@@ -40,9 +38,12 @@ pin in any orientation. Full record in **§6.3**.
   within ~0.5 mm of Olimex's own mesh. → §6.3
 - **The scalar checks in `hardware/enclosure/af4_enclosure_ocp.py` at the new height** — all pass,
   re-run 2026-09-16 by executing the parameter and check sections without OCP.
-- **`hardware/enclosure/verify_enclosure.py`** — numpy only, runs in any shell. Validated
-  2026-09-16: the committed exports pass every mesh check against the pre-lift parameters, and its
-  vendor-mesh check independently finds the cap collision (13.15 vs 12.62).
+- **The regenerated enclosure exports** — Mac, OCP 8.0.1, 2026-09-16: all script checks and six
+  solid tests pass, and `verify_enclosure.py` passes them independently. The lid export matches the
+  old one to 0.0023 mm.
+- **`hardware/enclosure/verify_enclosure.py`** — numpy only, runs in any shell. Validated against
+  the old exports first: it passed them at the old parameters and independently found the cap
+  collision from the vendor mesh (13.15 vs 12.62).
 - **The EXT1/EXT2 pin assignments** — read 2026-09-16 from Olimex's `ESP32-PoE-ISO_Rev_N.kicad_pcb`.
 - **The shipment itself**, read off the order page 2026-09-14. → §A3.2
 - **The reworked sample's mounting face, seating and pin 1** (2026-09-12), and everything else in
@@ -54,9 +55,9 @@ pin in any orientation. Full record in **§6.3**.
 
 ## What you may not trust
 
-- ⚠️ **The enclosure STEP/STL files and the printed case in hand.** Pre-lift. Do not assemble into
-  it. Neither session shell can install `cadquery-ocp` (PyPI 403), so the OCP scripts are a Mac
-  step. → item 27
+- ⚠️ **The printed case in hand.** Pre-lift. Do not assemble into it. → item 27
+- **The enclosure scripts run only on the Mac** (`cadquery-ocp`; PyPI is 403 from both session
+  shells) and need the OCP 8 compatibility block now in both. → §9.1
 - **Pin engagement of ~4.3 mm is calculated, not felt.** Check the hat's grip on the headers at
   the first dry-fit. A longer-pin header restores depth if it is loose.
 - **The DCDC1 end of EXT2.** The vendor model shows ~0.65 mm to the header plastic; the real part
@@ -88,7 +89,7 @@ pin in any orientation. Full record in **§6.3**.
 
 | # | Item | Blocks |
 |---|---|---|
-| 27 | **On the Mac, run `af4_enclosure_ocp.py` and `af4_hat_dummy_ocp.py`, then `verify_enclosure.py` → `ALL CHECKS PASSED`, reprint the case** (lid unchanged). Cut the PoE light pipes at 24.2 mm (hat pipes unchanged, 10.1). Move the hat up 1.5 mm in Tinkercad | **Assembly** — the case in hand collides |
+| 27 | **Reprint the case** — exports regenerated and verified 2026-09-16; the lid is unchanged. Cut the PoE light pipes at 24.2 mm (hat pipes unchanged, 10.1). Move the hat up 1.5 mm in Tinkercad | **Assembly** — the case in hand collides |
 | 26 | **Inspect all five on arrival and pick the best board** — check the J3/J4 face on each. Reflow the two pin-10 joints, clean with IPA, loupe the ten J3 joints | **The first thing when the box lands** |
 | 12 | **Solder two 1×10 male headers into EXT1/EXT2, pins up, plastic on the top face.** Shave the pin-10 end of the EXT2 plastic if it binds on DCDC1. Same bench session as 26 and 16 | **Assembly** |
 | 16 | **Rotate `af4_ota_password` during the item-12 serial flash**, then delete the old value from `firmware/secrets.yaml` **and** the Device Builder Secrets editor | No — but a live exposure |
@@ -121,4 +122,6 @@ script's 4.40 mm UEXT height had hidden it. Raised the hat 1.5 mm in both enclos
 replaced the transcribed height with measured `TALL_PARTS` checks, updated §6.1 and the living
 docs, and opened **§6.3** and **item 27**. Exports could not be regenerated — no `cadquery-ocp`
 in any session shell — so added `verify_enclosure.py`, a numpy-only check of the printed STLs, and
-proved it against the old exports. Confirmed the lid needs no reprint.
+proved it against the old exports. Kenny then ran the scripts on the Mac under OCP 8.0.1: fixed its
+API breaks and a second hand-typed lid height in the dummy script, and everything passed. The lid
+export matches the old one, so only the case is reprinted.

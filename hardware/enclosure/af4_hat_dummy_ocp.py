@@ -48,6 +48,25 @@ from OCP.BRepGProp import BRepGProp
 from OCP.TopoDS import TopoDS_Compound
 from OCP.BRep import BRep_Builder
 
+# ---- OCP 7.x / 8.x compatibility ------------------------------------------
+# cadquery-ocp 8 (OCCT 8) dropped the "_s" suffix on static methods, made
+# Bnd_Box.Get() return an unbound Limits struct, and removed
+# NCollection_Utf8String. Resolve each once here so the geometry code below
+# runs unchanged on either major version.
+def _static(cls, name):
+    f = getattr(cls, name + "_s", None)
+    return f if f is not None else getattr(cls, name)
+
+def _bbox6(b):
+    lo, hi = b.CornerMin(), b.CornerMax()
+    return (lo.X(), lo.Y(), lo.Z(), hi.X(), hi.Y(), hi.Z())
+
+def _stl_binary(sw):
+    try:
+        sw.ASCIIMode = False
+    except AttributeError:
+        sw.SetASCIIMode(False)
+
 # ============================================================ the z stack
 # from aF4-enclosure-notes.md; every one of these is also a constant in
 # af4_enclosure_ocp.py, and they must not drift apart.
@@ -93,7 +112,11 @@ PEG_D, PEG_L = 1.60, 1.60
 PEG_YS = [-144.30, -125.00]
 PEG_HOLE_D = 1.80
 
-TXT_FONT = "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
+TXT_FONT = next((f for f in (
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",   # Linux
+    "/System/Library/Fonts/Supplemental/Arial Bold.ttf",             # macOS
+    "/Library/Fonts/Arial Bold.ttf",
+) if os.path.exists(f)), "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf")
 
 # ============================================================ helpers
 def box(x0, y0, z0, x1, y1, z1):
@@ -117,13 +140,13 @@ def common(a, b):
     return BRepAlgoAPI_Common(a, b).Shape()
 
 def volume(s):
-    p = GProp_GProps(); BRepGProp.VolumeProperties_s(s, p)
+    p = GProp_GProps(); _static(BRepGProp, 'VolumeProperties')(s, p)
     return p.Mass()
 
 def bbox(s):
-    b = Bnd_Box(); BRepBndLib.Add_s(s, b)
+    b = Bnd_Box(); _static(BRepBndLib, 'Add')(s, b)
     b.SetGap(0.0)          # report the tight box, not the tolerance-inflated one
-    return b.Get()
+    return _bbox6(b)
 
 def translate(shape, dx, dy, dz):
     t = gp_Trsf(); t.SetTranslation(gp_Vec(dx, dy, dz))
@@ -142,7 +165,7 @@ def write_step(shape, path):
 
 def write_stl(shape, path):
     BRepMesh_IncrementalMesh(shape, 0.02, False, 0.3, True)
-    sw = StlAPI_Writer(); sw.ASCIIMode = False
+    sw = StlAPI_Writer(); _stl_binary(sw)
     sw.Write(shape, path)
 
 def read_step(path):
@@ -163,23 +186,30 @@ def emboss(s, x, y, h, size, depth):
             from OCP.Font import Font_BRepFont as _BRepFont, \
                 Font_BRepTextBuilder as _BRepTextBuilder
         from OCP.Graphic3d import Graphic3d_HorizontalTextAlignment, Graphic3d_VerticalTextAlignment
-        from OCP.NCollection import NCollection_Utf8String
+        try:
+            from OCP.NCollection import NCollection_Utf8String as _U
+        except ImportError:            # OCCT 8 renamed it NCollection_String
+            from OCP.NCollection import NCollection_String as _U
     except Exception as e:
         print("  [--] text skipped:", e)
         return None
     if not os.path.exists(TXT_FONT):
         print("  [--] text skipped: no font at", TXT_FONT)
         return None
-    f = _BRepFont()
-    if not f.Init(NCollection_Utf8String(TXT_FONT), size, 0):
-        print("  [--] text skipped: font would not load")
+    try:                                   # font API differs across OCCT versions
+        f = _BRepFont()
+        if not f.Init(_U(TXT_FONT), size, 0):
+            print("  [--] text skipped: font would not load")
+            return None
+        b = _BRepTextBuilder()
+        face = b.Perform(f, _U(s),
+                         gp_Ax3(gp_Pnt(x, y, h), gp_Dir(0, 0, 1), gp_Dir(1, 0, 0)),
+                         Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT,
+                         Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM)
+        return BRepPrimAPI_MakePrism(face, gp_Vec(0, 0, depth)).Shape()
+    except Exception as e:
+        print("  [--] text skipped:", e)
         return None
-    b = _BRepTextBuilder()
-    face = b.Perform(f, NCollection_Utf8String(s),
-                     gp_Ax3(gp_Pnt(x, y, h), gp_Dir(0, 0, 1), gp_Dir(1, 0, 0)),
-                     Graphic3d_HorizontalTextAlignment.Graphic3d_HTA_LEFT,
-                     Graphic3d_VerticalTextAlignment.Graphic3d_VTA_BOTTOM)
-    return BRepPrimAPI_MakePrism(face, gp_Vec(0, 0, depth)).Shape()
 
 # ============================================================ the dummy board
 board = box(BX0, BY0, HAT_Z, BX1, BY1, HAT_TOP)
@@ -255,7 +285,16 @@ chk("board outline width", BX1 - BX0, 57.0)
 chk("board outline length", BY1 - BY0, 50.0)
 chk("J1 bore reaches past the wall inner face", J1_X1 - (J1_X1 - J1_BORE_L), 9.5)
 chk("J2 nose recess inside outer wall face", 149.65 - J2_NOSE_X1, 0.5)
-chk("barrel crown to lid underside", 23.50 - (HAT_TOP + J1_H), 1.0)
+# The lid underside is read from af4_enclosure_ocp.py, never retyped: this line
+# said 23.50 until 2026-09-16 and failed the day the enclosure moved to 25.00.
+import re as _re
+_enc = open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                         "af4_enclosure_ocp.py"), encoding="utf-8").read()
+IZ1 = float(_re.search(r"^IZ1\s*=\s*([0-9.]+)", _enc, _re.M).group(1))
+_hz = _re.search(r"^HAT_LIFT\s*=\s*([0-9.]+)", _enc, _re.M)
+chk("HAT_LIFT agrees with af4_enclosure_ocp.py",
+    -abs((float(_hz.group(1)) if _hz else 0.0) - HAT_LIFT), 0.0)
+chk("barrel crown to lid underside", IZ1 - (HAT_TOP + J1_H), 1.0)
 
 here = os.path.dirname(os.path.abspath(__file__))
 CASE = os.environ.get("AF4_CASE_STEP", os.path.join(here, "af4_case_inframe.step"))

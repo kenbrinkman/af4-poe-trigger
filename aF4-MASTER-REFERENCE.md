@@ -83,15 +83,15 @@ one pass.
   - §6.1 The vertical stack — the governing dimension — L1013
   - §6.2 Two details that are easy to lose — L1048
   - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1066
-- **§7 Errors already found and fixed** — L1166
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1201
-- **§8 Open items** — L1221
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1270
-- **§9 Repository map** — L1301
-  - §9.1 Toolchain constraints worth knowing — L1322
-- **§10 Audit status** — L1333
-  - §10.1 Still unverified after the audit — L1349
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1383
+- **§7 Errors already found and fixed** — L1181
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1216
+- **§8 Open items** — L1236
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1285
+- **§9 Repository map** — L1316
+  - §9.1 Toolchain constraints worth knowing — L1337
+- **§10 Audit status** — L1353
+  - §10.1 Still unverified after the audit — L1369
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1403
 
 <!-- /SECTION-INDEX -->
 
@@ -1112,12 +1112,11 @@ same lift.
 
 **Two things this finding does not settle:**
 
-- **The STEP/STL exports were not regenerated in the session that made the change.** Neither
-  the Mac's session shell nor the cloud workspace could reach PyPI for `cadquery-ocp`, so only
-  the scalar checks were re-run (all pass); the OCP solid tests have not been. The printed
-  case in hand is the 38.4 mm version. **The lid does not change:** every lid feature is
-  positioned relative to `IZ1`, so the origin-translated print file is the same part at either
-  height — only the case needs reprinting. → item 27
+- **The printed case in hand is the 38.4 mm version and must be reprinted.** The exports were
+  regenerated on Kenny's Mac later the same day (below). **The lid does not change:** every lid
+  feature is positioned relative to `IZ1`, so the origin-translated print file is the same part
+  at either height. Confirmed on the regenerated file: same 5,448 triangles, same bounding box,
+  every vertex within 0.0023 mm of the old export. → item 27
 - **DCDC1 sits ~0.65 mm past the pin-10 end of EXT2 in the vendor model, but the real header
   plastic had to be forced in there.** The hat's J4 socket body is the same length and meets
   the same face. Shave the last half-segment of header plastic rather than force it, and
@@ -1155,6 +1154,22 @@ Environment rule, per script (from Kenny's 3D-model workflow in another project,
 here too): **`af4_enclosure_ocp.py` and `af4_hat_dummy_ocp.py` need `cadquery-ocp` and run only
 on Kenny's Mac; `verify_enclosure.py` needs numpy only and runs anywhere.** PyPI is 403-blocked
 from both session shells, so "install it and retry" is never the fix in a session.
+
+**Regenerated and verified on Kenny's Mac, 2026-09-16** (`~/.venvs/cad`, Python 3.14,
+`cadquery-ocp` 8.0.1). `af4_enclosure_ocp.py`: all geometry checks pass and all six solid tests
+read 0.000 mm³, including the new hat-slab-vs-tall-parts test; external 65.2 × 117.0 × 39.9 mm.
+`af4_hat_dummy_ocp.py`: all checks pass. `verify_enclosure.py`: **ALL CHECKS PASSED** on the new
+exports, re-run independently from the Mac-side session VM. Two things had to be fixed first:
+
+- **OCP 8 broke both scripts.** Static methods lost their `_s` suffix (`TopoDS.Edge_s` →
+  `TopoDS.Edge`), `Bnd_Box.Get()` returns an unbound `Limits` struct, and
+  `NCollection_Utf8String` became `NCollection_String`. Both scripts now resolve these through a
+  small compatibility block (`_static`, `_bbox6`, `_stl_binary`) and run on OCP 7 or 8. → §9.1
+- **The dummy script carried its own hand-typed lid height,** `23.50 - (HAT_TOP + J1_H)`, and
+  failed at 0.58 mm the moment the enclosure moved — the same class of error as the one this
+  section records, one file over. It now reads `IZ1` and `HAT_LIFT` from
+  `af4_enclosure_ocp.py` and fails if its own `HAT_LIFT` disagrees. It also looks for a macOS
+  font; the committed dummy export has no embossed label, which is cosmetic.
 
 > **Generalised lesson:** a clearance check is only as good as the number it is checked
 > against. This one tested the hat against a hand-typed height instead of the vendor mesh
@@ -1265,7 +1280,7 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 24 | **Move the J3/J4 footprints to `B.Cu`** (silkscreen to `B.SilkS`) in `pcb/gen_pcb.py`, rewrite the `PCBWay-README.txt` ASSEMBLY line to name the face by designator, and add the THT parts to the centroid with a side column. The fix for the *cause* of item 23, as opposed to this run's rework | No — but it is the only thing that stops item 23 recurring |
 | 25 | **D3/D5 LED polarity is unverified on the built boards.** 0805 water-clear packages show no cathode mark at either photo set's resolution. Referred to PCBWay 2026-09-11, then **explicitly released on 2026-09-12** so the question could not hold the EQ open. It now falls to commissioning 6.1 / 6.5. Low consequence either way: a reversed indicator fails to light and does not touch the trigger path | No — resolves at commissioning |
 | 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1, and **check the J3/J4 mounting face on every board**: only the reworked sample was ever photographed (§A3.2). Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
-| 27 | **Re-run `hardware/enclosure/af4_enclosure_ocp.py` and `af4_hat_dummy_ocp.py` on the Mac, confirm `verify_enclosure.py` prints `ALL CHECKS PASSED`, then reprint the case** for the 1.5 mm hat lift (§6.3). The lid is unchanged and need not be reprinted. The scripts were edited 2026-09-16 and their scalar checks pass, but the OCP solid tests were not run and the exports are still the 38.4 mm version (the verifier fails them on five checks), because no session shell can install `cadquery-ocp`. Also cut the two PoE light pipes to 24.2 mm, and move the hat up 1.5 mm in the Tinkercad model | **YES** — the printed case in hand puts the hat into the cap |
+| 27 | **Reprint the case** for the 1.5 mm hat lift (§6.3), cut the two PoE light pipes to 24.2 mm, and move the hat up 1.5 mm in the Tinkercad model. The lid is unchanged and is not reprinted. **Exports regenerated and verified 2026-09-16** on Kenny's Mac: every script check, all six solid tests and `verify_enclosure.py` pass | **YES** — the printed case in hand puts the hat into the cap |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
 
@@ -1327,6 +1342,11 @@ input, where the output lands at ~10.5 V regardless of R4/R5, and the divider is
   and exec'd to regenerate the CSV, then cross-checked against the centroid.
 - `kicad-cli` 7.x has **no `pcb drc` subcommand**; DRC runs through the `pcbnew` Python module.
 - Zones must be filled with `ZONE_FILLER` before exporting Gerbers, or the pours come out empty.
+- **The enclosure scripts need `cadquery-ocp`, which installs only on Kenny's Mac** (PyPI is
+  403-blocked from both session shells). The Mac venv is Python 3.14, which pulls **OCP 8.0.1** —
+  an API break from 7.x: no `_s` suffix on static methods, `Bnd_Box.Get()` unusable,
+  `NCollection_Utf8String` → `NCollection_String`. Both scripts carry a compatibility block for
+  it. `verify_enclosure.py` is numpy-only and runs in any shell (§6.3).
 
 ---
 
