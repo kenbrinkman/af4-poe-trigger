@@ -83,15 +83,15 @@ one pass.
   - §6.1 The vertical stack — the governing dimension — L1013
   - §6.2 Two details that are easy to lose — L1048
   - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1066
-- **§7 Errors already found and fixed** — L1139
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1174
-- **§8 Open items** — L1194
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1243
-- **§9 Repository map** — L1274
-  - §9.1 Toolchain constraints worth knowing — L1294
-- **§10 Audit status** — L1305
-  - §10.1 Still unverified after the audit — L1321
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1355
+- **§7 Errors already found and fixed** — L1166
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1201
+- **§8 Open items** — L1221
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1270
+- **§9 Repository map** — L1301
+  - §9.1 Toolchain constraints worth knowing — L1322
+- **§10 Audit status** — L1333
+  - §10.1 Still unverified after the audit — L1349
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1383
 
 <!-- /SECTION-INDEX -->
 
@@ -1114,8 +1114,10 @@ same lift.
 
 - **The STEP/STL exports were not regenerated in the session that made the change.** Neither
   the Mac's session shell nor the cloud workspace could reach PyPI for `cadquery-ocp`, so only
-  the scalar checks were re-run (all pass); the solid tests have not been. The printed case
-  and lid in hand are the 38.4 mm version. → item 27
+  the scalar checks were re-run (all pass); the OCP solid tests have not been. The printed
+  case in hand is the 38.4 mm version. **The lid does not change:** every lid feature is
+  positioned relative to `IZ1`, so the origin-translated print file is the same part at either
+  height — only the case needs reprinting. → item 27
 - **DCDC1 sits ~0.65 mm past the pin-10 end of EXT2 in the vendor model, but the real header
   plastic had to be forced in there.** The hat's J4 socket body is the same length and meets
   the same face. Shave the last half-segment of header plastic rather than force it, and
@@ -1128,6 +1130,31 @@ hat's two live pins are EXT1 pin 3 (GND — the only ground on either row) and E
 (GPIO32); across every flip-and-rotate combination they land on EXT2-3 / EXT1-6,
 EXT1-8 / EXT2-5, or EXT2-8 / EXT1-5. **No orientation puts hat ground on a ground pin.** Pin
 assignments read from Olimex's `ESP32-PoE-ISO_Rev_N.kicad_pcb` on GitHub.
+
+**A numpy-only verifier was added the same day: `hardware/enclosure/verify_enclosure.py`.** The
+OCP script can only agree with itself and cannot run in a session; the verifier reads the STL
+files that actually get printed and needs nothing but numpy, so it runs on the Mac, in the
+Mac-side session VM (~4 s) and in the cloud container. It checks both bounding boxes, every
+standoff top by ray cast, the hat envelope and the ESP32 envelope (up to the tallest measured
+part) for case material by ray-parity point-in-mesh — behind a positive control that must find
+the floor and walls solid — both jack holes open along their axes, and the hat slab against
+`TALL_PARTS` and against the vendor ESP32 mesh sampled across every triangle. **Run against the
+committed exports on 2026-09-16:**
+
+- with the **pre-lift** parameters (`git show HEAD~1:…`) every mesh check passes — the exports
+  are exactly the 12.618 / 23.50 design, which validates the verifier — and **the vendor-mesh
+  check fails, tallest point 13.15 against a hat underside of 12.62.** That is this collision,
+  found from the vendor model alone: a check against the part's own model would have caught it
+  on 2026-08-27.
+- with the **current** parameters it fails five checks — case height 35.40 vs 36.90, both hat
+  standoffs at 12.618 vs 14.118, both jack holes blocked on their new axes. **That is the
+  acceptance test for item 27: regenerate, then `python3 verify_enclosure.py` must print
+  `ALL CHECKS PASSED`.**
+
+Environment rule, per script (from Kenny's 3D-model workflow in another project, which holds
+here too): **`af4_enclosure_ocp.py` and `af4_hat_dummy_ocp.py` need `cadquery-ocp` and run only
+on Kenny's Mac; `verify_enclosure.py` needs numpy only and runs anywhere.** PyPI is 403-blocked
+from both session shells, so "install it and retry" is never the fix in a session.
 
 > **Generalised lesson:** a clearance check is only as good as the number it is checked
 > against. This one tested the hat against a hand-typed height instead of the vendor mesh
@@ -1238,7 +1265,7 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 24 | **Move the J3/J4 footprints to `B.Cu`** (silkscreen to `B.SilkS`) in `pcb/gen_pcb.py`, rewrite the `PCBWay-README.txt` ASSEMBLY line to name the face by designator, and add the THT parts to the centroid with a side column. The fix for the *cause* of item 23, as opposed to this run's rework | No — but it is the only thing that stops item 23 recurring |
 | 25 | **D3/D5 LED polarity is unverified on the built boards.** 0805 water-clear packages show no cathode mark at either photo set's resolution. Referred to PCBWay 2026-09-11, then **explicitly released on 2026-09-12** so the question could not hold the EQ open. It now falls to commissioning 6.1 / 6.5. Low consequence either way: a reversed indicator fails to light and does not touch the trigger path | No — resolves at commissioning |
 | 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1, and **check the J3/J4 mounting face on every board**: only the reworked sample was ever photographed (§A3.2). Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
-| 27 | **Re-run `hardware/enclosure/af4_enclosure_ocp.py` and `af4_hat_dummy_ocp.py`, then reprint case and lid** for the 1.5 mm hat lift (§6.3). The scripts were edited 2026-09-16 and their scalar checks pass, but the solid tests were not run and the STEP/STL exports are still the 38.4 mm version, because no session shell could install `cadquery-ocp`. Also cut the two PoE light pipes to 24.2 mm, and move the hat up 1.5 mm in the Tinkercad model | **YES** — the printed case in hand puts the hat into the cap |
+| 27 | **Re-run `hardware/enclosure/af4_enclosure_ocp.py` and `af4_hat_dummy_ocp.py` on the Mac, confirm `verify_enclosure.py` prints `ALL CHECKS PASSED`, then reprint the case** for the 1.5 mm hat lift (§6.3). The lid is unchanged and need not be reprinted. The scripts were edited 2026-09-16 and their scalar checks pass, but the OCP solid tests were not run and the exports are still the 38.4 mm version (the verifier fails them on five checks), because no session shell can install `cadquery-ocp`. Also cut the two PoE light pipes to 24.2 mm, and move the hat up 1.5 mm in the Tinkercad model | **YES** — the printed case in hand puts the hat into the cap |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
 
@@ -1282,7 +1309,8 @@ input, where the output lands at ~10.5 V regardless of R4/R5, and the divider is
 | `docs/aF4-esp32-trigger-BOM.md` | Human-readable parts list with reasoning |
 | `docs/aF4-assembly-guide.md` | Build sequence and commissioning |
 | `docs/aF4-enclosure-notes.md` | Print and fit notes |
-| `hardware/enclosure/af4_enclosure_ocp.py` | Parametric enclosure source, self-checking |
+| `hardware/enclosure/af4_enclosure_ocp.py` | Parametric enclosure source, self-checking. Needs `cadquery-ocp` — Mac only |
+| `hardware/enclosure/verify_enclosure.py` | Checks the exported case/lid STLs against the parameters, measured parts and vendor mesh. numpy only — runs anywhere (§6.3) |
 | `pcb/gen_pcb.py` | **Source of truth for the board.** Edit this, not the `.kicad_pcb` |
 | `pcb/post.py` | Fills copper pours, runs DRC |
 | `pcb/make_package.py` | Generates BOM, centroid, fab notes, zip |

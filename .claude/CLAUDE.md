@@ -159,6 +159,7 @@ Every one of these has actually cost time here.
 | Board geometry, isolation, DRC | §4.1 · §4.2 · §4.3 |
 | Commissioning checks 6.1–6.8 | §8.1 |
 | Enclosure, the vertical stack | §6.1 · §6.3 · `docs/aF4-enclosure-notes.md` |
+| Regenerate or verify the enclosure meshes — which shell | §6.3 · `docs/aF4-enclosure-notes.md` Files. OCP scripts = Mac only; `verify_enclosure.py` = any shell |
 | The PCBWay order, the engineer question | `pcb/pcbway-order-YB1800644.md` |
 | Bench tests, what is measured vs asserted | `docs/aF4-meter-test-battery.md` · §10.2 |
 | What the audit did and did not confirm | §10 · §10.1 |

@@ -17,7 +17,21 @@ used to be hand-wired inside it is gone.
 - `hardware/enclosure/aF4-trigger-lid.stl` / `.step` — lid, exported print-side down (flat top on bed)
 - `hardware/enclosure/af4_enclosure_ocp.py` — parametric source (Python/OpenCascade); every dimension
   is a named constant and the script runs a geometry + solid-interference check
-  before it exports
+  before it exports. **Needs `cadquery-ocp`, so it runs on Kenny's Mac only** — PyPI is
+  blocked from both session shells.
+- `hardware/enclosure/verify_enclosure.py` — **numpy-only check of the exported STLs** against
+  the script's parameters, the measured Olimex parts and the vendor ESP32 mesh. Runs anywhere,
+  including a session. Regenerate then verify:
+
+  ```
+  cd hardware/enclosure
+  python3 af4_enclosure_ocp.py
+  python3 af4_hat_dummy_ocp.py
+  python3 verify_enclosure.py
+  ```
+
+  Expect `all geometry checks pass` from the first and `ALL CHECKS PASSED` from the last. The
+  lid's print file does not change with `HAT_Z` — only the case needs reprinting after a lift.
 
 ## What changed from rev C
 
