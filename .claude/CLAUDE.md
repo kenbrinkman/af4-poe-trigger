@@ -59,7 +59,7 @@ README.md                     folder map, human entry point
 STATUS.md                     the only live-status doc — rewritten, never appended
 aF4-MASTER-REFERENCE.md       the record; §N.N numbered, grepped, never read whole
 .claude/CLAUDE.md             this file
-.claude/settings.json         Claude Code settings: no attribution, secrets unreadable, push asks, hooks
+.claude/settings.json         Claude Code settings: no attribution, secrets unreadable, push allowed, force asks, hooks
 docs/                         subsystem references + git-rules.md
 tools/                        section_index.py — keeps the reference's section index honest
 firmware/                     af4-feeder.yaml (source of truth) + secrets.yaml (gitignored)
@@ -137,8 +137,9 @@ Every one of these has actually cost time here.
 ## 6. Working rules
 
 - **Git:** read `docs/git-rules.md` before any git work. The short version: commit directly —
-  no delete grant is needed under Claude Code on the Mac. Kenny runs `git push`; it is on the
-  ask list. Never write a `commit-*.sh`. Never put assistant attribution in a commit message
+  no delete grant is needed under Claude Code on the Mac. The session pushes too: `git remote -v`
+  first, `git push` or `git push origin main` only, output reported word for word; force and
+  delete pushes stay on the ask list. Never write a `commit-*.sh`. Never put assistant attribution in a commit message
   (`.claude/settings.json` turns it off; a `commit-msg` hook is the backstop).
 - **Finishing work:** **rewrite `STATUS.md`, do not append to it.** The durable record goes to
   `aF4-MASTER-REFERENCE.md` as a new numbered section. Do not renumber existing sections. The
