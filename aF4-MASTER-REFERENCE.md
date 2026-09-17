@@ -44,56 +44,57 @@ one pass.
 > 🔑 **Do not read this file whole.** Find the section here, then read only its
 > line range. Numbers drift — confirm with `grep -n "^### 2.4" <file>`.
 
-  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L104
-  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L122
-  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L145
-  - §A1.3 Isolation, re-derived `[AUDIT]` — L174
-  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L196
-  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L207
-  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L264
-  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L312
-- **§1 What the system must do** — L358
-  - §1.1 Requirements — L366
-  - §1.2 Measured facts about the port — L377
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L394
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L434
-- **§2 Circuit** — L463
-  - §2.1 Regulator — the calculation that matters — L510
-  - §2.2 Load on the 10.4 V rail — L543
-  - §2.3 PhotoMOS drive — L594
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L619
-  - §2.5 Protection — L661
-  - §2.6 Indicator LEDs — L684
-- **§3 Bill of materials — with verification status** — L718
-  - §3.1 Sourcing traps recorded — L747
-  - §3.2 Bought separately (not on the board) — L755
-- **§4 Board** — L763
-  - §4.1 Geometry from vendor CAD `[CAD]` — L781
-  - §4.2 Verification status of the board — L791
-  - §4.3 Isolation — L813
-- **§5 Firmware** — L828
-  - §5.1 The safety architecture — L834
-  - §5.2 Timing check against the spec `[CALC]` — L851
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L871
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L895
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L906
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L924
-  - §5.7 Home Assistant integration — L935
-- **§6 Enclosure** — L1007
-  - §6.1 The vertical stack — the governing dimension — L1015
-  - §6.2 Two details that are easy to lose — L1050
-  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1068
-  - §6.4 Lid label turned to read portrait `2026-09-16` — L1181
-- **§7 Errors already found and fixed** — L1201
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1236
-- **§8 Open items** — L1256
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1305
-- **§9 Repository map** — L1336
-  - §9.1 Toolchain constraints worth knowing — L1359
-  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1374
-- **§10 Audit status** — L1414
-  - §10.1 Still unverified after the audit — L1430
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1464
+  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L105
+  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L123
+  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L146
+  - §A1.3 Isolation, re-derived `[AUDIT]` — L175
+  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L197
+  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L208
+  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L265
+  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L313
+- **§1 What the system must do** — L359
+  - §1.1 Requirements — L367
+  - §1.2 Measured facts about the port — L378
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L395
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L435
+- **§2 Circuit** — L464
+  - §2.1 Regulator — the calculation that matters — L511
+  - §2.2 Load on the 10.4 V rail — L544
+  - §2.3 PhotoMOS drive — L595
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L620
+  - §2.5 Protection — L662
+  - §2.6 Indicator LEDs — L685
+- **§3 Bill of materials — with verification status** — L719
+  - §3.1 Sourcing traps recorded — L748
+  - §3.2 Bought separately (not on the board) — L756
+- **§4 Board** — L764
+  - §4.1 Geometry from vendor CAD `[CAD]` — L782
+  - §4.2 Verification status of the board — L792
+  - §4.3 Isolation — L814
+  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L827
+- **§5 Firmware** — L862
+  - §5.1 The safety architecture — L868
+  - §5.2 Timing check against the spec `[CALC]` — L885
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L905
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L929
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L940
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L958
+  - §5.7 Home Assistant integration — L969
+- **§6 Enclosure** — L1041
+  - §6.1 The vertical stack — the governing dimension — L1049
+  - §6.2 Two details that are easy to lose — L1084
+  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1102
+  - §6.4 Lid label turned to read portrait `2026-09-16` — L1215
+- **§7 Errors already found and fixed** — L1235
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1270
+- **§8 Open items** — L1290
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1339
+- **§9 Repository map** — L1370
+  - §9.1 Toolchain constraints worth knowing — L1393
+  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1408
+- **§10 Audit status** — L1450
+  - §10.1 Still unverified after the audit — L1466
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1500
 
 <!-- /SECTION-INDEX -->
 
@@ -823,6 +824,39 @@ of the wrong U1 footprint and is withdrawn (§A1).
 
 ⚠️ **Assembler instruction that must survive:** no copper, vias or stitching in that band.
 
+### 4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17`
+
+Kenny asked whether a board made with KiCad 7-era tools holds up under current ones. Everything
+below ran on the Mac against **copies** in the session scratchpad; nothing in `pcb/` was
+regenerated or rewritten. It is a check of what was ordered, not a change — rev E is spent.
+
+**What was checked against what.** The uploaded package is `pcb/af4-trigger-hat-rev-E-GERBERS.zip`
+(`pcb/pcbway-order-YB1800644.md`). Its eleven fab files are byte-identical to `pcb/gerbers/`.
+The committed `.kicad_pcb` (file format 20221018, KiCad 7) loads in KiCad 9 without complaint.
+
+| Check | KiCad 9.0.7 result |
+|---|---|
+| DRC, zones as shipped | **0 errors, 0 unconnected.** 33 warnings, all silkscreen: 16 silk overlap, 8 silk-to-edge, 7 silk over copper, 2 text height — the same 33 as the KiCad 7 `pcb/drc.rpt` |
+| The KiCad 7 report's other 28 | `lib_footprint_issues` — not raised under `kicad-cli` with no footprint library table. Expected for generated footprints, not a finding |
+| Zones refilled by KiCad 9's filler | GNDP 633.844 → 633.876 mm², GNDL 1467.197 → 1467.252 mm², same island counts. DRC after refill identical |
+| Clearance sweep, custom rules | **0 at 0.24 mm, 1 at 0.25 mm** — minimum copper gap **0.245 mm**, GPIO32 track to J3 pad 4. Matches §4.2 exactly |
+| Isolation, logic nets (GNDL, GPIO32, LED_A) to power copper | **4.425 mm clearance and 4.425 mm creepage** (KiCad 9's creepage constraint), set by R1 pad 2 to the GNDP pour edge at x 126.35, confirmed from pad geometry. GNDL pour to GNDP pour 4.70 mm. Matches §4.3 |
+| Netlist read back from the board | Matches §2 net for net: F1 → D1 → +12V; D2 TVS +12V–GNDP; U2 pin 1 ADJ, pin 2 + tab 10V4, pin 3 12V; R4 121 Ω / R5 887 Ω; U1 pins 1/2 LED_A/GNDL, 3/4 TIP/+10V4; R2 GPIO32–GNDL; J3.3 = GNDL, J4.6 = GPIO32; D3/D5 pad 1 on GNDP |
+| KiCad 9 Gerber export vs the shipped Gerbers | **Pixel-identical on all nine layers** (both coppers, masks, pastes, silks, edge), rasterised at 0.025 mm. Control: the same comparison against KiCad 9-*refilled* copper shows 2,000+ differing pixels, so the method sees sub-0.05 mm pour changes |
+| KiCad 9 drill export vs the shipped `.drl` | **Identical**: the same 7 tools (0.45–3.20 mm), the same 47 hits and slots, narrowest slot 0.70 mm (§4.2) |
+
+**Conclusion:** the tool generation changed nothing that reached the fab. The ordered board is the
+board the §4.2 audit verified.
+
+**A KiCad 9 report quirk, not a board fault:** the isolation rule reported its 4.425 mm pair as
+"Pad 2 [PWRLED] of R6". R6 sits at x 135–137, on the power side; the pad geometry puts the real
+pair at R1 pad 2. Read positions from a KiCad 9 DRC item before trusting its item label.
+
+**What this does not cover:** the J3/J4 mounting face (item 24 — the file is wrong, the rework
+fixed the parts), the "10s pulse" silkscreen (item 19), D3/D5 physical polarity (item 25), and
+assembly quality on the four unphotographed boards (item 26). None is a tool question. Board-level
+DRC also cannot catch the enclosure-side cap collision; that is §6.3's job.
+
 ---
 
 ## 5. Firmware
@@ -1390,7 +1424,9 @@ project. Each line below was checked on the Mac on 2026-09-17.
 **What this changes, and what it does not:**
 
 - **`pcb/make_package.py` and `pcb/post.py` can probably run locally again**, under KiCad's
-  bundled Python. **Not yet exercised.** The committed board was produced by KiCad 7-era
+  bundled Python. **Not yet exercised.** (KiCad 9 *has* since read, DRC'd and re-exported the
+  committed board without changing a pixel of fab output — §4.4. The generator scripts themselves
+  are still unrun.) The committed board was produced by KiCad 7-era
   tooling; KiCad 9 may rewrite the file format, re-fill zones differently, or report new DRC
   classes. The first run must be **diffed against the committed `.kicad_pcb` and `drc.rpt`**
   before anything regenerated is trusted — and the rev E fab data is spent regardless (§4 of

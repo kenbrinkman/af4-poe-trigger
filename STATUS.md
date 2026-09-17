@@ -48,6 +48,9 @@ pin in any orientation. Full record in **§6.3**.
 - **The reworked sample's mounting face, seating and pin 1** (2026-09-12), and everything else in
   the original sample photos (2026-09-11). → §A3, §A3.1
 - **§2 arithmetic, all `[CAD]` board geometry, all 20 MPNs, DRC, BOM ≡ centroid ≡ board.**
+- **The ordered board under KiCad 9.0.7** (2026-09-17): 0 DRC errors, clearance 0.245 mm,
+  isolation 4.425 mm, netlist ≡ §2, and a KiCad 9 export is pixel-identical to the shipped
+  Gerbers with an identical drill file. → §4.4
 - **The firmware matches §5 exactly**, and the flashed device matches `firmware/af4-feeder.yaml`.
 - **The commissioning bands** (6.2 = 11.4–12.0 V, 6.3 = 10.0–10.9 V).
 - **Both reef automations as §5.7 describes them.**
@@ -70,8 +73,9 @@ pin in any orientation. Full record in **§6.3**.
 - **D3 and D5 polarity** is unverified until commissioning. → item 25
 - **Silkscreen reads "10.4V 10s pulse"** — wrong, unfixable on this run.
 - **LM1117 V_REF sub-bands and the LED viewing angle** were never re-pulled from primary PDFs.
-- **`pcbnew` via KiCad 9.0.7 is available but unexercised** on this board, which KiCad 7-era
-  tooling produced. Diff the first regenerated `.kicad_pcb` and `drc.rpt` before trusting it. → §9.2
+- **`pcb/gen_pcb.py` and `pcb/make_package.py` have not been re-run under KiCad 9.** The board
+  file itself has been checked on KiCad 9 (§4.4); a *regenerated* board has not. Diff the first
+  one against the committed `.kicad_pcb` before trusting it. → §9.2
 
 ## Standing corrections — settled, do not re-raise
 
@@ -119,7 +123,8 @@ pin in any orientation. Full record in **§6.3**.
 
 ## Last session — 2026-09-17
 
-Kenny reported the case and lid reprinted; recorded against item 27 in `STATUS.md` and the §8
-registry, with a line in §6.4. No hardware verification in-session. Earlier the same day: first
-session in **Claude Code on the Mac** (toolchain checked and recorded in **§9.2**; settings, hooks
-and `tools/section_index.py` added; `docs/git-rules.md` §1, §2, §6 rewritten).
+**Re-checked the ordered board on KiCad 9.0.7** — DRC, KiCad 9 zone refill, clearance sweep,
+creepage on the isolation band, netlist read-back, and a raster diff of a KiCad 9 export against
+the shipped Gerbers and drill file. All agree with the KiCad 7 audit; nothing reached the fab
+differently. Scratchpad only, nothing in `pcb/` changed. → §4.4. Earlier: case and lid reprinted
+(item 27); first Claude Code session on the Mac (§9.2).
