@@ -18,9 +18,6 @@ aF4-project-overview.pdf
 secrets.yaml
 *secret*
 
-# Scratch parked here because the Claude session's mount cannot delete files.
-_to_delete/
-
 # OS cruft
 .DS_Store
 Thumbs.db
@@ -33,5 +30,5 @@ __pycache__/
 # PCB build outputs - regenerate with gen_pcb.py + kicad-cli, or unzip the package
 pcb/gerbers/
 
-# Session scratch, not a deliverable
-Claude outputs/
+# Claude Code per-user overrides — personal, not shared
+.claude/settings.local.json

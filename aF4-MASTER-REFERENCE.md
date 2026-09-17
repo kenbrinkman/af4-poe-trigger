@@ -5,7 +5,7 @@ PoE trigger project, written to be *audited*. Every load-bearing claim carries a
 tag so a reviewer can tell what has been verified against a primary source and what is an
 assertion that has not. The assertions are the interesting part — attack those first.
 
-> 🔑 **Do not read this file whole** — it costs ~16,000 tokens. Use the section index
+> 🔑 **Do not read this file whole** — it costs ~24,000 tokens. Use the section index
 > below, then `grep -n "^### 2.4"` and read only that range.
 >
 > 🚫 **This file does not describe current state.** For phase, what may be trusted, and the
@@ -44,55 +44,56 @@ one pass.
 > 🔑 **Do not read this file whole.** Find the section here, then read only its
 > line range. Numbers drift — confirm with `grep -n "^### 2.4" <file>`.
 
-  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L103
-  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L121
-  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L144
-  - §A1.3 Isolation, re-derived `[AUDIT]` — L173
-  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L195
-  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L206
-  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L263
-  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L311
-- **§1 What the system must do** — L357
-  - §1.1 Requirements — L365
-  - §1.2 Measured facts about the port — L376
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L393
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L433
-- **§2 Circuit** — L462
-  - §2.1 Regulator — the calculation that matters — L509
-  - §2.2 Load on the 10.4 V rail — L542
-  - §2.3 PhotoMOS drive — L593
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L618
-  - §2.5 Protection — L660
-  - §2.6 Indicator LEDs — L683
-- **§3 Bill of materials — with verification status** — L717
-  - §3.1 Sourcing traps recorded — L746
-  - §3.2 Bought separately (not on the board) — L754
-- **§4 Board** — L762
-  - §4.1 Geometry from vendor CAD `[CAD]` — L780
-  - §4.2 Verification status of the board — L790
-  - §4.3 Isolation — L812
-- **§5 Firmware** — L827
-  - §5.1 The safety architecture — L833
-  - §5.2 Timing check against the spec `[CALC]` — L850
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L870
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L894
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L905
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L923
-  - §5.7 Home Assistant integration — L934
-- **§6 Enclosure** — L1006
-  - §6.1 The vertical stack — the governing dimension — L1014
-  - §6.2 Two details that are easy to lose — L1049
-  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1067
-  - §6.4 Lid label turned to read portrait `2026-09-16` — L1180
-- **§7 Errors already found and fixed** — L1200
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1235
-- **§8 Open items** — L1255
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1304
-- **§9 Repository map** — L1335
-  - §9.1 Toolchain constraints worth knowing — L1356
-- **§10 Audit status** — L1372
-  - §10.1 Still unverified after the audit — L1388
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1422
+  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L104
+  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L122
+  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L145
+  - §A1.3 Isolation, re-derived `[AUDIT]` — L174
+  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L196
+  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L207
+  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L264
+  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L312
+- **§1 What the system must do** — L358
+  - §1.1 Requirements — L366
+  - §1.2 Measured facts about the port — L377
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L394
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L434
+- **§2 Circuit** — L463
+  - §2.1 Regulator — the calculation that matters — L510
+  - §2.2 Load on the 10.4 V rail — L543
+  - §2.3 PhotoMOS drive — L594
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L619
+  - §2.5 Protection — L661
+  - §2.6 Indicator LEDs — L684
+- **§3 Bill of materials — with verification status** — L718
+  - §3.1 Sourcing traps recorded — L747
+  - §3.2 Bought separately (not on the board) — L755
+- **§4 Board** — L763
+  - §4.1 Geometry from vendor CAD `[CAD]` — L781
+  - §4.2 Verification status of the board — L791
+  - §4.3 Isolation — L813
+- **§5 Firmware** — L828
+  - §5.1 The safety architecture — L834
+  - §5.2 Timing check against the spec `[CALC]` — L851
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L871
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L895
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L906
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L924
+  - §5.7 Home Assistant integration — L935
+- **§6 Enclosure** — L1007
+  - §6.1 The vertical stack — the governing dimension — L1015
+  - §6.2 Two details that are easy to lose — L1050
+  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1068
+  - §6.4 Lid label turned to read portrait `2026-09-16` — L1181
+- **§7 Errors already found and fixed** — L1201
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1236
+- **§8 Open items** — L1256
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1305
+- **§9 Repository map** — L1336
+  - §9.1 Toolchain constraints worth knowing — L1359
+  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1374
+- **§10 Audit status** — L1413
+  - §10.1 Still unverified after the audit — L1429
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1463
 
 <!-- /SECTION-INDEX -->
 
@@ -1351,21 +1352,61 @@ input, where the output lands at ~10.5 V regardless of R4/R5, and the divider is
 | `pcb/af4-trigger-hat-rev-E-GERBERS.zip` | **What was actually uploaded** to the PCB-fabrication line item |
 | `pcb/af4-trigger-hat-rev-E-PCBWay.zip` | The all-in-one package. Byte-identical fab data, but **not** the file that was uploaded |
 | `pcb/pcbway-order-YB1800644.md` | Order, quote, EQ and payment record |
+| `tools/section_index.py` | Regenerates this document's section index; `--check` for staleness. Run by Claude Code hooks (§9.2) |
+| `.claude/settings.json` | Claude Code project settings: no commit attribution, secrets unreadable, `git push` asks, section-index hooks (§9.2) |
 | `aF4-protoboard-*.svg`, `archive/rev-c-protoboard/protoboard 20x20.stl` | **Rev C history — do not build from these** |
 
 ### 9.1 Toolchain constraints worth knowing
 
-- **`pcbnew` is not installed on the Mac.** `pcb/make_package.py` cannot be re-run locally;
+- ⚠️ *Superseded 2026-09-17 by §9.2 — `pcbnew` is available through KiCad 9's bundled Python.*
+  **`pcbnew` is not installed on the Mac.** `pcb/make_package.py` cannot be re-run locally;
   artifact-only fixes must patch the generated file and repack the zip directly. The BOM half
   of the script needs no `pcbnew`, though — its `PARTS` list can be sliced out of the source
   and exec'd to regenerate the CSV, then cross-checked against the centroid.
-- `kicad-cli` 7.x has **no `pcb drc` subcommand**; DRC runs through the `pcbnew` Python module.
+- `kicad-cli` 7.x has **no `pcb drc` subcommand** (9.x does — §9.2); DRC runs through the `pcbnew` Python module.
 - Zones must be filled with `ZONE_FILLER` before exporting Gerbers, or the pours come out empty.
 - **The enclosure scripts need `cadquery-ocp`, which installs only on Kenny's Mac** (PyPI is
   403-blocked from both session shells). The Mac venv is Python 3.14, which pulls **OCP 8.0.1** —
   an API break from 7.x: no `_s` suffix on static methods, `Bnd_Box.Get()` unusable,
   `NCollection_Utf8String` → `NCollection_String`. Both scripts carry a compatibility block for
   it. `verify_enclosure.py` is numpy-only and runs in any shell (§6.3).
+
+### 9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17`
+
+From 2026-09-17 sessions run in **Claude Code, natively on Kenny's Mac**, not in the Cowork
+sandbox. Most of §9.1's "session shell" limits were properties of that sandbox, not of the
+project. Each line below was checked on the Mac on 2026-09-17.
+
+| Tool | Where | Checked |
+|---|---|---|
+| KiCad **9.0.7** | `/Applications/KiCad/KiCad.app` | `kicad-cli version` |
+| `kicad-cli` | `/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli` — **not on `PATH`** | has `pcb drc`, `pcb export`, `pcb render` |
+| `pcbnew` Python module | KiCad's bundled Python: `/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3` (3.9) | `import pcbnew` → 9.0.7 |
+| `cadquery-ocp` 8.0.1 + numpy 2.5.3, trimesh, matplotlib | venv `~/.venvs/cad` (Python 3.14) | `verify_enclosure.py` **ALL CHECKS PASSED**, label rot 180 IoU 0.72 |
+| ESPHome **2026.8.2** | `/opt/homebrew/bin/esphome` | `esphome config firmware/af4-feeder.yaml` → *Configuration is valid* (one expected warning: GPIO12 strapping pin — the Olimex PHY power pin) |
+| `gh` | `/opt/homebrew/bin/gh`, logged in as `kenbrinkman` | `gh auth status` |
+| Home Assistant | MCP server attached to the Claude Code session | live state and automations readable (§5.7) |
+
+**What this changes, and what it does not:**
+
+- **`pcb/make_package.py` and `pcb/post.py` can probably run locally again**, under KiCad's
+  bundled Python. **Not yet exercised.** The committed board was produced by KiCad 7-era
+  tooling; KiCad 9 may rewrite the file format, re-fill zones differently, or report new DRC
+  classes. The first run must be **diffed against the committed `.kicad_pcb` and `drc.rpt`**
+  before anything regenerated is trusted — and the rev E fab data is spent regardless (§4 of
+  `.claude/CLAUDE.md`, lesson 6).
+- **The enclosure scripts no longer need Kenny at the keyboard** — a session can run them in
+  `~/.venvs/cad`. `verify_enclosure.py` needs numpy, which the Homebrew `python3` lacks: run
+  it with `~/.venvs/cad/bin/python`.
+- **`esphome config` prints the resolved configuration**, which may include secret values —
+  whether this version redacts them was not checked. Send its stdout to `/dev/null` and read
+  only the exit code and the status lines. Never pass `--show-secrets`.
+- **Validation is not deployment.** The Device Builder copy and its own secrets store are still
+  separate and still hand-synced (`.claude/CLAUDE.md` lesson 3). A local `esphome config` pass
+  says nothing about what the Device Builder holds.
+- **GitHub is reachable**, but pushing stays with Kenny by choice; `git push` is on the ask
+  list in `.claude/settings.json` (`docs/git-rules.md` §2).
+- **PyPI reachability from the Mac was not tested**; nothing here needed it.
 
 ---
 

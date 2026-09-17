@@ -1,0 +1,54 @@
+{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
+    "deny": [
+      "Read(./firmware/secrets.yaml)",
+      "Read(./archive/secrets/**)"
+    ],
+    "ask": [
+      "Bash(git push*)"
+    ],
+    "allow": [
+      "Bash(git status*)",
+      "Bash(git log*)",
+      "Bash(git show*)",
+      "Bash(git diff*)",
+      "Bash(git ls-files*)",
+      "Bash(git remote -v)",
+      "Bash(git check-ignore*)",
+      "Bash(grep *)",
+      "Bash(sed -n *)",
+      "Bash(python3 tools/section_index.py*)",
+      "Bash(~/.venvs/cad/bin/python verify_enclosure.py*)"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/tools/section_index.py\"",
+            "statusMessage": "Refreshing reference section index"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git commit*)",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/tools/section_index.py\" --check || exit 2",
+            "statusMessage": "Checking reference section index"
+          }
+        ]
+      }
+    ]
+  }
+}

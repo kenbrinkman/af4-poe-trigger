@@ -1,52 +1,40 @@
 # Working with the aF4 git repository
 
-**Rewritten 2026-09-05**, superseding §5 of `archive/aF4-HANDOFF.md`. These apply to every
-session that touches this folder.
+**Rewritten 2026-09-05; §1–§2 and §6 rewritten 2026-09-17** for Claude Code on Kenny's Mac.
+These apply to every session that touches this folder.
 
-> 🔑 **The short version: ask for the folder delete grant, then commit directly.
-> Kenny runs `git push`. No `commit-*.sh` files.**
+> 🔑 **The short version: commit directly. Kenny runs `git push`. No `commit-*.sh` files.**
 
 **Remote:** `origin` → `https://github.com/kenbrinkman/af4-poe-trigger.git`, branch `main`.
 There are several project repos on this machine — **confirm with `git remote -v` before
 pushing.** The wrong one has been pushed once.
 
-## 1. The delete grant — ask for it first
+## 1. Where sessions run, and what that changes
 
-A session reaches this folder through a mount that **forbids `unlink` by default**. Git cannot
-clear its own `.git/index.lock`, so every write dies at the second command with *"Unable to
-create '.git/index.lock': File exists."*
+Since 2026-09-17 sessions run in **Claude Code, natively on Kenny's Mac**. Git behaves
+normally: files can be deleted, so `.git/index.lock` clears itself, and Kenny's own git
+identity is visible. **No delete grant is needed.** The repo-local
+`user.name` / `user.email` set on 2026-09-05 are still there and harmless.
 
-**The fix:** the session asks once for a **session-scoped folder delete grant**. Kenny approves
-one prompt, and from the next shell call `rm` / `rmdir` / `unlink` work inside this folder for
-the rest of that session. After that `git add`, `git commit`, `git mv`, `git rm` all run
-normally in place.
+**History — the Cowork sandbox, until 2026-09-16.** Sessions reached the folder through a
+mount that forbade `unlink`, so git died on its second write with *"Unable to create
+'.git/index.lock': File exists"* unless Kenny approved a session-scoped folder delete grant
+first; even read-only `git status` stranded a lock. The sandbox `$HOME` also hid
+`~/.gitconfig`, hence the repo-local identity. If a session ever runs in that sandbox again,
+both workarounds apply again. A stranded lock is a traffic cone, not data — deleting it is safe.
 
-- **It is session-scoped** — it does not carry to the next chat.
-- **Ask at the start of any session that will touch the repo**, not after the first failure.
-- **Read-only git still takes the index lock** — `git status`, `git diff` against the worktree,
-  `git add --dry-run`. Harmless with the grant; strands a lock without it. If a session did
-  read-only git before the grant landed, `rm -f .git/index.lock` once it does.
-  - Index-safe regardless: `git remote -v`, `git log`, `git show`, `git show <rev>:<path>`,
-    `git reflog`, `git stash list`, `git ls-files`, `git check-ignore`, `git branch -vv`.
-- **A stranded lock is a traffic cone, not data.** Deleting it is safe.
+## 2. Push stays with Kenny
 
-⚠️ **The session shell has no git identity** — `$HOME` there is the sandbox VM's home, not
-`/Users/kenbrinkman`, so Kenny's global `~/.gitconfig` is invisible and the first commit dies
-with *"Author identity unknown."* Fixed once, repo-locally, on 2026-09-05:
-`git config --local user.name "Kenneth Brinkman"` and
-`git config --local user.email "kenbrinkman@mac.com"`. Local config is not tracked by git, so
-**a fresh clone will need it again.**
-
-## 2. Push stays blocked
-
-The session shell's egress allowlist blocks GitHub (`Received HTTP code 403 from proxy after
-CONNECT`). So the division is fixed:
+The sandbox's egress allowlist blocked GitHub, which is why the split began. Claude Code on
+the Mac *can* reach GitHub (`gh` is logged in), so **this is now a choice, not a limit**, and
+it is kept:
 
 > **The session commits. Kenny pushes.**
 
-The handover is **one command — `git push`** — supplied unprompted every time a session
-commits, with one plain sentence naming the remote, and the reminder that **a commit is local
-until it is pushed.** Run `git remote -v` first.
+`.claude/settings.json` puts `git push` on the **ask** list, so a session cannot push without
+Kenny approving the prompt. The handover is **one command — `git push`** — supplied
+unprompted every time a session commits, with one plain sentence naming the remote, and the
+reminder that **a commit is local until it is pushed.** Run `git remote -v` first.
 
 🚫 **Never go back to generating a `commit-*.sh` per change.** That is the habit this replaces.
 
@@ -57,9 +45,12 @@ No `Co-Authored-By:`, no session trailer, no "Generated with". GitHub reads the
 sidebar; four commits from one session on 2026-09-02 did exactly that and had to be found and
 removed.
 
-The session harness re-injects an attribution instruction at the start of every session. **It
-does not override this rule.** A `commit-msg` hook strips the trailers as a backstop —
-installed 2026-09-05, this repo had none until then.
+The session harness injects an attribution instruction by default. **It does not override
+this rule.** Two layers enforce it:
+
+1. **`.claude/settings.json` sets `attribution.commit` and `attribution.pr` to `""`** — Claude
+   Code then adds no trailer at all. Tracked, so it survives a fresh clone. Added 2026-09-17.
+2. **A `commit-msg` hook strips the trailers as a backstop** — installed 2026-09-05.
 
 ⚠️ **Hooks are never tracked by git.** A fresh clone has no hook. Reinstall with:
 
@@ -124,31 +115,24 @@ item 16.
 ## 6. Keeping the section index honest
 
 `aF4-MASTER-REFERENCE.md` carries a generated section index between `<!-- SECTION-INDEX -->`
-markers. ⚠️ **Re-run this after any edit that changes the file's length**, or the line numbers
-lie:
+markers. Any edit that changes the file's length makes its line numbers lie. The generator is
+**`tools/section_index.py`** (moved out of this file 2026-09-17):
 
-```python
-import re
-p = "aF4-MASTER-REFERENCE.md"
-src = open(p, encoding="utf-8").read()
-src = re.sub(r"\n?<!-- SECTION-INDEX -->.*?<!-- /SECTION-INDEX -->\n\n---\n", "", src, flags=re.S)
-lines = src.split("\n")
-rows = [(len(m.group(1)), m.group(2), m.group(3).strip(), i)
-        for i, ln in enumerate(lines, 1)
-        if (m := re.match(r"^(#{2,3}) (A?\d+(?:\.\d+[a-z]?)?)\.? (.*)$", ln))]
-def build(rows, off):
-    out = ["<!-- SECTION-INDEX -->", "## Section index", "",
-           "> 🔑 **Do not read this file whole.** Find the section here, then read only its",
-           "> line range. Numbers drift — confirm with `grep -n \"^### 2.4\" <file>`.", ""]
-    for d, n, t, ln in rows:
-        out.append(f"{'' if d==2 else '  '}- {'**' if d==2 else ''}§{n} {t}"
-                   f"{'**' if d==2 else ''} — L{ln+off}")
-    return out + ["", "<!-- /SECTION-INDEX -->", "", "---"]
-idx = lines.index("---")
-off = 1 + len(build(rows, 0))
-new = lines[:idx+1] + [""] + build(rows, off) + lines[idx+1:]
-open(p, "w", encoding="utf-8").write("\n".join(new))
+```sh
+python3 tools/section_index.py
+python3 tools/section_index.py --check
 ```
+
+The first rewrites the index, and only touches the file if something changed. The second
+exits 1 on a stale index and changes nothing.
+
+**Claude Code runs it for you** — `.claude/settings.json` carries two hooks:
+
+- a **Stop** hook regenerates the index at the end of every turn;
+- a **PreToolUse** hook runs `--check` before any `git commit` and **blocks the commit** if
+  the index is stale. Regenerate, `git add aF4-MASTER-REFERENCE.md`, commit again.
+
+Outside Claude Code, run it by hand before committing.
 
 🚫 **Never renumber an existing `§N.N`.** Docs, commits and conversations cite them. Add
 a new section numbered after the highest that exists (10 today, so the next is 11); do not renumber `§2.4`.

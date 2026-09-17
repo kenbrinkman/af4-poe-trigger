@@ -1,6 +1,6 @@
 # STATUS — aF4 PoE Trigger
 
-**Rewritten 2026-09-16.** The only live-status document in this project. Rewrite it; never
+**Rewritten 2026-09-17.** The only live-status document in this project. Rewrite it; never
 append to it. If it passes ~120 lines, something in it belongs in `aF4-MASTER-REFERENCE.md`.
 
 ## Phase
@@ -56,8 +56,8 @@ pin in any orientation. Full record in **§6.3**.
 ## What you may not trust
 
 - ⚠️ **The printed case in hand.** Pre-lift. Do not assemble into it. → item 27
-- **The enclosure scripts run only on the Mac** (`cadquery-ocp`; PyPI is 403 from both session
-  shells) and need the OCP 8 compatibility block now in both. → §9.1
+- **The enclosure scripts run only on the Mac**, in `~/.venvs/cad`, and need the OCP 8
+  compatibility block now in both. Claude Code sessions run there too. → §9.2
 - **Pin engagement of ~4.3 mm is calculated, not felt.** Check the hat's grip on the headers at
   the first dry-fit. A longer-pin header restores depth if it is loose.
 - **The DCDC1 end of EXT2.** The vendor model shows ~0.65 mm to the header plastic; the real part
@@ -68,7 +68,8 @@ pin in any orientation. Full record in **§6.3**.
 - **D3 and D5 polarity** is unverified until commissioning. → item 25
 - **Silkscreen reads "10.4V 10s pulse"** — wrong, unfixable on this run.
 - **LM1117 V_REF sub-bands and the LED viewing angle** were never re-pulled from primary PDFs.
-- **`pcbnew` is not installed on the Mac.** → §9.1
+- **`pcbnew` via KiCad 9.0.7 is available but unexercised** on this board, which KiCad 7-era
+  tooling produced. Diff the first regenerated `.kicad_pcb` and `drc.rpt` before trusting it. → §9.2
 
 ## Standing corrections — settled, do not re-raise
 
@@ -114,16 +115,12 @@ pin in any orientation. Full record in **§6.3**.
 - **R5 to 0.25 W** (item 18). **J1/J2 sourcing** — consider LCSC-stocked parts.
 - **Fab notes: give slot widths as the full set**, and consider separate PTH/NPTH drill files.
 
-## Last session — 2026-09-16
+## Last session — 2026-09-17
 
-Rejected mounting the ESP32 upside down (mirrored EXT pinout). Parsed Olimex's mesh, then had
-Kenny caliper the three tall parts: the cap beside DCDC1 collides with the hat by 0.78 mm, and the
-script's 4.40 mm UEXT height had hidden it. Raised the hat 1.5 mm in both enclosure scripts,
-replaced the transcribed height with measured `TALL_PARTS` checks, updated §6.1 and the living
-docs, and opened **§6.3** and **item 27**. Exports could not be regenerated — no `cadquery-ocp`
-in any session shell — so added `verify_enclosure.py`, a numpy-only check of the printed STLs, and
-proved it against the old exports. Kenny then ran the scripts on the Mac under OCP 8.0.1: fixed its
-API breaks and a second hand-typed lid height in the dummy script, and everything passed. The lid
-export matched the old one — until Kenny asked for the lid text turned to read portrait (RJ45 at
-the top, jacks left): `LID_LABEL_ROT = 180`, clearance checks for the label, and a raster
-orientation check in `verify_enclosure.py`, which identifies the current lid as rot 90. **§6.4.**
+First session in **Claude Code on the Mac**, replacing the Cowork sandbox; no hardware work. Found
+most "session shell" limits were the sandbox's, and checked what the Mac actually has: KiCad 9.0.7
+with `pcbnew` in its bundled Python, OCP 8.0.1 in `~/.venvs/cad` (`verify_enclosure.py` passed
+again), ESPHome 2026.8.2 (`firmware/af4-feeder.yaml` validates), `gh`, and Home Assistant over MCP.
+Recorded in **§9.2**. Added `.claude/settings.json` (no attribution, secrets unreadable, `git push`
+asks) and `tools/section_index.py`, run by a Stop hook and checked before every commit. Rewrote
+`docs/git-rules.md` §1, §2 and §6. The previous session's enclosure work is in §6.3 and §6.4.

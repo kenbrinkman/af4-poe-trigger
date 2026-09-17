@@ -29,6 +29,8 @@ the durable facts and the routing table.
 | `STATUS.md` | **The only live-status doc.** Phase, what you may trust, open items |
 | `aF4-MASTER-REFERENCE.md` | **The record.** Every load-bearing claim tagged with its provenance (measured / datasheet / calculated / asserted). Section-indexed |
 | `.claude/CLAUDE.md` | Durable priming for AI sessions + the routing table |
+| `.claude/settings.json` | Claude Code project settings and hooks — see `docs/git-rules.md` |
+| `tools/` | `tools/section_index.py` — regenerates the master reference's section index |
 | `docs/` | Subsystem references: feeder spec, PCB notes, BOM, assembly guide, enclosure notes, vendor-doc notes, meter test battery, and `docs/git-rules.md` |
 | `firmware/` | `firmware/af4-feeder.yaml` — the ESPHome config as flashed, **source of truth**. `firmware/secrets.yaml` is gitignored |
 | `hardware/enclosure/` | `hardware/enclosure/af4_enclosure_ocp.py` (parametric source, self-checking) and its STEP/STL exports; the printable rev E hat stand-in |

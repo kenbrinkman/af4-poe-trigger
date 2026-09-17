@@ -17,8 +17,8 @@ used to be hand-wired inside it is gone.
 - `hardware/enclosure/aF4-trigger-lid.stl` / `.step` — lid, exported print-side down (flat top on bed)
 - `hardware/enclosure/af4_enclosure_ocp.py` — parametric source (Python/OpenCascade); every dimension
   is a named constant and the script runs a geometry + solid-interference check
-  before it exports. **Needs `cadquery-ocp`, so it runs on Kenny's Mac only** — PyPI is
-  blocked from both session shells.
+  before it exports. **Needs `cadquery-ocp`, so it runs on Kenny's Mac only** — in the
+  `~/.venvs/cad` venv, which Claude Code sessions on the Mac can also use (§9.2).
 - `hardware/enclosure/verify_enclosure.py` — **numpy-only check of the exported STLs** against
   the script's parameters, the measured Olimex parts and the vendor ESP32 mesh. Runs anywhere,
   including a session. Regenerate then verify:
