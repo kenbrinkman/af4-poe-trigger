@@ -91,9 +91,9 @@ one pass.
 - **§9 Repository map** — L1336
   - §9.1 Toolchain constraints worth knowing — L1359
   - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1374
-- **§10 Audit status** — L1413
-  - §10.1 Still unverified after the audit — L1429
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1463
+- **§10 Audit status** — L1414
+  - §10.1 Still unverified after the audit — L1430
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1464
 
 <!-- /SECTION-INDEX -->
 
@@ -1353,7 +1353,7 @@ input, where the output lands at ~10.5 V regardless of R4/R5, and the divider is
 | `pcb/af4-trigger-hat-rev-E-PCBWay.zip` | The all-in-one package. Byte-identical fab data, but **not** the file that was uploaded |
 | `pcb/pcbway-order-YB1800644.md` | Order, quote, EQ and payment record |
 | `tools/section_index.py` | Regenerates this document's section index; `--check` for staleness. Run by Claude Code hooks (§9.2) |
-| `.claude/settings.json` | Claude Code project settings: no commit attribution, secrets unreadable, `git push` asks, section-index hooks (§9.2) |
+| `.claude/settings.json` | Claude Code project settings: no commit attribution, secrets unreadable, `git push` allowed and force pushes ask, section-index hooks (§9.2) |
 | `aF4-protoboard-*.svg`, `archive/rev-c-protoboard/protoboard 20x20.stl` | **Rev C history — do not build from these** |
 
 ### 9.1 Toolchain constraints worth knowing
@@ -1404,8 +1404,9 @@ project. Each line below was checked on the Mac on 2026-09-17.
 - **Validation is not deployment.** The Device Builder copy and its own secrets store are still
   separate and still hand-synced (`.claude/CLAUDE.md` lesson 3). A local `esphome config` pass
   says nothing about what the Device Builder holds.
-- **GitHub is reachable**, but pushing stays with Kenny by choice; `git push` is on the ask
-  list in `.claude/settings.json` (`docs/git-rules.md` §2).
+- **GitHub is reachable**, through git's `osxkeychain` helper and `gh`. Pushing first stayed
+  with Kenny by choice; later on 2026-09-17 it moved to the session. `git push` and
+  `git push origin main` are allowed, force and delete pushes ask (`docs/git-rules.md` §2).
 - **PyPI reachability from the Mac was not tested**; nothing here needed it.
 
 ---

@@ -1,9 +1,9 @@
 # Working with the aF4 git repository
 
-**Rewritten 2026-09-05; §1–§2 and §6 rewritten 2026-09-17** for Claude Code on Kenny's Mac.
+**Rewritten 2026-09-05; §1–§2 and §6 rewritten 2026-09-17; the session pushes since later that day** for Claude Code on Kenny's Mac.
 These apply to every session that touches this folder.
 
-> 🔑 **The short version: commit directly. Kenny runs `git push`. No `commit-*.sh` files.**
+> 🔑 **The short version: commit directly, then `git remote -v` and push. No `commit-*.sh` files.**
 
 **Remote:** `origin` → `https://github.com/kenbrinkman/af4-poe-trigger.git`, branch `main`.
 There are several project repos on this machine — **confirm with `git remote -v` before
@@ -23,18 +23,26 @@ first; even read-only `git status` stranded a lock. The sandbox `$HOME` also hid
 `~/.gitconfig`, hence the repo-local identity. If a session ever runs in that sandbox again,
 both workarounds apply again. A stranded lock is a traffic cone, not data — deleting it is safe.
 
-## 2. Push stays with Kenny
+## 2. The session commits and pushes
 
-The sandbox's egress allowlist blocked GitHub, which is why the split began. Claude Code on
-the Mac *can* reach GitHub (`gh` is logged in), so **this is now a choice, not a limit**, and
-it is kept:
+The sandbox's egress allowlist blocked GitHub, which is why "Kenny pushes" began. Claude Code
+on the Mac reaches GitHub with Kenny's own credentials — git's `osxkeychain` helper holds the
+token and `gh` is logged in as `kenbrinkman` — so on 2026-09-17 the split was dropped:
 
-> **The session commits. Kenny pushes.**
+> **The session commits and pushes.**
 
-`.claude/settings.json` puts `git push` on the **ask** list, so a session cannot push without
-Kenny approving the prompt. The handover is **one command — `git push`** — supplied
-unprompted every time a session commits, with one plain sentence naming the remote, and the
-reminder that **a commit is local until it is pushed.** Run `git remote -v` first.
+Every push, in this order:
+
+1. **Run `git remote -v`** and confirm `origin` is `kenbrinkman/af4-poe-trigger`. The Keychain
+   token has full `repo` scope and can push to *any* of Kenny's repos; this check and the
+   allow list below are the only things that stop a push to the wrong one.
+2. **Push with `git push` or `git push origin main`** — the only two forms on the **allow**
+   list in `.claude/settings.json`. Any other form prompts.
+3. **Report the push output word for word**, including the commit range. If it fails, say so;
+   a commit is local until it is pushed.
+
+`git push --force*`, `git push -f*` and `git push --delete*` stay on the **ask** list: history
+rewrites and branch deletes still need Kenny to approve the prompt. Never bare `--force` (§5).
 
 🚫 **Never go back to generating a `commit-*.sh` per change.** That is the habit this replaces.
 

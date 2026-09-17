@@ -121,6 +121,6 @@ First session in **Claude Code on the Mac**, replacing the Cowork sandbox; no ha
 most "session shell" limits were the sandbox's, and checked what the Mac actually has: KiCad 9.0.7
 with `pcbnew` in its bundled Python, OCP 8.0.1 in `~/.venvs/cad` (`verify_enclosure.py` passed
 again), ESPHome 2026.8.2 (`firmware/af4-feeder.yaml` validates), `gh`, and Home Assistant over MCP.
-Recorded in **§9.2**. Added `.claude/settings.json` (no attribution, secrets unreadable, `git push`
-asks) and `tools/section_index.py`, run by a Stop hook and checked before every commit. Rewrote
+Recorded in **§9.2**. Added `.claude/settings.json` (no attribution, secrets unreadable; the session
+now pushes to `origin main`, force pushes ask) and `tools/section_index.py`, run by a Stop hook and checked before every commit. Rewrote
 `docs/git-rules.md` §1, §2 and §6. The previous session's enclosure work is in §6.3 and §6.4.

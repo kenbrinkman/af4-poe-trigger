@@ -9,7 +9,9 @@
       "Read(./archive/secrets/**)"
     ],
     "ask": [
-      "Bash(git push*)"
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git push --delete*)"
     ],
     "allow": [
       "Bash(git status*)",
@@ -22,7 +24,9 @@
       "Bash(grep *)",
       "Bash(sed -n *)",
       "Bash(python3 tools/section_index.py*)",
-      "Bash(~/.venvs/cad/bin/python verify_enclosure.py*)"
+      "Bash(~/.venvs/cad/bin/python verify_enclosure.py*)",
+      "Bash(git push)",
+      "Bash(git push origin main)"
     ]
   },
   "hooks": {
