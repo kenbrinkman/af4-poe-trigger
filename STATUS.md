@@ -5,20 +5,19 @@ append to it. If it passes ~120 lines, something in it belongs in `aF4-MASTER-RE
 
 ## Phase
 
-**🟡 Boards in transit since 2026-09-14. A design collision found on 2026-09-16 is fixed and the
-new enclosure is exported and verified — but the printed case in hand is the old one and puts the
-hat 0.78 mm into an Olimex capacitor, and the lid label now reads portrait. Both are exported and
-verified; reprint case and lid.** → item 27, §6.3, §6.4
+**🟡 Boards in transit since 2026-09-14. The case and lid are reprinted (2026-09-17) with the
+1.5 mm hat lift that clears the Olimex capacitor and the portrait lid label. Left before the boards
+land: cut the two PoE light pipes to 24.2 mm.** → item 27, §6.3, §6.4
 
 | | |
 |---|---|
 | Boards | PCBWay `YB1800644`, 5 pcs assembled, **shipped 2026-09-14, DHL (DTP)**. No delivery date is published; DHL Express out of China typically runs 3–6 business days, so *roughly* 09-18 to 09-23 — a band, not a commitment. Tracking number deliberately not chased → §A3.2 |
 | Firmware | **Complete and flashed**, bench-verified 2026-09-01 |
 | HA software | **Complete**, verified against the live instance 2026-09-02 |
-| Enclosure | **1.5 mm hat lift, 39.9 mm tall — exported and verified 2026-09-16.** Lid label turned to read portrait (`LID_LABEL_ROT = 180`), re-exported and verified the same day: every script check, all six solid tests, `verify_enclosure.py` ALL CHECKS PASSED including the label raster (rot 180, IoU 0.72). **Reprint both** → item 27 |
+| Enclosure | **Reprinted 2026-09-17** — case at the 1.5 mm hat lift (39.9 mm tall), lid with the portrait label. Both from the exports verified 2026-09-16: every script check, all six solid tests, `verify_enclosure.py` ALL CHECKS PASSED (label rot 180, IoU 0.72). PoE light pipes still to cut → item 27 |
 | Go-live | `input_boolean.reef_af4_schedule_enabled` stays **OFF** until commissioning 6.1–6.8 pass |
 
-**The immediate thread:** reprint case and lid; cut the two PoE light pipes to 24.2 mm. Both can happen before the boards land. When the box arrives, **one bench session still covers items 26, 12 and 16**.
+**The immediate thread:** cut the two PoE light pipes to 24.2 mm — before the boards land. When the box arrives, **one bench session still covers items 26, 12 and 16**.
 
 ## The 2026-09-16 finding in one paragraph
 
@@ -55,7 +54,10 @@ pin in any orientation. Full record in **§6.3**.
 
 ## What you may not trust
 
-- ⚠️ **The printed case in hand.** Pre-lift. Do not assemble into it. → item 27
+- ⚠️ **The old pre-lift case**, if it is still around. Do not assemble into it. The reprint is
+  the one to use. → item 27
+- **The reprinted case has not been dry-fitted.** It is printed from verified exports, but the
+  0.72 mm cap clearance is first physically checked at the item-12 dry-fit.
 - **The enclosure scripts run only on the Mac**, in `~/.venvs/cad`, and need the OCP 8
   compatibility block now in both. Claude Code sessions run there too. → §9.2
 - **Pin engagement of ~4.3 mm is calculated, not felt.** Check the hat's grip on the headers at
@@ -90,7 +92,7 @@ pin in any orientation. Full record in **§6.3**.
 
 | # | Item | Blocks |
 |---|---|---|
-| 27 | **Reprint case and lid** — exported and verified 2026-09-16; §6.3 lift, §6.4 label. Cut the PoE light pipes at 24.2 mm (hat pipes unchanged, 10.1). Move the hat up 1.5 mm in Tinkercad | **Assembly** — the case in hand collides |
+| 27 | **Case and lid reprinted 2026-09-17.** Still open: cut the PoE light pipes at 24.2 mm (hat pipes unchanged, 10.1); move the hat up 1.5 mm in Tinkercad | **Assembly** — light pipes only |
 | 26 | **Inspect all five on arrival and pick the best board** — check the J3/J4 face on each. Reflow the two pin-10 joints, clean with IPA, loupe the ten J3 joints | **The first thing when the box lands** |
 | 12 | **Solder two 1×10 male headers into EXT1/EXT2, pins up, plastic on the top face.** Shave the pin-10 end of the EXT2 plastic if it binds on DCDC1. Same bench session as 26 and 16 | **Assembly** |
 | 16 | **Rotate `af4_ota_password` during the item-12 serial flash**, then delete the old value from `firmware/secrets.yaml` **and** the Device Builder Secrets editor | No — but a live exposure |
@@ -117,10 +119,7 @@ pin in any orientation. Full record in **§6.3**.
 
 ## Last session — 2026-09-17
 
-First session in **Claude Code on the Mac**, replacing the Cowork sandbox; no hardware work. Found
-most "session shell" limits were the sandbox's, and checked what the Mac actually has: KiCad 9.0.7
-with `pcbnew` in its bundled Python, OCP 8.0.1 in `~/.venvs/cad` (`verify_enclosure.py` passed
-again), ESPHome 2026.8.2 (`firmware/af4-feeder.yaml` validates), `gh`, and Home Assistant over MCP.
-Recorded in **§9.2**. Added `.claude/settings.json` (no attribution, secrets unreadable; the session
-now pushes to `origin main`, force pushes ask) and `tools/section_index.py`, run by a Stop hook and checked before every commit. Rewrote
-`docs/git-rules.md` §1, §2 and §6. The previous session's enclosure work is in §6.3 and §6.4.
+Kenny reported the case and lid reprinted; recorded against item 27 in `STATUS.md` and the §8
+registry, with a line in §6.4. No hardware verification in-session. Earlier the same day: first
+session in **Claude Code on the Mac** (toolchain checked and recorded in **§9.2**; settings, hooks
+and `tools/section_index.py` added; `docs/git-rules.md` §1, §2, §6 rewritten).

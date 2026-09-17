@@ -1186,7 +1186,7 @@ the two jacks on the left**, per a mockup. In the enclosure frame, looking down 
 is text reading along −X with its top toward −Y: `LID_LABEL_ROT = 180` (the old layout was the
 equivalent of 90). Same size, depth and centre; the block now runs across the lid, and the script
 asserts its clearance to the lid edge (9.8 mm), the boss counterbores (11.6) and the sight holes
-(22.0). **The lid now needs reprinting as well as the case.** → item 27
+(22.0). **The lid now needs reprinting as well as the case.** Reprinted with the case 2026-09-17. → item 27
 
 `verify_enclosure.py` gained check 6, which exists because a rotation is the kind of change
 nobody can verify by reading numbers: it rasterises the engraving out of the exported lid STL at
@@ -1300,7 +1300,7 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 24 | **Move the J3/J4 footprints to `B.Cu`** (silkscreen to `B.SilkS`) in `pcb/gen_pcb.py`, rewrite the `PCBWay-README.txt` ASSEMBLY line to name the face by designator, and add the THT parts to the centroid with a side column. The fix for the *cause* of item 23, as opposed to this run's rework | No — but it is the only thing that stops item 23 recurring |
 | 25 | **D3/D5 LED polarity is unverified on the built boards.** 0805 water-clear packages show no cathode mark at either photo set's resolution. Referred to PCBWay 2026-09-11, then **explicitly released on 2026-09-12** so the question could not hold the EQ open. It now falls to commissioning 6.1 / 6.5. Low consequence either way: a reversed indicator fails to light and does not touch the trigger path | No — resolves at commissioning |
 | 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1, and **check the J3/J4 mounting face on every board**: only the reworked sample was ever photographed (§A3.2). Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
-| 27 | **Reprint the case and the lid.** The case for the 1.5 mm hat lift (§6.3); the lid for the portrait label (§6.4). Both re-exported on the Mac 2026-09-16 and verified: every script check, all six solid tests, and `verify_enclosure.py` including check 6 (label reads rot 180, IoU 0.72). Also cut the two PoE light pipes to 24.2 mm, and move the hat up 1.5 mm in the Tinkercad model | **YES** — the printed case in hand puts the hat into the cap |
+| 27 | **Case and lid reprinted 2026-09-17** (Kenny) from the exports verified on the Mac 2026-09-16: the case for the 1.5 mm hat lift (§6.3), the lid for the portrait label (§6.4). **Still open:** cut the two PoE light pipes to 24.2 mm (hat pipes unchanged, 10.1), and move the hat up 1.5 mm in the Tinkercad model. The pre-lift case is retired — do not assemble into it | **Assembly** — the PoE light pipes only; the enclosure itself no longer blocks |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
 
