@@ -15,42 +15,41 @@ five as built, leave J1 fitted and dead, and bring 12 V in through a panel-mount
 | Boards | **In hand, 5 pcs.** Electrically as designed; only the 12 V plug interface is unreachable. Not yet inspected → item 26 |
 | Firmware | **Complete and flashed**, bench-verified 2026-09-01. Unaffected |
 | HA software | **Complete**, verified against the live instance 2026-09-02. Unaffected |
-| Enclosure | **Script changed and re-verified 2026-09-18** — old J1 hole removed, panel jack added, cable tie post added. **The case must be reprinted** (item 29). ✅ **The lid does not** — its STL is byte-identical, so the 09-17 lid print still stands |
+| Enclosure | **Script changed and re-verified 2026-09-18** — old J1 hole removed, keyed D-hole for the panel jack added, cable tie post added. **The case must be reprinted** (item 29). ✅ **The lid does not** — `aF4-trigger-lid.stl` is byte-identical to the commit the 09-17 lid was printed from, verified not assumed |
+| 12 V wiring | **Soldered 2026-09-18** to J1's pad tails — red to pin 1, black to pin 2, pin 3 bare. ⚠️ **Polarity not yet confirmed with a meter** |
 | Go-live | `input_boolean.reef_af4_schedule_enabled` stays **OFF** until commissioning 6.1–6.8 pass |
 
 **Nothing is on order and nothing is waiting.** Item 28 opened and closed the same day: the
 panel jack came out of the parts drawer — six **DALQUIS DC-099**, the part rev C already used —
 was calipered, and the case geometry is set to the real part. **The case can be printed now.**
 
-1. **Print the case** (item 29). The **lid is unchanged** — its STL is byte-identical, so the
-   09-17 lid print still stands.
-2. **At the bench, in parallel:** items **26**, **12** and **16** are the session already
+1. **Confirm the 12 V polarity with a meter** — black tail to **TP4 is a dead short**. Ten
+   seconds, and it is the only thing that settles it. ⚠️ Never the mirror test on red against
+   TP1: F1 and D1 make a *correct* board read a diode drop.
+2. **Print the case** (item 29). The **lid is unchanged**; print the case only.
+3. **At the bench, in parallel:** items **26**, **12** and **16** are the session already
    planned, plus cutting the two PoE light pipes to 24.2 mm (item 27 — pipe lengths unchanged).
 
 ## The 2026-09-18 finding in one paragraph
 
-`pcb/gen_pcb.py` places J1 at rotation **270**. CUI's own STEP model puts the Ø5.5 bore at
-footprint-local **y +10.32**, which at rot 270 aims it at board **x 133.68** — the middle of the
-hat — leaving the blank back face 0.87 mm inside the board edge. **J2 is correct at rot 90**; the
-two connectors needed the same handedness and got opposite rotations. **The part cannot be
-re-seated:** its pins sit at local x = 0, −3.2, −8.5, and no rotation or bottom-side fit maps
-gaps of 3.2 and 5.3 onto themselves. A second, independent error surfaced on the same part: the
-enclosure's `J1_Y = -116.56` was the jack **body** centre, not its bore axis (−117.81), so the
-wall hole was 1.25 mm off against 0.95 mm of slack — the plug would have fouled the wall even
-facing the right way. **Three checks appeared to cover this and all three were hollow**; the
-table in §A4 says how each one failed to ask the question.
+`pcb/gen_pcb.py` places J1 at rotation **270**, which aims CUI's bore at board **x 133.68** — the
+middle of the hat. **J2 is correct at rot 90**; the two connectors needed the same handedness.
+**The part cannot be re-seated:** its pins sit at local x = 0, −3.2, −8.5, and no rotation maps
+gaps of 3.2 and 5.3 onto themselves. A second error surfaced on the same part — the enclosure's
+`J1_Y` was the jack **body** centre, not its bore axis, so the hole was 1.25 mm off against
+0.95 mm of slack. **Three checks appeared to cover this and all three were hollow.** → §A4
 
 ## What you may trust
 
-- **The DC-099's barrel, flat and nut** — calipered 2026-09-18: barrel Ø11.50 with a flat at
-  10.50, flange 1.50 thick, nut 3.00 thick / 14.00 across flats / 15.80 across corners. The wall
-  hole is a **D, flat up**, with a 1.00 mm key. **Red is +12 V, black is −.** → §A4
-- **The J1 diagnosis** — read from `pcb/gen_pcb.py`, `pcb/af4-trigger-hat.kicad_pcb` and CUI's
-  STEP model, not from the photograph. → §A4
-- **The pad identification on the hat's underside.** Three tails in a row at board x 144; **the
-  wider gap is on the ground side**. GND (pad 2) nearest the board edge, 5.3 mm to the switch
-  contact (pad 3, unconnected), 3.2 mm to +12 V (pad 1), nearest J2. **GND tail to TP4 is a dead
-  short — confirm that way.** ⚠️ Never against TP1: F1 and D1 make a correct board read a diode drop.
+- **The lid needs no reprint** — `aF4-trigger-lid.stl` checked byte-for-byte against commit
+  `29f1682`, the state the 09-17 lid was printed from. Unchanged since `5cb4b7b`. → §A4
+- **The J1 diagnosis and the DC-099's calipered dimensions** — the first read from the design
+  sources and CUI's STEP model rather than the photograph, the second from the part. Both in §A4
+  with their provenance. **Red is +12 V, black is −.**
+- **The pad identification on the hat's underside** — corroborated by Same Sky's own PCB layout
+  drawing, whose published gaps are exactly our footprint's. **The wider gap is the ground side**,
+  in both the pin and the shield-tab column; **pin 1 is in the tight pair with pin 3**. Confirm on
+  the bench as **GND tail → TP4, a dead short**; ⚠️ never as red against TP1. → §A4
 - **The enclosure at its new geometry**, re-run on the Mac 2026-09-18: every scalar check passes,
   all ten solid tests read 0 mm³, and `verify_enclosure.py` passes independently — including the
   new check that the **old J1 hole is closed** in the printed mesh. External size unchanged at
@@ -66,11 +65,14 @@ table in §A4 says how each one failed to ask the question.
 
 ## What you may not trust
 
-- ⚠️ **Two `PJ_*` dimensions are still upper bounds, not measurements** — the DC-099's flange Ø
-  and body Ø. Both only feed the clearance envelope, which the nut's 15.80 mm across-corners
-  dominates, and anything up to Ø20 passes. Everything that shapes the printed hole is calipered.
-- **Thread length (9.00) and overall length (20.00) are from the vendor drawing**, not calipers.
-  The drawing was ambiguous; a measured 11.5 mm barrel is what resolved it. → §A4
+- ⚠️ **The 12 V polarity is soldered but unverified.** Photograph and datasheet both agree it is
+  right; neither is a meter. Not dangerous either way — D1 blocks a reversal, so the symptom
+  would be D3 dark at 6.1, not damage. → §A4
+- ⚠️ **Whichever board carries the wires is now the build board by default**, and item 26's
+  inspection of all five has not happened yet. If that board fails inspection, the wires move.
+- **Four `PJ_*` values are not calipered:** flange Ø and body Ø are assumed upper bounds, thread
+  and overall length come from the vendor drawing. None shapes the printed hole and none gates a
+  check; the script names them on every run. → §A4
 - ⚠️ **The 2026-09-17 case print is retired** — it has the old J1 hole and no panel-jack hole. The
   **lid** from that print is still good.
 - **The 0.72 mm cap clearance and the ~4.3 mm pin engagement are still calculated, not felt.**
@@ -88,6 +90,9 @@ table in §A4 says how each one failed to ask the question.
 
 ## Standing corrections — settled, do not re-raise
 
+- 🚫 **Never route the 12 V leads across the hat's right-hand edge.** 0.50 mm between the hat
+  edge and the inner wall; a lead there is crushed by the lid, invisibly. Down into the void,
+  then along the floor. → §A4
 - 🚫 **Do not remove J1, and do not try to plug anything into it.** It stays fitted and dead on
   every board; D1 and C1 block its bore anyway. → §A4
 - 🚫 **The J1 error is ours, not PCBWay's** — same family as J3/J4. No complaint, no credit
@@ -123,14 +128,10 @@ table in §A4 says how each one failed to ask the question.
 
 ### Carried to the next board revision
 
-- **J1 to rotation 90**, body re-placed so the nose overhangs — a re-layout of that corner, not a
-  nudge. **Both jack datums from the vendor STEP**, bore axis and bore face. → §A4
-- **J3/J4 footprints onto `B.Cu`** (item 24).
-- **Keep the hat's bottom face clear over enclosure x 111.5–118.5, y −161.5 to −155** — the
-  Olimex cap sits there. A notch would let a future rev drop the 1.5 mm lift.
-- **C1 replacement** — `GRM31CR61H106KA12L` is EOL with no stock on the substitutes.
-- **R5 to 0.25 W** (item 18). **J1/J2 sourcing** — consider LCSC-stocked parts.
-- **Fab notes: give slot widths as the full set**, and consider separate PTH/NPTH drill files.
+**§A4 holds the full list**, headed by J1 to rotation 90 with its corner re-laid out, and both
+jack datums taken from the vendor STEP rather than by hand. Unchanged from before: J3/J4
+footprints onto `B.Cu` (item 24), the hat's underside kept clear over the Olimex cap, C1's EOL
+replacement, R5 to 0.25 W (item 18), J1/J2 sourcing, and the fab-note fixes.
 
 ## Last session — 2026-09-18
 
@@ -141,4 +142,6 @@ route — hat used as built, panel jack in the +X wall — into `af4_enclosure_o
 `verify_enclosure.py`, corrected `af4_hat_dummy_ocp.py`, and recorded it as §A4 with items 28
 and 29. Then item 28 closed the same day: the jack was already in stock, and calipering it
 revealed a **flat on the barrel**, which replaced the printed anti-rotation scheme with a keyed
-D-hole and deleted the `hex_x` helper. Exports regenerated; the case changes, the lid does not.
+D-hole and deleted the `hex_x` helper. Exports regenerated. Kenny then soldered the 12 V pair to
+J1's pad tails, re-running them inboard once the 0.50 mm edge clearance was pointed out, and the
+lid was confirmed byte-identical to the 09-17 print rather than taken on trust.

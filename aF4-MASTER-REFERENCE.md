@@ -53,49 +53,49 @@ one pass.
   - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L266
   - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L314
   - §A4 J1, the 12 V barrel jack, faces inboard on all five boards `[CAD] 2026-09-18` — L360
-- **§1 What the system must do** — L514
-  - §1.1 Requirements — L522
-  - §1.2 Measured facts about the port — L533
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L550
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L590
-- **§2 Circuit** — L619
-  - §2.1 Regulator — the calculation that matters — L666
-  - §2.2 Load on the 10.4 V rail — L699
-  - §2.3 PhotoMOS drive — L750
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L775
-  - §2.5 Protection — L817
-  - §2.6 Indicator LEDs — L840
-- **§3 Bill of materials — with verification status** — L874
-  - §3.1 Sourcing traps recorded — L903
-  - §3.2 Bought separately (not on the board) — L911
-- **§4 Board** — L919
-  - §4.1 Geometry from vendor CAD `[CAD]` — L937
-  - §4.2 Verification status of the board — L947
-  - §4.3 Isolation — L969
-  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L982
-- **§5 Firmware** — L1017
-  - §5.1 The safety architecture — L1023
-  - §5.2 Timing check against the spec `[CALC]` — L1040
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1060
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1084
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1095
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1113
-  - §5.7 Home Assistant integration — L1124
-- **§6 Enclosure** — L1196
-  - §6.1 The vertical stack — the governing dimension — L1204
-  - §6.2 Two details that are easy to lose — L1239
-  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1257
-  - §6.4 Lid label turned to read portrait `2026-09-16` — L1370
-- **§7 Errors already found and fixed** — L1390
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1425
-- **§8 Open items** — L1445
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1496
-- **§9 Repository map** — L1527
-  - §9.1 Toolchain constraints worth knowing — L1550
-  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1565
-- **§10 Audit status** — L1607
-  - §10.1 Still unverified after the audit — L1623
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1657
+- **§1 What the system must do** — L556
+  - §1.1 Requirements — L564
+  - §1.2 Measured facts about the port — L575
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L592
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L632
+- **§2 Circuit** — L661
+  - §2.1 Regulator — the calculation that matters — L708
+  - §2.2 Load on the 10.4 V rail — L741
+  - §2.3 PhotoMOS drive — L792
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L817
+  - §2.5 Protection — L859
+  - §2.6 Indicator LEDs — L882
+- **§3 Bill of materials — with verification status** — L916
+  - §3.1 Sourcing traps recorded — L945
+  - §3.2 Bought separately (not on the board) — L953
+- **§4 Board** — L961
+  - §4.1 Geometry from vendor CAD `[CAD]` — L979
+  - §4.2 Verification status of the board — L989
+  - §4.3 Isolation — L1011
+  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L1024
+- **§5 Firmware** — L1059
+  - §5.1 The safety architecture — L1065
+  - §5.2 Timing check against the spec `[CALC]` — L1082
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1102
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1126
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1137
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1155
+  - §5.7 Home Assistant integration — L1166
+- **§6 Enclosure** — L1238
+  - §6.1 The vertical stack — the governing dimension — L1246
+  - §6.2 Two details that are easy to lose — L1281
+  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1299
+  - §6.4 Lid label turned to read portrait `2026-09-16` — L1412
+- **§7 Errors already found and fixed** — L1432
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1467
+- **§8 Open items** — L1487
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1538
+- **§9 Repository map** — L1569
+  - §9.1 Toolchain constraints worth knowing — L1592
+  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1607
+- **§10 Audit status** — L1649
+  - §10.1 Still unverified after the audit — L1665
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1699
 
 <!-- /SECTION-INDEX -->
 
@@ -499,6 +499,48 @@ wall the flange clamps.
 
 **Fit the jack before the boards go in.** The nut is 14 mm across flats and wants a spanner or
 fingers inside an otherwise empty box.
+
+#### The wiring, as executed `2026-09-18`
+
+Kenny soldered the DC-099's leads to J1's pad tails on the hat's underside the same day:
+**red to pin 1 (`+12V_RAW`), black to pin 2 (`GNDP`), pin 3 left bare.** Re-soldered once so
+the leads exit **inboard** rather than across the board's right-hand edge — see the routing
+constraint below.
+
+**The pad identification is corroborated by Same Sky's own PCB layout drawing**, which is worth
+recording because it is an independent source from the footprint: the drawing gives **5.30 and
+3.20** down the pin column and **6.20 and 3.60** down the shield-tab column, and our footprint
+has exactly those gaps. Two consequences:
+
+- **Pin 1 sits in the tight pair with pin 3; pin 2 is the far one.** The wide gap is the ground
+  side, in both columns, on the low-y side of the board.
+- The tab column gives a **second, independent read** of which way round the part is, using
+  features that carry no wires. If the pin row is ever ambiguous under solder, read the tabs.
+
+⚠️ **Polarity is not confirmed until the meter says so.** The photograph agrees and the drawing
+agrees, but the deciding test is **black tail → TP4 reads a dead short**. Do not attempt the
+mirror test on red against TP1: F1 and D1 sit between them, so a *correct* board reads a diode
+drop and looks like a fault. A reversal is not destructive — D1 is a series Schottky and blocks
+it — so the failure mode is D3 staying dark at commissioning 6.1, not damage.
+
+#### Routing: the 0.50 mm you cannot see
+
+🚫 **The 12 V leads must never cross the hat's right-hand edge.** `HAT_X1` is 146.15 and `IX1`
+is 146.65: **0.50 mm**, and the enclosure script asserts exactly that gap. A wire laid over that
+edge is crushed when the lid goes on, and the damage is invisible from outside.
+
+Take the leads straight **down** off the pad tails into the void beneath the hat, then along the
+floor to the tie post and the jack. There is room: the pads sit at board x 144, **26 mm outboard
+of the ESP32's right edge**, so nothing is under them but ~20 mm of air between J1's 3.4 mm pin
+drop and the case floor at z −9.50.
+
+#### The lid does not change
+
+✅ Verified rather than assumed, 2026-09-18: `aF4-trigger-lid.stl` is **byte-for-byte identical**
+to its state at commit `29f1682`, which is what the 2026-09-17 lid was printed from — unchanged
+since `5cb4b7b`, the portrait-label commit. Every change in this section is +X wall and floor
+geometry. The case's external envelope is unchanged at 65.2 × 117.0 × 39.9 mm, so the existing
+lid still mates. **Print the case only.**
 
 #### Carried to rev F
 

@@ -113,6 +113,11 @@ Meter, board unpowered: **the +12 V pad tail to J2 sleeve should read open**
 (the PhotoMOS is off and the LM1117 is unpowered). Between the 12 V test pad and
 GND you will read the reverse-polarity diode, not a short.
 
+🚫 **Route the 12 V leads DOWN, never across the hat's right-hand edge.** There is **0.50 mm**
+between the hat edge (x 146.15) and the case's inner wall (146.65) — a lead laid over it is
+crushed by the lid and the damage cannot be seen from outside. Drop straight off the pads into
+the void beneath the hat, then along the floor to the tie post and the panel jack.
+
 **Identifying the two pad tails on the hat's underside.** J1's three tails sit in
 a row at board x 144. The spacing is asymmetric and that is the key — **the wider
 gap is on the ground side**: nearest the board's own edge is **GND** (pad 2), then
