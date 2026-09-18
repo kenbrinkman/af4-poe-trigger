@@ -179,19 +179,22 @@ the script will tell you if anything now collides.
 | Wall-mount screws | 2 | #8 or M4, into the tabs |
 
 ⚠️ **This stopped being true on 2026-09-18.** Rev E's J1 came back rotated 180°,
-so the 12 V input is now a **panel-mount jack** in the +X wall at (y −172.50,
-z +6.00), wired back to J1's pad tails on the hat's underside, with a cable tie
-post on the floor at (143.00, −162.50) and a polarised inline connector in the
-run. The old J1 penetration is gone and the wall is solid there. What still holds:
+so the 12 V input is now a **DALQUIS DC-099 panel-mount jack** in the +X wall at
+(y −172.50, z +6.00), wired back to J1's pad tails on the hat's underside, with a
+cable tie post on the floor at (143.00, −161.50). Its barrel carries a **flat**,
+so the wall hole is a **D, flat up** — Ø11.90 bored with the wall put back 4.95 mm
+above the axis, leaving a 1.00 mm key. Flat up also makes the roof a flat bridge,
+so this is the one wall hole that needs no teardrop crown. The old J1 penetration is gone and the wall is solid there. What still holds:
 the RJ45 and the 3.5 mm trigger jack pass through walls and are soldered to a
 board. → §A4, and items 28 and 29.
 
 ## Assembly order
 
-1. Print both parts. Fit the 12 V panel jack into its +X wall hole and test-fit
-   a 3.5 mm plug into the trigger hole **before** going further — a light chase
-   with a round file is normal. ⚠️ The +X wall has **no barrel hole** any more;
-   if the print has one it is the retired 09-17 case (§A4).
+1. Print the case (the 09-17 lid still fits). Fit the DC-099 **flat up** into
+   its D-hole and **tighten the 14 mm nut now, while the box is empty**, and
+   test-fit a 3.5 mm plug into the trigger hole — a light chase with a round file
+   is normal. ⚠️ The +X wall has **no round barrel hole** any more; if the print
+   has one it is the retired 09-17 case (§A4).
 2. Fit the ESP32-POE-ISO onto its three standoffs, RJ45 into the wall opening,
    3 × M2. **This has to happen first** — the hat covers two of its screws.
 3. Solder two 1 × 10 male headers into EXT1/EXT2, pins up, if not already done.

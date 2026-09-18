@@ -178,7 +178,7 @@ def main():
             ("J2 3.5 mm", P["J2_Y"], P["J2_AXIS_Z"], P["J2_HOLE_D"],
              P["IX1"] - 0.5),
             ("12 V panel", P["PJ_Y"], P["PJ_AXIS_Z"], P["PJ_HOLE_D"],
-             P["IX1"] - P["PJ_PAD_T"] - 0.5)):
+             P["IX1"] - 0.5)):
         pts = []
         for x in np.arange(x0, P["OX1"] + 0.5, 0.25):
             for ang in np.linspace(0, 2 * math.pi, 16, endpoint=False):

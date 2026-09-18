@@ -156,41 +156,48 @@ J2_HOLE_D = 6.6          # 6.0 mm nose + 0.3 clearance per side
 PJ_Y      = -172.50
 PJ_AXIS_Z = 6.00
 
-# THE JACK ITSELF IS NOT YET IN HAND. Every dimension below is a placeholder for
-# a common M8-thread 5.5 x 2.5 mm panel jack. Lesson 13 applies literally here —
-# a clearance check is only as good as the number it checks against. MEASURE THE
-# PART, set these five, set PJ_DIMS_VERIFIED, re-run, and only then print.
-PJ_THREAD_D = 8.00       # threaded barrel diameter          [UNVERIFIED]
-PJ_THREAD_L = 7.00       # thread length behind the flange   [UNVERIFIED]
-PJ_FLANGE_D = 11.00      # flange that seats on the wall     [UNVERIFIED]
-PJ_BODY_D   = 10.00      # body diameter behind the wall     [UNVERIFIED]
-PJ_BODY_L   = 14.00      # how far it protrudes inboard      [UNVERIFIED]
-PJ_NUT_T    = 1.60       # supplied nut thickness            [UNVERIFIED]
-PJ_DIMS_VERIFIED = False
+# THE PART: DALQUIS DC-099, 5.5 x 2.5 mm, 10 A, threaded panel mount, with
+# 150 mm of 18 AWG pre-soldered leads -- RED IS +12 V, BLACK IS -, recorded on
+# both rev C protoboard diagrams in archive/. Six in hand; rev C used this same
+# part before the hat existed. Calipered by Kenny 2026-09-18 except as marked.
+PJ_BARREL_D = 11.50      # threaded barrel, full diameter         [MEAS]
+PJ_FLAT_H   = 10.50      # flat face to the opposite arc          [MEAS]
+PJ_FLANGE_T =  1.50      # flange thickness                       [MEAS]
+PJ_NUT_T    =  3.00      # nut thickness                          [MEAS]
+PJ_NUT_AF   = 14.00      # nut across flats                       [MEAS]
+PJ_NUT_AC   = 15.80      # nut across corners                     [MEAS]
+PJ_THREAD_L =  9.00      # [VENDOR DRAWING] The drawing gives 2 + 9 + 9 against
+                         # a stated 20 mm overall. The competing reading -- that
+                         # the two 9s are diameters -- is ruled out by the
+                         # calipered 11.5 mm barrel, so these are axial.
+PJ_BODY_L   = 20.00      # [VENDOR DRAWING] overall length. Worst case: the
+                         # whole part sitting inboard of the wall.
+PJ_FLANGE_D = 16.00      # [ASSUMED UPPER BOUND] not calipered. Both only feed
+PJ_BODY_D   = 13.00      # [ASSUMED UPPER BOUND] the clearance envelope, which
+                         # the nut's 15.8 across-corners dominates anyway.
+                         # Anything up to Ø20 still passes every check.
+PJ_DIMS_VERIFIED = True
 
-# RETENTION. The baseline is the jack's own nut on the plain 3.0 mm wall: a
-# 7 mm thread leaves 4.0 mm for a 1.6 mm nut, so nothing has to be added and
-# nothing rests on a guessed number. Anti-rotation is opt-in and comes as a
-# PAIR, because a nut pocket on its own would eat the wall the flange clamps:
-#   PJ_PAD_T   thickens the wall locally from the inside (a Ø PJ_PAD_D boss)
-#   PJ_NUT_AF  sinks the nut into that pad, vertex-up so the pocket roof is
-#              self-supporting; the nut then cannot turn and the jack is
-#              tightened from outside without twisting the cable.
-# Set BOTH once the nut is measured. The thread check below polices the
-# combination and fails if pad plus pocket outruns the thread.
-PJ_PAD_D  = 16.00
-PJ_PAD_T  = 0.00         # 0 = no pad; try 2.00 together with a nut pocket
-PJ_NUT_AF = None         # nut across-flats, or None for no pocket
-
-PJ_HOLE_D   = PJ_THREAD_D + 0.40
-PJ_POCKET_T = (PJ_NUT_T + 0.30) if PJ_NUT_AF else 0.0
-PJ_CLAMP_T  = WALL + PJ_PAD_T - PJ_POCKET_T   # plastic the flange clamps
+# RETENTION. The barrel carries a FLAT, so the part keys itself and no captive
+# nut is needed: flange outside, 3.0 mm wall, nut inside, 9 - 3 - 3 = 3.0 mm of
+# thread to spare. The wall hole is a D with the FLAT UP, which also makes its
+# roof a flat bridge rather than a curved overhang -- so unlike J2 this hole
+# needs no teardrop crown, and its envelope stays inside Ø11.9 where any
+# plausible flange covers it.
+#
+# The pad-and-captive-hex-pocket scheme this block carried until the part was
+# measured is gone. The manufacturer's flat does that job better, and the hex
+# pocket would have eaten the wall the flange clamps.
+PJ_FIT      = 0.40                                   # printed-hole clearance
+PJ_HOLE_D   = PJ_BARREL_D + PJ_FIT                   # 11.90
+PJ_FLAT_Z   = (PJ_FLAT_H + PJ_FIT) - PJ_HOLE_D / 2   # 4.95 above the axis
+PJ_ENV_D    = max(PJ_BODY_D, PJ_FLANGE_D, PJ_NUT_AC)
 
 # CABLE TIE POST. The 12 V pair is soldered to J1's pad tails on the hat's
 # underside, which is the weakest joint in the whole repair. Anchor the cable
 # here, between the jack and the hat, so nothing can pull on those tails.
-TIE_X, TIE_Y = 143.00, -162.50
-TIE_W, TIE_T, TIE_H = 8.0, 2.4, 6.0     # along y, along x, above the floor
+TIE_X, TIE_Y = 143.00, -161.50
+TIE_W, TIE_T, TIE_H = 7.0, 2.4, 6.0     # along y, along x, above the floor
 TIE_SLOT_W, TIE_SLOT_H, TIE_SLOT_Z = 4.0, 2.2, 2.0
 
 # --- mounts ----------------------------------------------------------------
@@ -310,18 +317,6 @@ def teardrop_x(cy, cz, x0, x1, d, cap=TD_CAP):
     f = BRepBuilderAPI_MakeFace(mw.Wire()).Face()
     tri = BRepPrimAPI_MakePrism(f, gp_Vec(ln, 0, 0)).Shape()
     return fuse(s, tri)
-
-def hex_x(cy, cz, x0, ln, af):
-    """Hex pocket along +X, VERTEX UP so its roof is self-supporting in a
-    z-up print. `af` is across-flats; the circumradius is af/sqrt(3)."""
-    r = af / math.sqrt(3)
-    pts = [gp_Pnt(x0, cy + r * math.sin(math.radians(60 * i)),
-                  cz + r * math.cos(math.radians(60 * i))) for i in range(6)]
-    mw = BRepBuilderAPI_MakeWire()
-    for i in range(6):
-        mw.Add(BRepBuilderAPI_MakeEdge(pts[i], pts[(i + 1) % 6]).Edge())
-    f = BRepBuilderAPI_MakeFace(mw.Wire()).Face()
-    return BRepPrimAPI_MakePrism(f, gp_Vec(ln, 0, 0)).Shape()
 
 def fillet_vertical_edges(shape, r):
     mk = BRepFilletAPI_MakeFillet(shape)
@@ -477,15 +472,13 @@ case = cut(case, box(104.5, IY0 - WG_D, 14.8, 113.9, IY0 + 0.01, 17.0))
 # absent — see the 2026-09-18 change note at the top of this file.
 case = cut(case, teardrop_x(J2_Y, J2_AXIS_Z, IX1 - 1, OX1 + 1, J2_HOLE_D))
 
-# +X wall: the 12 V panel jack. Optional inside pad first, then the bore, then
-# the optional vertex-up hex pocket that captures the nut. Order matters.
-if PJ_PAD_T > 0:
-    case = fuse(case, cyl_x(PJ_Y, PJ_AXIS_Z, IX1 - PJ_PAD_T, PJ_PAD_T, PJ_PAD_D))
-case = cut(case, teardrop_x(PJ_Y, PJ_AXIS_Z, IX1 - PJ_PAD_T - 1, OX1 + 1,
-                            PJ_HOLE_D))
-if PJ_NUT_AF:
-    case = cut(case, hex_x(PJ_Y, PJ_AXIS_Z, IX1 - PJ_PAD_T - 0.01,
-                           PJ_POCKET_T + 0.01, PJ_NUT_AF + 0.40))
+# +X wall: the 12 V panel jack. A D-hole keyed to the barrel's flat, FLAT UP:
+# bore it round, then put the wall back above the flat plane. Flat up means the
+# roof is a flat bridge, so this hole wants no teardrop.
+case = cut(case, cyl_x(PJ_Y, PJ_AXIS_Z, IX1 - 1, (OX1 - IX1) + 2, PJ_HOLE_D))
+_fy = PJ_HOLE_D / 2 + 0.50
+case = fuse(case, box(IX1, PJ_Y - _fy, PJ_AXIS_Z + PJ_FLAT_Z,
+                      OX1, PJ_Y + _fy, PJ_AXIS_Z + _fy))
 
 # cable tie post on the floor, between the panel jack and the hat
 case = fuse(case, box(TIE_X - TIE_T / 2, TIE_Y - TIE_W / 2, IZ0,
@@ -585,10 +578,15 @@ ok &= clear("J2 nose recess inside outer face", OX1 - J2_NOSE_X, 0.5)
 if not PJ_DIMS_VERIFIED:
     print("  [WARN] panel jack dimensions are PLACEHOLDERS — measure the part,"
           " set PJ_DIMS_VERIFIED, re-run, then print")
-PJ_ENV_D = max(PJ_BODY_D, PJ_FLANGE_D, PJ_PAD_D if PJ_PAD_T > 0 else 0.0)
-ok &= clear("panel jack thread reaches its nut",
-            PJ_THREAD_L - (PJ_CLAMP_T + PJ_NUT_T), 0.50)
-ok &= clear("wall left under the jack flange", PJ_CLAMP_T, 2.00)
+else:
+    print("  [note] panel jack: barrel, flat and nut are calipered; thread and"
+          " overall length are from the vendor drawing; flange and body"
+          " diameters are assumed upper bounds (see the PJ_ block)")
+ok &= clear("panel jack thread past the wall and nut",
+            PJ_THREAD_L - (WALL + PJ_NUT_T), 0.50)
+ok &= clear("wall left under the jack flange", WALL, 2.00)
+ok &= clear("D-hole flat leaves a real key", PJ_HOLE_D / 2 - PJ_FLAT_Z, 0.50)
+ok &= clear("flange covers the D-hole", (PJ_FLANGE_D - PJ_HOLE_D) / 2, 1.00)
 ok &= clear("panel jack to hat near edge", HAT_Y0 - (PJ_Y + PJ_ENV_D / 2), 2.00)
 ok &= clear("panel jack to the -Y lid boss",
             (PJ_Y - PJ_ENV_D / 2) - (IY0 + LB_IN + LID_BOSS_D / 2), 2.00)

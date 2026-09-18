@@ -53,49 +53,49 @@ one pass.
   - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L266
   - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L314
   - §A4 J1, the 12 V barrel jack, faces inboard on all five boards `[CAD] 2026-09-18` — L360
-- **§1 What the system must do** — L481
-  - §1.1 Requirements — L489
-  - §1.2 Measured facts about the port — L500
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L517
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L557
-- **§2 Circuit** — L586
-  - §2.1 Regulator — the calculation that matters — L633
-  - §2.2 Load on the 10.4 V rail — L666
-  - §2.3 PhotoMOS drive — L717
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L742
-  - §2.5 Protection — L784
-  - §2.6 Indicator LEDs — L807
-- **§3 Bill of materials — with verification status** — L841
-  - §3.1 Sourcing traps recorded — L870
-  - §3.2 Bought separately (not on the board) — L878
-- **§4 Board** — L886
-  - §4.1 Geometry from vendor CAD `[CAD]` — L904
-  - §4.2 Verification status of the board — L914
-  - §4.3 Isolation — L936
-  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L949
-- **§5 Firmware** — L984
-  - §5.1 The safety architecture — L990
-  - §5.2 Timing check against the spec `[CALC]` — L1007
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1027
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1051
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1062
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1080
-  - §5.7 Home Assistant integration — L1091
-- **§6 Enclosure** — L1163
-  - §6.1 The vertical stack — the governing dimension — L1171
-  - §6.2 Two details that are easy to lose — L1206
-  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1224
-  - §6.4 Lid label turned to read portrait `2026-09-16` — L1337
-- **§7 Errors already found and fixed** — L1357
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1392
-- **§8 Open items** — L1412
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1463
-- **§9 Repository map** — L1494
-  - §9.1 Toolchain constraints worth knowing — L1517
-  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1532
-- **§10 Audit status** — L1574
-  - §10.1 Still unverified after the audit — L1590
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1624
+- **§1 What the system must do** — L514
+  - §1.1 Requirements — L522
+  - §1.2 Measured facts about the port — L533
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L550
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L590
+- **§2 Circuit** — L619
+  - §2.1 Regulator — the calculation that matters — L666
+  - §2.2 Load on the 10.4 V rail — L699
+  - §2.3 PhotoMOS drive — L750
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L775
+  - §2.5 Protection — L817
+  - §2.6 Indicator LEDs — L840
+- **§3 Bill of materials — with verification status** — L874
+  - §3.1 Sourcing traps recorded — L903
+  - §3.2 Bought separately (not on the board) — L911
+- **§4 Board** — L919
+  - §4.1 Geometry from vendor CAD `[CAD]` — L937
+  - §4.2 Verification status of the board — L947
+  - §4.3 Isolation — L969
+  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L982
+- **§5 Firmware** — L1017
+  - §5.1 The safety architecture — L1023
+  - §5.2 Timing check against the spec `[CALC]` — L1040
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1060
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1084
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1095
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1113
+  - §5.7 Home Assistant integration — L1124
+- **§6 Enclosure** — L1196
+  - §6.1 The vertical stack — the governing dimension — L1204
+  - §6.2 Two details that are easy to lose — L1239
+  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1257
+  - §6.4 Lid label turned to read portrait `2026-09-16` — L1370
+- **§7 Errors already found and fixed** — L1390
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1425
+- **§8 Open items** — L1445
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1496
+- **§9 Repository map** — L1527
+  - §9.1 Toolchain constraints worth knowing — L1550
+  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1565
+- **§10 Audit status** — L1607
+  - §10.1 Still unverified after the audit — L1623
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1657
 
 <!-- /SECTION-INDEX -->
 
@@ -452,20 +452,53 @@ Confirm with a meter before soldering: **the GND tail to TP4 is a dead short.** 
 unambiguously. ⚠️ **Do not try to confirm +12 V against TP1 the same way** — F1 and D1 sit
 between them, so it reads a diode drop, not continuity, and a correct board looks like a fault.
 
-#### Retention, and what is still a placeholder
+#### The part: DALQUIS DC-099, already in stock `[MEAS] 2026-09-18`
 
-The jack is not yet sourced. Every dimension in the `PJ_*` block of `af4_enclosure_ocp.py` is a
-placeholder for a common M8-thread 5.5 × 2.5 panel jack, and `PJ_DIMS_VERIFIED = False` makes
-the script say so on every run. **Measure the part, set the six numbers, re-run, and only then
-print.** This is exactly the trap this section is about; the flag is there so it cannot be
-walked into twice.
+Not ordered — **found in the parts drawer.** Kenny already had six, bought 2026-07-18, and
+**rev C used this same part** before the hat existed (`docs/aF4-pcb-notes.md`; the rev C
+enclosure had a "DC-099 hole in the input wall" that rev D deleted). 5.5 × 2.5 mm, 10 A,
+threaded panel mount, **150 mm of 18 AWG pre-soldered leads — red is +12 V, black is −**,
+recorded on both rev C protoboard diagrams in `archive/`. No soldering at the panel at all,
+which makes it strictly better than the Same Sky PJ-005B that was the fallback.
 
-Retention is the jack's own nut on the plain 3.0 mm wall — a 7 mm thread leaves 4.0 mm for a
-1.6 mm nut, so nothing has to be added and nothing rests on a guess. Anti-rotation is opt-in and
-comes as a **pair**: `PJ_PAD_T` thickens the wall locally from the inside, and `PJ_NUT_AF` sinks
-the nut into that pad, vertex-up so the pocket roof self-supports in a z-up print. **Set both or
-neither** — a nut pocket alone eats the wall the flange clamps. The `panel jack thread reaches
-its nut` and `wall left under the jack flange` checks police the combination.
+| | | Provenance |
+|---|---|---|
+| Barrel, full Ø | 11.50 mm | `[MEAS]` |
+| **Barrel flat**, face to opposite arc | 10.50 mm | `[MEAS]` |
+| Flange thickness | 1.50 mm | `[MEAS]` |
+| Nut: thickness / across flats / across corners | 3.00 / 14.00 / 15.80 mm | `[MEAS]` |
+| Thread length | 9.00 mm | `[VENDOR DRAWING]` |
+| Overall length | 20.00 mm | `[VENDOR DRAWING]` |
+| Flange Ø, body Ø | 16.00, 13.00 mm | ⚠️ `[ASSUMED UPPER BOUND]` |
+
+**The vendor drawing was ambiguous and the caliper resolved it.** It gives "2 mm", "9 mm",
+"9 mm" and an overall "20 mm" with no indication of which are axial and which are diameters.
+Two readings were coherent: 2 + 9 + 9 = 20 as consecutive axial segments, or a 2 mm flange
+with 9 mm thread and body *diameters*. **A measured 11.5 mm barrel rules out the second**, so
+the thread is 9 mm long — which clears the 3.0 mm wall and its 3.0 mm nut with 3.0 mm to spare.
+Flange and body diameters remain uncalipered and are carried as upper bounds; both only feed
+the clearance envelope, which the nut's 15.80 mm across-corners dominates anyway, and **anything
+up to Ø20 still passes every check.**
+
+#### Retention: the barrel has a flat
+
+⚠️ **This replaced a worse design.** The script carried an opt-in pad-plus-captive-hex-pocket
+scheme, written when the part was unknown, to stop the jack turning when a plug is pushed in.
+**The DC-099's barrel carries a flat, so the part keys itself** — better than anything that
+could have been printed around it, and it costs nothing.
+
+The wall hole is therefore a **D, flat UP**: Ø11.90 bored, then the wall put back above a plane
+4.95 mm over the axis, leaving a 1.00 mm key. Flat up also makes the hole's roof a flat bridge
+instead of a curved overhang, so **unlike J2 this hole needs no teardrop crown**, and its whole
+envelope stays inside Ø11.90 where any plausible flange covers it. The stack is simply flange
+outside, 3.0 mm wall, nut inside.
+
+The pad and hex-pocket code is gone, along with the now-unused `hex_x` helper. It was the right
+design for an unknown part and the wrong one for this part; a hex pocket would have eaten the
+wall the flange clamps.
+
+**Fit the jack before the boards go in.** The nut is 14 mm across flats and wants a spanner or
+fingers inside an otherwise empty box.
 
 #### Carried to rev F
 
@@ -1456,8 +1489,8 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 24 | **Move the J3/J4 footprints to `B.Cu`** (silkscreen to `B.SilkS`) in `pcb/gen_pcb.py`, rewrite the `PCBWay-README.txt` ASSEMBLY line to name the face by designator, and add the THT parts to the centroid with a side column. The fix for the *cause* of item 23, as opposed to this run's rework | No — but it is the only thing that stops item 23 recurring |
 | 25 | **D3/D5 LED polarity is unverified on the built boards.** 0805 water-clear packages show no cathode mark at either photo set's resolution. Referred to PCBWay 2026-09-11, then **explicitly released on 2026-09-12** so the question could not hold the EQ open. It now falls to commissioning 6.1 / 6.5. Low consequence either way: a reversed indicator fails to light and does not touch the trigger path | No — resolves at commissioning |
 | 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1, and **check the J3/J4 mounting face on every board**: only the reworked sample was ever photographed (§A3.2). Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
-| 28 | **Source the 12 V panel-mount jack** (5.5 × 2.5, centre-positive, threaded panel barrel), a polarised 2-pin inline connector for the run, and hook-up wire. Then **measure the jack** — thread Ø and length, flange Ø, body Ø and length, nut thickness and across-flats — set the `PJ_*` block in `hardware/enclosure/af4_enclosure_ocp.py`, set `PJ_DIMS_VERIFIED = True`, and re-run both it and `verify_enclosure.py`. ⚠️ **The script's placeholders are not dimensions of any part in hand.** → §A4 | **Printing** — and therefore assembly |
-| 29 | **Reprint case and lid** from the exports regenerated 2026-09-18, once item 28 has replaced the placeholder jack dimensions. The 09-17 print is retired: it has the old J1 hole and no panel-jack hole. Print dimensions are unchanged at 65.2 × 117.0 × 39.9 mm. Then fit the panel jack, solder the 12 V pair to J1's pad tails on the hat underside (GND tail to TP4 reads a dead short — confirm that way, never against TP1), anchor the cable at the tie post, and fit the inline connector → §A4 | **Assembly** |
+| 28 | ✅ **CLOSED same day, 2026-09-18.** Nothing was ordered: Kenny already had six **DALQUIS DC-099** panel jacks, the same part rev C used, with 150 mm of 18 AWG pre-soldered leads. Calipered, the `PJ_*` block set, `PJ_DIMS_VERIFIED` flipped, both scripts re-run and the exports regenerated. The measurement also revealed a **flat on the barrel**, which replaced the printed anti-rotation scheme with a D-hole. Flange Ø and body Ø remain uncalipered upper bounds and gate nothing. → §A4 | — |
+| 29 | **Reprint the CASE** from the exports regenerated 2026-09-18 — **the lid does not change**, its STL is byte-identical, so the 09-17 lid print still stands. The 09-17 case is retired: old J1 hole, no panel-jack hole. Print size unchanged at 65.2 × 117.0 × 39.9 mm. Then fit the DC-099 **flat up** and tighten its 14 mm nut **before the boards go in**, solder the pair to J1's pad tails on the hat underside (**red +12 V, black −**; GND tail to TP4 reads a dead short — confirm that way, never against TP1), and anchor the cable at the tie post → §A4 | **Assembly** |
 | 27 | **Case and lid reprinted 2026-09-17** (Kenny) from the exports verified on the Mac 2026-09-16: the case for the 1.5 mm hat lift (§6.3), the lid for the portrait label (§6.4). **Still open:** cut the two PoE light pipes to 24.2 mm (hat pipes unchanged, 10.1), and move the hat up 1.5 mm in the Tinkercad model. The pre-lift case is retired — do not assemble into it | **Assembly** — the PoE light pipes only; the enclosure itself no longer blocks |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)

@@ -18,13 +18,14 @@ five as built, leave J1 fitted and dead, and bring 12 V in through a panel-mount
 | Enclosure | **Script changed and re-verified 2026-09-18** — old J1 hole removed, panel jack added, cable tie post added. **The case must be reprinted** (item 29). ✅ **The lid does not** — its STL is byte-identical, so the 09-17 lid print still stands |
 | Go-live | `input_boolean.reef_af4_schedule_enabled` stays **OFF** until commissioning 6.1–6.8 pass |
 
-**The immediate thread, in two lanes that do not block each other:**
+**Nothing is on order and nothing is waiting.** Item 28 opened and closed the same day: the
+panel jack came out of the parts drawer — six **DALQUIS DC-099**, the part rev C already used —
+was calipered, and the case geometry is set to the real part. **The case can be printed now.**
 
-1. **Order the panel jack** (item 28) — 5.5 × 2.5 centre-positive threaded panel barrel, a
-   polarised 2-pin inline connector, hook-up wire. Nothing can be printed until it is measured.
-2. **Meanwhile, at the bench, nothing waits on it:** items **26**, **12** and **16** are exactly
-   the session already planned, plus cutting the two PoE light pipes to 24.2 mm (item 27 — the
-   reprint does not change pipe lengths).
+1. **Print the case** (item 29). The **lid is unchanged** — its STL is byte-identical, so the
+   09-17 lid print still stands.
+2. **At the bench, in parallel:** items **26**, **12** and **16** are the session already
+   planned, plus cutting the two PoE light pipes to 24.2 mm (item 27 — pipe lengths unchanged).
 
 ## The 2026-09-18 finding in one paragraph
 
@@ -41,6 +42,9 @@ table in §A4 says how each one failed to ask the question.
 
 ## What you may trust
 
+- **The DC-099's barrel, flat and nut** — calipered 2026-09-18: barrel Ø11.50 with a flat at
+  10.50, flange 1.50 thick, nut 3.00 thick / 14.00 across flats / 15.80 across corners. The wall
+  hole is a **D, flat up**, with a 1.00 mm key. **Red is +12 V, black is −.** → §A4
 - **The J1 diagnosis** — read from `pcb/gen_pcb.py`, `pcb/af4-trigger-hat.kicad_pcb` and CUI's
   STEP model, not from the photograph. → §A4
 - **The pad identification on the hat's underside.** Three tails in a row at board x 144; **the
@@ -62,9 +66,11 @@ table in §A4 says how each one failed to ask the question.
 
 ## What you may not trust
 
-- ⚠️ **Every `PJ_*` dimension in `af4_enclosure_ocp.py` is a placeholder** for a jack nobody has
-  measured. `PJ_DIMS_VERIFIED = False` and the script says so on every run. **Do not print the
-  case until item 28 replaces them.** → §A4
+- ⚠️ **Two `PJ_*` dimensions are still upper bounds, not measurements** — the DC-099's flange Ø
+  and body Ø. Both only feed the clearance envelope, which the nut's 15.80 mm across-corners
+  dominates, and anything up to Ø20 passes. Everything that shapes the printed hole is calipered.
+- **Thread length (9.00) and overall length (20.00) are from the vendor drawing**, not calipers.
+  The drawing was ambiguous; a measured 11.5 mm barrel is what resolved it. → §A4
 - ⚠️ **The 2026-09-17 case print is retired** — it has the old J1 hole and no panel-jack hole. The
   **lid** from that print is still good.
 - **The 0.72 mm cap clearance and the ~4.3 mm pin engagement are still calculated, not felt.**
@@ -98,12 +104,11 @@ table in §A4 says how each one failed to ask the question.
 
 | # | Item | Blocks |
 |---|---|---|
-| 28 | **Source and then MEASURE the 12 V panel jack**, inline connector and wire; set the `PJ_*` block and `PJ_DIMS_VERIFIED`; re-run both enclosure scripts | **Printing, and so assembly** |
+| 29 | **Print the case** from the 09-18 exports — **not the lid**. Then fit the DC-099 flat up and tighten its 14 mm nut **while the box is empty**, solder the pair to J1's pad tails (**red +12 V, black −**), anchor at the tie post | **Assembly** |
 | 26 | **Inspect all five and pick the best board** — check the J3/J4 face on each. Reflow the two pin-10 joints, clean with IPA, loupe the ten J3 joints | **The bench session, now** |
 | 12 | **Solder two 1×10 male headers into EXT1/EXT2, pins up, plastic on the top face.** Shave the pin-10 end of EXT2's plastic if it binds on DCDC1 | **Assembly** |
 | 16 | **Rotate `af4_ota_password` during the item-12 serial flash**, then delete the old value from `firmware/secrets.yaml` **and** the Device Builder Secrets editor | No — but a live exposure |
 | 27 | **Cut the two PoE light pipes to 24.2 mm** (hat pipes unchanged, 10.1); move the hat up 1.5 mm in Tinkercad. Unaffected by the reprint | **Assembly** |
-| 29 | **Reprint the case** (not the lid) from the 09-18 exports, once item 28 lands. Then fit the jack, solder to the pad tails, anchor the cable, fit the inline connector | **Assembly** |
 | — | **Plumb the reef system.** The long pole | **Go-live** |
 | 15 | **Commissioning 6.1–6.8 all pass** before the schedule toggle goes on. 6.1 now means the panel jack, not J1 | **Go-live** |
 | 24 | **Fix the cause of the J3/J4 error:** footprints to `B.Cu`, silkscreen to `B.SilkS`, face named in `PCBWay-README.txt`, THT parts in the centroid with a side column | No |
@@ -133,5 +138,7 @@ Boards delivered. Diagnosed J1 from the design sources and CUI's STEP model, con
 correct, and proved no re-seat is possible. Found the enclosure's J1 hole was 1.25 mm off axis
 independently, and that all three checks covering the jack were hollow. Took Kenny's repair
 route — hat used as built, panel jack in the +X wall — into `af4_enclosure_ocp.py` and
-`verify_enclosure.py`, corrected `af4_hat_dummy_ocp.py`, regenerated the exports, and recorded
-it as §A4 with items 28 and 29.
+`verify_enclosure.py`, corrected `af4_hat_dummy_ocp.py`, and recorded it as §A4 with items 28
+and 29. Then item 28 closed the same day: the jack was already in stock, and calipering it
+revealed a **flat on the barrel**, which replaced the printed anti-rotation scheme with a keyed
+D-hole and deleted the `hex_x` helper. Exports regenerated; the case changes, the lid does not.
