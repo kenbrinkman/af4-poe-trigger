@@ -89,9 +89,9 @@ a hand-made backup once landed in the repo root and was one `git add -A` away fr
 right after a rotation had finished cleaning up the previous leak. That backup now lives at
 `archive/secrets/`, still ignored.
 
-Values that were in history before 2026-09-02 are in a public repo's history and **have been
-rotated** — except the OTA password, which rotates at the next serial flash. See `STATUS.md`
-item 16.
+Values that were in history before 2026-09-02 are in a public repo's history and **have all
+been rotated**, the OTA password included — it rotated at the serial flash of the replacement
+PoE board on 2026-09-18 and was then proven by a live OTA. Item 16 is closed. → §11.4
 
 ## 5. Gotchas worth carrying
 

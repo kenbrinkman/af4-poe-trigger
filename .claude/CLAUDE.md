@@ -135,13 +135,13 @@ Every one of these has actually cost time here.
 - **The Home Assistant configuration.** Automations, helpers, counters and the dashboard live
   in the HA instance. The pieces that matter: `automation.reef_tank_af4_scheduled_feed`,
   `automation.reef_tank_feeder_health_watchdog`, `counter.reef_af4_feeds_today`, and
-  `input_boolean.reef_af4_schedule_enabled` — the go-live switch. **Two feeds a day**, at times held in `input_datetime.reef_af4_feed_time_1` / `_2` so they stay dashboard-editable — the count and the times live only in HA, deliberately. → §5.7
+  `input_boolean.reef_af4_schedule_enabled` — the go-live switch. **Six feed slots**, `input_datetime.reef_af4_feed_time_1`…`_6`, gated by `input_number.reef_af4_feeds_per_day` — slot N only fires while the count is ≥ N, so raising or lowering it on the Feeding tab adds or removes feeds with no config change. Set to **2** as of 2026-09-18. Count and times live only in HA, deliberately. → §5.7
 - **The ESPHome Device Builder copy of the YAML**, and its own secrets store. See §4.3 above.
 - **The PCBWay order page** — the only reliable signal for fabrication progress. PCBWay does
   not reliably announce an engineer question *or* its closure by email; the EQ counter
   returning to 0 is the signal. Rep on this order: Ivy Yang, `service33@pcbway.com`.
 - **Network placement.** The board sits on PoE in the reef sump area, at `192.168.1.55`,
-  reserved in OPNsense dnsmasq against MAC `20:E7:C8:74:A6:D7`.
+  reserved in OPNsense dnsmasq against MAC `00:70:07:7F:48:C3`.
 
 ## 6. Working rules
 

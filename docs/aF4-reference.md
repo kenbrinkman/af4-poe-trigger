@@ -111,7 +111,7 @@ truth**. The ESPHome Device Builder (Docker on the Unraid server, port 6052)
 holds its own copy — paste changes there manually, then Install → Wirelessly.
 First flash was USB via web.esphome.io (factory .bin); everything since is OTA
 (enclosure has no USB cutout). IP 192.168.1.55 reserved in OPNsense dnsmasq
-against Ethernet MAC `20:E7:C8:74:A6:D7`.
+against Ethernet MAC `00:70:07:7F:48:C3`.
 
 **Helpers + automation (HA):**
 

@@ -44,58 +44,64 @@ one pass.
 > 🔑 **Do not read this file whole.** Find the section here, then read only its
 > line range. Numbers drift — confirm with `grep -n "^### 2.4" <file>`.
 
-  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L106
-  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L124
-  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L147
-  - §A1.3 Isolation, re-derived `[AUDIT]` — L176
-  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L198
-  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L209
-  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L266
-  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L314
-  - §A4 J1, the 12 V barrel jack, faces inboard on all five boards `[CAD] 2026-09-18` — L360
-- **§1 What the system must do** — L556
-  - §1.1 Requirements — L564
-  - §1.2 Measured facts about the port — L575
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L592
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L632
-- **§2 Circuit** — L661
-  - §2.1 Regulator — the calculation that matters — L708
-  - §2.2 Load on the 10.4 V rail — L741
-  - §2.3 PhotoMOS drive — L792
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L817
-  - §2.5 Protection — L859
-  - §2.6 Indicator LEDs — L882
-- **§3 Bill of materials — with verification status** — L916
-  - §3.1 Sourcing traps recorded — L945
-  - §3.2 Bought separately (not on the board) — L953
-- **§4 Board** — L961
-  - §4.1 Geometry from vendor CAD `[CAD]` — L979
-  - §4.2 Verification status of the board — L989
-  - §4.3 Isolation — L1011
-  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L1024
-- **§5 Firmware** — L1059
-  - §5.1 The safety architecture — L1065
-  - §5.2 Timing check against the spec `[CALC]` — L1082
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1102
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1126
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1137
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1155
-  - §5.7 Home Assistant integration — L1166
-- **§6 Enclosure** — L1238
-  - §6.1 The vertical stack — the governing dimension — L1246
-  - §6.2 Two details that are easy to lose — L1281
-  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1299
-  - §6.4 Lid label turned to read portrait `2026-09-16` — L1412
-- **§7 Errors already found and fixed** — L1432
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1467
-- **§8 Open items** — L1487
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1538
-- **§9 Repository map** — L1569
-  - §9.1 Toolchain constraints worth knowing — L1592
-  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1607
-- **§10 Audit status** — L1649
-  - §10.1 Still unverified after the audit — L1665
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1699
+  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L112
+  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L130
+  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L153
+  - §A1.3 Isolation, re-derived `[AUDIT]` — L182
+  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L204
+  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L215
+  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L272
+  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L320
+  - §A4 J1, the 12 V barrel jack, faces inboard on all five boards `[CAD] 2026-09-18` — L366
+- **§1 What the system must do** — L562
+  - §1.1 Requirements — L570
+  - §1.2 Measured facts about the port — L581
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L598
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L638
+- **§2 Circuit** — L667
+  - §2.1 Regulator — the calculation that matters — L714
+  - §2.2 Load on the 10.4 V rail — L747
+  - §2.3 PhotoMOS drive — L798
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L823
+  - §2.5 Protection — L865
+  - §2.6 Indicator LEDs — L888
+- **§3 Bill of materials — with verification status** — L922
+  - §3.1 Sourcing traps recorded — L951
+  - §3.2 Bought separately (not on the board) — L959
+- **§4 Board** — L967
+  - §4.1 Geometry from vendor CAD `[CAD]` — L985
+  - §4.2 Verification status of the board — L995
+  - §4.3 Isolation — L1017
+  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L1030
+- **§5 Firmware** — L1065
+  - §5.1 The safety architecture — L1071
+  - §5.2 Timing check against the spec `[CALC]` — L1088
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1108
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1132
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1143
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1161
+  - §5.7 Home Assistant integration — L1172
+- **§6 Enclosure** — L1253
+  - §6.1 The vertical stack — the governing dimension — L1261
+  - §6.2 Two details that are easy to lose — L1296
+  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1314
+  - §6.4 Lid label turned to read portrait `2026-09-16` — L1427
+- **§7 Errors already found and fixed** — L1447
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1482
+- **§8 Open items** — L1502
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1554
+- **§9 Repository map** — L1585
+  - §9.1 Toolchain constraints worth knowing — L1608
+  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1623
+- **§10 Audit status** — L1665
+  - §10.1 Still unverified after the audit — L1681
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1715
+- **§11 The PoE board was replaced `[MEAS] 2026-09-18`** — L1727
+  - §11.1 Every board has two MACs, three apart, and the two systems use different ones — L1742
+  - §11.2 Home Assistant migrates the device; it does not need a delete and re-add — L1761
+  - §11.3 The OPNsense reservation is one line — L1783
+  - §11.4 The OTA password rotation, and the character that broke it — L1795
+  - §11.5 The standing corrections — L1820
 
 <!-- /SECTION-INDEX -->
 
@@ -1165,23 +1171,32 @@ anything on the board.
 
 ### 5.7 Home Assistant integration
 
-Entities: `button.af4_feeder_feed` (sole control), `binary_sensor.af4_feeder_feed_lockout`,
+Entities — **seven**, re-read from HA 2026-09-18: `button.af4_feeder_feed` (sole control),
+`button.af4_feeder_restart`, `binary_sensor.af4_feeder_feed_lockout`,
 `binary_sensor.af4_feeder_status`, `sensor.af4_feeder_ip_address`, `sensor.af4_feeder_uptime`,
-`button.af4_feeder_restart`.
+`sensor.af4_feeder_esphome_version`. ⚠️ This list said six until 2026-09-18; the version
+sensor was always there and was simply never written down.
 
 Helpers: `input_boolean.reef_af4_schedule_enabled` (master kill switch),
-`input_datetime.reef_af4_feed_time_1` / `_2`, `counter.reef_af4_feeds_today`,
-`sensor.reef_af4_next_feed`.
+`input_datetime.reef_af4_feed_time_1` … `_6`, `input_number.reef_af4_feeds_per_day`,
+`counter.reef_af4_feeds_today`, `sensor.reef_af4_next_feed`.
 
-Automations: `automation.reef_tank_af4_scheduled_feed` (scheduler + per-feed confirmation),
+Consumers of the aF4 entities — **four, plus a dashboard**, re-read 2026-09-18:
+`automation.reef_tank_af4_scheduled_feed` (scheduler + per-feed confirmation),
 `automation.reef_tank_feeder_health_watchdog` (backstop, shared with the Plank feeder),
-`automation.reef_tank_reset_ato_counter_daily` (nightly counter reset).
+`automation.reef_circulation_pause_powerheads_for_feeding` (triggers on the lockout edge —
+**not previously recorded here**), `automation.reef_tank_reset_ato_counter_daily` (nightly
+counter reset), and the **Reef Command** dashboard (`reef-command`).
+
+**Every one keys on `entity_id`, not `device_id`** — verified 2026-09-18. That is what makes
+a board swap survivable; see §11.
 
 #### `automation.reef_tank_af4_scheduled_feed` — read from HA 2026-09-02
 
 Materially more than "presses a button", which is all this document used to say. Triggers
-on the two `input_datetime` helpers so times stay dashboard-editable, gated by the master
-kill switch, then:
+on **six** `input_datetime` helpers so times stay dashboard-editable, each slot gated by
+`input_number.reef_af4_feeds_per_day` — slot N is inert while the count is below N — then,
+behind the master kill switch:
 
 1. **Two interlocks before pressing.** `binary_sensor.af4_feeder_feed_lockout` must be
    `off`, and `binary_sensor.reef_tank_sump_return_pump_..._running` must be `on`. The
@@ -1219,7 +1234,7 @@ Three deliberate choices worth preserving:
 3. **The counter counts confirmed pulses, not presses.** See point 3 above.
 
 Networking: IP 192.168.1.55 reserved in OPNsense dnsmasq against Ethernet MAC
-`20:E7:C8:74:A6:D7` (host override `af4-feeder`, MAC match only, no client identifier). The
+`00:70:07:7F:48:C3` (host override `af4-feeder`, MAC match only, no client identifier). The
 board pulled a new DHCP lease after flashing, which broke HA's cached discovery with
 `Errno 113`; the reservation is the fix.
 
@@ -1520,7 +1535,7 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 13 | ~~Confirm the internal 24 h timer under external triggering~~ — **CLOSED `[VENDOR]`: the built-in schedule is completely overridden while the link port is connected.** The old assumption was backwards; this is what item 17 exists to cover | — |
 | 14 | Resolve the LED viewing-angle conflict, 120° vs 160°/140° (§2.6) | No — cosmetic |
 | 15 | Commissioning steps 6.1–6.8 must all pass before the schedule toggle is enabled | **YES** — gates go-live |
-| 16 | **Secrets: two of three fully remediated 2026-09-02.** All three moved out of the repo to a gitignored `firmware/secrets.yaml` via `!secret`, and history deliberately not rewritten because rotation is what remediates. **API key and web_server password are rotated and verified live** on the device. ⚠️ **The OTA password on the device is still the value published in git history** — ESPHome uses one value for both compiling and authenticating the upload, so it cannot rotate over OTA (see `docs/aF4-assembly-guide.md` §4). It rotates at the next **serial** flash, which item 12 puts the board on the bench for anyway | No — but it is a live exposure until the serial flash |
+| 16 | ~~Rotate the OTA password~~ — ✅ **CLOSED 2026-09-18.** All three credentials are now rotated and verified live. `af4_api_key` and the web password went over OTA on 2026-09-02; `af4_ota_password` rotated at the serial flash of the **replacement** board (§11.4) and was then proven end to end by a successful Device Builder OTA install — the one credential OTA cannot change, verified by the path that needs it. The first attempt failed `authentication is invalid` because the chosen password contained YAML-significant characters, so the Mac and Device Builder secrets stores resolved to different strings; a punctuation-free `openssl rand -hex 24` value pasted into both fixed it. The old values remain in git history and are worthless by design | — |
 | 17 | ~~Missed-feed alert in HA~~ — **ALREADY CLOSED, and this item should never have been opened.** `automation.reef_tank_feeder_health_watchdog` has done it since 2026-08-27: a 23:45 counter-vs-elapsed-feed-times backstop, plus a board-offline branch. The scheduled-feed automation independently notifies on skip and on unacknowledged press. Read from HA 2026-09-02; the work existed and was simply never written back to this repo | — |
 | 18 | **R5 runs at 77 % of an 0805's 125 mW rating.** A 0.25 W part is a drop-in; raising the divider impedance is NOT available, it is the minimum-load ballast. **Window has now closed for this run** — boards are in fabrication | No — note for a future rev |
 | 19 | Silkscreen on the fabbed rev E boards reads **"10.4V 10s pulse"**. Corrected in `pcb/gen_pcb.py` for any future rev; the five boards in fabrication will carry the old string | No — cosmetic, and unfixable now |
@@ -1534,6 +1549,7 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 28 | ✅ **CLOSED same day, 2026-09-18.** Nothing was ordered: Kenny already had six **DALQUIS DC-099** panel jacks, the same part rev C used, with 150 mm of 18 AWG pre-soldered leads. Calipered, the `PJ_*` block set, `PJ_DIMS_VERIFIED` flipped, both scripts re-run and the exports regenerated. The measurement also revealed a **flat on the barrel**, which replaced the printed anti-rotation scheme with a D-hole. Flange Ø and body Ø remain uncalipered upper bounds and gate nothing. → §A4 | — |
 | 29 | **Reprint the CASE** from the exports regenerated 2026-09-18 — **the lid does not change**, its STL is byte-identical, so the 09-17 lid print still stands. The 09-17 case is retired: old J1 hole, no panel-jack hole. Print size unchanged at 65.2 × 117.0 × 39.9 mm. Then fit the DC-099 **flat up** and tighten its 14 mm nut **before the boards go in**, solder the pair to J1's pad tails on the hat underside (**red +12 V, black −**; GND tail to TP4 reads a dead short — confirm that way, never against TP1), and anchor the cable at the tie post → §A4 | **Assembly** |
 | 27 | **Case and lid reprinted 2026-09-17** (Kenny) from the exports verified on the Mac 2026-09-16: the case for the 1.5 mm hat lift (§6.3), the lid for the portrait label (§6.4). **Still open:** cut the two PoE light pipes to 24.2 mm (hat pipes unchanged, 10.1), and move the hat up 1.5 mm in the Tinkercad model. The pre-lift case is retired — do not assemble into it | **Assembly** — the PoE light pipes only; the enclosure itself no longer blocks |
+| 30 | **Erase the retired ESP32-POE-ISO.** `python -m esptool --port /dev/cu.usbserial-XXXX erase-flash`, then label it *"retired 2026-09-18 — was af4-feeder, base MAC `20:e7:c8:74:a6:d4`"* and bag it. Until it is erased it still carries the node name `af4-feeder`, a valid API encryption key and an OTA password, so powering it on the LAN puts a second board answering to the same name beside the real one — a genuine feed hazard, not a theoretical one. Safe to do now: the replacement is adopted and verified (§11), so no rollback is being destroyed | No — but it is a standing hazard while it waits |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
 
@@ -1705,3 +1721,118 @@ already understood; **A6** (port decay time) would confirm R3 is harmless-but-re
 published figures; **B2** is confounded by the 5-minute spacing rule; **B3** (held-high
 yields exactly one feed) is the one with real information value, because the design's best
 safety property currently rests on vendor documentation rather than on this unit.
+
+---
+
+## 11. The PoE board was replaced `[MEAS] 2026-09-18`
+
+The Olimex ESP32-POE-ISO that had been flashed and on the network since July was swapped for
+a duplicate board. Nothing was wrong with the old one; the new one is the board that goes into
+the rev E enclosure. The swap cost one failed OTA, recorded below because the failure is the
+useful part.
+
+**Only three things ever knew which physical ESP32 this was.** The node name `af4-feeder`, the
+API encryption key, the OTA password and all seven entity IDs live in the YAML and follow the
+firmware, not the silicon. The three that do not:
+
+1. Home Assistant's ESPHome config entry, whose unique_id is the board's MAC.
+2. The OPNsense dnsmasq reservation, MAC → `192.168.1.55`.
+3. The old board's own flash — same node name, same API key, same OTA password.
+
+### 11.1 Every board has two MACs, three apart, and the two systems use different ones
+
+This looked like a contradiction in the record and is not one.
+
+| | Old board | New board |
+|---|---|---|
+| **Base MAC** — what ESPHome reports and HA stores | `20:e7:c8:74:a6:d4` | `00:70:07:7f:48:c0` |
+| **Ethernet MAC** — what DHCP sees and OPNsense reserves against | `20:E7:C8:74:A6:D7` | `00:70:07:7F:48:C3` |
+
+The ESP32 derives its interface MACs from one eFuse base address: WiFi STA = base, AP = base+1,
+BT = base+2, **Ethernet = base+3**. ESPHome's `mac_address` is the base; the LAN8720 uses base+3.
+So HA's device record and the DHCP reservation legitimately hold **different values for the same
+board**, and every document in this project that names "the MAC" means the Ethernet one.
+
+**Confirmed three ways, not assumed:** the +3 relationship was inferred from the old board's pair,
+then *measured* from the new board's DHCP lease before the reservation was edited, then displayed
+outright by the ESPHome Device Builder device panel, which lists `MAC Address` and `Ethernet MAC`
+as separate fields. ⚠️ **Never compute the reservation MAC — read it from the lease.**
+
+### 11.2 Home Assistant migrates the device; it does not need a delete and re-add
+
+The planned procedure was: delete the ESPHome integration entry (to free the seven entity IDs),
+re-add, re-paste the API key, re-set the area, then check nothing came back as `_2`. **That was
+unnecessary.** HA raised a repair —
+
+> **Device conflict for af4-feeder** — the device has reported a MAC address change from
+> `20:e7:c8:74:a6:d4` to `00:70:07:7f:48:c0` … *Migrate configuration to new device* /
+> *Remove or rename device*
+
+**Take "Migrate configuration to new device."** It re-points the existing config entry's unique_id
+at the new MAC and keeps everything hanging off it. Verified afterwards: same `device_id`
+(`2508be2c…`), same config entry (`01KXV8NE…`), all **seven** entity IDs unchanged with no `_2`
+suffix, recorder history intact, area still **Reef Tank Sump**, and the API key never re-entered.
+
+"Remove or rename device" is the branch for two boards meant to coexist. It is not this case.
+
+**Why the entity IDs mattered enough to plan around:** all four consumers key on `entity_id`, not
+`device_id` (§5.7). A delete-then-re-add in the wrong order leaves the old registry rows holding
+the names, the new entities land as `button.af4_feeder_feed_2`, and the scheduled feed, the
+watchdog and the powerhead pause all break **silently**. The migrate path cannot produce that.
+
+### 11.3 The OPNsense reservation is one line
+
+Host entry uuid `259adfd7-8c24-4661-8ec0-65cff87d45a8` in `/conf/config.xml`, reachable as
+`ssh vault` (192.168.1.1). Change `hwaddr` only — **edit the entry, never add a second**; two
+entries claiming `.55` is the classic failure. Apply with `configctl dnsmasq restart`, which
+regenerates `/usr/local/etc/dnsmasq.conf` (`dhcp-host=00:70:07:7f:48:c3,192.168.1.55,af4-feeder`)
+and restarts the service. Back up `/conf/config.xml` first and diff afterwards — the change
+should be exactly one line.
+
+⚠️ **The lease is 86400 s.** A reservation change does not move a board that already holds a
+pool address; it bites at the next renewal, twelve hours away. **Reboot the board.**
+
+### 11.4 The OTA password rotation, and the character that broke it
+
+Item 16 — rotating `af4_ota_password`, open since the 2026-09-02 credential incident — was closed
+here, because **a serial flash is the only flash that can rotate it** (§4.3) and the board was on
+the bench bare.
+
+The first Device Builder install after the rotation failed: **`authentication is invalid`**. The
+cause was not the procedure but the password itself — **it contained characters that YAML parses**,
+so the Mac's `firmware/secrets.yaml` and the Device Builder's own `secrets.yaml` resolved to two
+different strings while *looking* identical in both editors. The worst of these is `#`: unquoted,
+` #` opens a comment and silently truncates the value.
+
+**ESPHome imposes no password requirements at all** — `ota.password` validates as
+`cv.sensitive()` → `cv.string`, any non-empty string, no length or character rules; an *empty*
+value silently disables OTA authentication; and OTA v2 authenticates by SHA-256 challenge-response
+over a nonce and cnonce, so the password is never transmitted. **Every real constraint is YAML
+and copy-paste.** Use `openssl rand -hex 24` — punctuation-free hex cannot misparse — quote it
+anyway, paste rather than retype it into the second store, and compare the two by hash before
+spending a flash.
+
+**Nothing is written to the board on a failed OTA auth**, which is why this is a cheap failure and
+why it was worth provoking deliberately while the case was still open. Resolved by a clean hex
+password in both stores, a serial re-flash, then a successful Device Builder install — config
+hash `0xa8529b6a` → `0xd4f82693`, build `2026-09-18 18:07:52`.
+
+### 11.5 The standing corrections
+
+- 🚫 **Never compute the Ethernet MAC for a reservation.** Read it from the DHCP lease. → §11.1
+- 🚫 **On a board swap, take HA's "Migrate configuration to new device."** Do not delete and
+  re-add the ESPHome entry; the entity IDs are load-bearing and migration preserves them. → §11.2
+- 🚫 **An OTA password must be punctuation-free.** Two YAML files that *look* the same can
+  resolve differently. Compare by hash, not by eye. → §11.4
+- ⚠️ **Prove an OTA path before the case closes.** The enclosure has no USB cutout, so after
+  assembly OTA is the only way in and recovery is USB with the case open. The Device Builder
+  install that closed item 16 doubles as that proof.
+- **The Device Builder YAML was byte-identical to `firmware/af4-feeder.yaml`** at the time of the
+  swap — 196 lines, zero diff. A "Modified" badge in the Device Builder means *the config it
+  would build now differs from what it last built*, which a secrets edit alone is enough to cause.
+  It is not evidence of YAML drift; check before assuming it is. → §4.3
+- **The Mac can flash and build independently.** `esphome run firmware/af4-feeder.yaml --device
+  /dev/cu.usbserial-XXXX` compiles from the source of truth with the repo's secrets; the esp-idf
+  and xtensa toolchains are already cached in `~/.platformio`, so no long first build. The Olimex
+  enumerates as a CH340 (`0x1a86:0x7523`). If it will not enter the bootloader: hold **BUT1**,
+  tap **RST**, release **BUT1**. → §9.2
