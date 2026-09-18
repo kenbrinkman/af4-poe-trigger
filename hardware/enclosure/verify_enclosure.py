@@ -16,7 +16,8 @@ WHAT IT CHECKS
     2. top of every standoff, read by a ray cast into the mesh
     3. no case material inside the hat's envelope or above the ESP32 up to the
        tallest measured part (point-in-mesh by ray parity)
-    4. both jack holes are open along their axes through the +X wall
+    4. the 3.5 mm and 12 V panel holes are open along their axes through the
+       +X wall, and the old J1 barrel hole is CLOSED (2026-09-18 change)
     5. hat board slab against the measured TALL_PARTS, and against the vendor mesh
     6. the lid label: rasterises the engraving out of the printed lid and matches it
        against all eight rotations/mirrors of the intended text (needs matplotlib;
@@ -173,15 +174,25 @@ def main():
         "%d of %d samples inside" % (n, len(esp_env)))
 
     # ---- 4. jack holes open along their axes -------------------------------
-    for nm, y, z, d in (("J1 barrel", P["J1_Y"], P["J1_AXIS_Z"], P["J1_HOLE_D"]),
-                        ("J2 3.5 mm", P["J2_Y"], P["J2_AXIS_Z"], P["J2_HOLE_D"])):
+    for nm, y, z, d, x0 in (
+            ("J2 3.5 mm", P["J2_Y"], P["J2_AXIS_Z"], P["J2_HOLE_D"],
+             P["IX1"] - 0.5),
+            ("12 V panel", P["PJ_Y"], P["PJ_AXIS_Z"], P["PJ_HOLE_D"],
+             P["IX1"] - P["PJ_PAD_T"] - 0.5)):
         pts = []
-        for x in np.arange(P["IX1"] - 0.5, P["OX1"] + 0.5, 0.25):
+        for x in np.arange(x0, P["OX1"] + 0.5, 0.25):
             for ang in np.linspace(0, 2 * math.pi, 16, endpoint=False):
                 rr = 0.8 * d / 2
                 pts.append(np.array([x, y + rr * math.cos(ang), z + rr * math.sin(ang)]) + JIT)
         n = int(inside(case, pts).sum())
         chk("%s hole open on axis z %.2f" % (nm, z), n == 0, "%d of %d samples blocked" % (n, len(pts)))
+
+    # the old J1 barrel hole must be GONE: solid wall the whole way across it
+    pts = [np.array([x, P["J1_OLD_Y"], P["J1_OLD_AXIS_Z"]]) + JIT
+           for x in np.arange(P["IX1"] + 0.3, P["OX1"] - 0.3, 0.25)]
+    n = int(inside(case, pts).sum())
+    chk("old J1 barrel hole is closed", n == len(pts),
+        "%d of %d samples are solid wall" % (n, len(pts)))
 
     # ---- 5. hat slab vs the tall parts -------------------------------------
     for nm, x0, y0, x1, y1, tz in P["TALL_PARTS"]:

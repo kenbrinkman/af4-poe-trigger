@@ -120,6 +120,15 @@ Every one of these has actually cost time here.
     part is ~9.6 mm and an Olimex capacitor beside DCDC1 sat 0.78 mm *into* the hat. Caught by
     Kenny dry-fitting headers, not by any check. **Check against the part or its own model,
     never a transcribed dimension.** → §6.3
+14. **A check whose result is fixed by its own inputs is not a check.** Rev E's J1 barrel jack
+    came back rotated 180° — bore facing into the middle of the hat — past three checks that
+    looked like they covered it. One did arithmetic on a hand-typed coordinate for the wrong
+    face; one evaluated `9.5 >= 9.5`; one intersected the plug with the case but never with the
+    jack. **Before trusting a check, ask what state of the world would make it fail.** If there
+    is none, it is a comment. → §A4
+15. **The enclosure's 12 V input is a panel-mount jack, not J1.** J1 stays fitted and dead on all
+    five boards and the feed is tapped from its pad tails on the hat's underside. Do not remove
+    it, do not plug into it, and do not raise it with PCBWay — the error was ours. → §A4
 
 ## 5. What is not in this folder
 

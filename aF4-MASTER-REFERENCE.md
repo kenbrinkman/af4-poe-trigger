@@ -44,57 +44,58 @@ one pass.
 > 🔑 **Do not read this file whole.** Find the section here, then read only its
 > line range. Numbers drift — confirm with `grep -n "^### 2.4" <file>`.
 
-  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L105
-  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L123
-  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L146
-  - §A1.3 Isolation, re-derived `[AUDIT]` — L175
-  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L197
-  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L208
-  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L265
-  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L313
-- **§1 What the system must do** — L359
-  - §1.1 Requirements — L367
-  - §1.2 Measured facts about the port — L378
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L395
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L435
-- **§2 Circuit** — L464
-  - §2.1 Regulator — the calculation that matters — L511
-  - §2.2 Load on the 10.4 V rail — L544
-  - §2.3 PhotoMOS drive — L595
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L620
-  - §2.5 Protection — L662
-  - §2.6 Indicator LEDs — L685
-- **§3 Bill of materials — with verification status** — L719
-  - §3.1 Sourcing traps recorded — L748
-  - §3.2 Bought separately (not on the board) — L756
-- **§4 Board** — L764
-  - §4.1 Geometry from vendor CAD `[CAD]` — L782
-  - §4.2 Verification status of the board — L792
-  - §4.3 Isolation — L814
-  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L827
-- **§5 Firmware** — L862
-  - §5.1 The safety architecture — L868
-  - §5.2 Timing check against the spec `[CALC]` — L885
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L905
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L929
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L940
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L958
-  - §5.7 Home Assistant integration — L969
-- **§6 Enclosure** — L1041
-  - §6.1 The vertical stack — the governing dimension — L1049
-  - §6.2 Two details that are easy to lose — L1084
-  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1102
-  - §6.4 Lid label turned to read portrait `2026-09-16` — L1215
-- **§7 Errors already found and fixed** — L1235
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1270
-- **§8 Open items** — L1290
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1339
-- **§9 Repository map** — L1370
-  - §9.1 Toolchain constraints worth knowing — L1393
-  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1408
-- **§10 Audit status** — L1450
-  - §10.1 Still unverified after the audit — L1466
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1500
+  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L106
+  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L124
+  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L147
+  - §A1.3 Isolation, re-derived `[AUDIT]` — L176
+  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L198
+  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L209
+  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L266
+  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L314
+  - §A4 J1, the 12 V barrel jack, faces inboard on all five boards `[CAD] 2026-09-18` — L360
+- **§1 What the system must do** — L481
+  - §1.1 Requirements — L489
+  - §1.2 Measured facts about the port — L500
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L517
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L557
+- **§2 Circuit** — L586
+  - §2.1 Regulator — the calculation that matters — L633
+  - §2.2 Load on the 10.4 V rail — L666
+  - §2.3 PhotoMOS drive — L717
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L742
+  - §2.5 Protection — L784
+  - §2.6 Indicator LEDs — L807
+- **§3 Bill of materials — with verification status** — L841
+  - §3.1 Sourcing traps recorded — L870
+  - §3.2 Bought separately (not on the board) — L878
+- **§4 Board** — L886
+  - §4.1 Geometry from vendor CAD `[CAD]` — L904
+  - §4.2 Verification status of the board — L914
+  - §4.3 Isolation — L936
+  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L949
+- **§5 Firmware** — L984
+  - §5.1 The safety architecture — L990
+  - §5.2 Timing check against the spec `[CALC]` — L1007
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1027
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1051
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1062
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1080
+  - §5.7 Home Assistant integration — L1091
+- **§6 Enclosure** — L1163
+  - §6.1 The vertical stack — the governing dimension — L1171
+  - §6.2 Two details that are easy to lose — L1206
+  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1224
+  - §6.4 Lid label turned to read portrait `2026-09-16` — L1337
+- **§7 Errors already found and fixed** — L1357
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1392
+- **§8 Open items** — L1412
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1463
+- **§9 Repository map** — L1494
+  - §9.1 Toolchain constraints worth knowing — L1517
+  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1532
+- **§10 Audit status** — L1574
+  - §10.1 Still unverified after the audit — L1590
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1624
 
 <!-- /SECTION-INDEX -->
 
@@ -353,6 +354,127 @@ is owed.
   reworked sample was accepted as the pattern, but that is an inference, not an observation.
   **Check the mounting face on every board before selecting one** — the same defect that A3
   caught is exactly the one that a second build run can reproduce silently.
+
+---
+
+### A4. J1, the 12 V barrel jack, faces inboard on all five boards `[CAD] 2026-09-18`
+
+The boards arrived 2026-09-18. Kenny saw it immediately: nothing can be plugged into the
+12 V input. **J1 is rotated 180° from usable, on every board, and the error is in our fab
+data — not in PCBWay's build.** Same family as A3: ours, not theirs. No complaint, no credit
+request, no email.
+
+**The proof, from two independent sources.** `pcb/gen_pcb.py` places J1 at rotation **270**
+(`"J1", "PJ-079BH", 144.00, 121.00, 270`), which `pcb/af4-trigger-hat.kicad_pcb` carries as
+`(at 144 121 -90)`. CUI's own STEP model for `BarrelJack_CUI_PJ-079BH_Horizontal` puts the
+Ø5.5 receptacle bore at footprint-local **y +10.32** and the 2.5 mm centre pin on the same
+axis. At rot 270 that bore maps to board **x = 133.68** — pointing at the middle of the hat.
+The jack's blank back face lands at x 145.28, 0.87 mm inside the board's right edge at 146.15.
+
+**J2 is correct, and for the same reason J1 is not.** The SJ1-3523N's bore is also at
+footprint-local +y, but J2 is placed at rot **90**, which maps its nose to x 148.45 — 2.30 mm
+proud of the board edge, as intended. **The two connectors needed the same handedness and were
+given opposite rotations.** One number, 180° apart.
+
+**The part cannot be re-seated.** J1's three pins sit at footprint-local x = 0, −3.2, −8.5:
+gaps of 3.2 and 5.3 mm. No in-plane rotation and no bottom-side fit maps that set onto itself —
+the gaps come back in the wrong order. The two shield tabs and the Ø2.13 locating boss settle
+it. A PJ-079BH can go into those holes exactly one way, and that way is backwards.
+
+**Everything else about the board is unaffected.** The pads are correctly netted — pad 1
+`+12V_RAW` at (144.00, 121.00), pad 2 `GNDP` at (144.00, 112.50), pad 3 the jack's internal
+switch contact, unconnected. Nothing is damaged, no other net is touched, and no other
+component is placed inside J1's 11.5 × 10.1 mm body shadow.
+
+#### The second error, in the enclosure, on the same part
+
+`hardware/enclosure/af4_enclosure_ocp.py` carried `J1_Y = -116.56` under the comment *"jack
+axes, from the vendor 3D models"*. **−116.56 is the jack's BODY centre** (footprint-local
+x −4.45). The bore axis is at local x −3.19, i.e. **y −117.81**. The wall hole was therefore
+**1.25 mm off axis**, against 0.95 mm of radial slack in a Ø7.4 hole for a Ø5.5 plug. **The
+plug would have fouled the wall even if the jack had faced outward.** A second datum taken by
+hand instead of from the part — §6.3's lesson, repeated on the very next component.
+
+#### Why nothing caught it
+
+Three checks looked as though they covered this. **All three were hollow**, and each one was
+hollow in a different way:
+
+| Check | Where | Why it could not fail |
+|---|---|---|
+| `J1 plug engagement` | `af4_enclosure_ocp.py` | Arithmetic on `J1_FACE_X = 145.28` — a hand-typed constant for the *wrong face*. It measured the assumption against itself |
+| `J1 bore reaches past the wall inner face` | `af4_hat_dummy_ocp.py` | Evaluated `J1_X1 - (J1_X1 - J1_BORE_L) >= J1_BORE_L`, i.e. `9.5 >= 9.5`. Algebraically true for every input |
+| `5.5 mm plug path clears the case wall bore` | `af4_hat_dummy_ocp.py` | Intersected the plug with the **case** only, never with the jack body. It tested the hole, not the jack |
+
+The fitment dummy was built to prove the enclosure before the boards came back, and it did its
+job on everything it actually tested. But it took J1's bore face from the same hand assumption
+the enclosure did, so it agreed — and agreement between two models fed the same wrong number is
+not verification. **§9 already says a script can only ever agree with itself; this is what that
+costs when the number it agrees about is wrong.** `verify_enclosure.py`, which exists precisely
+to break that circle, reads the STL and the parameters — and the parameters were the error.
+
+→ New lesson, and it is the sharper form of §6.3's: **a check whose result is fixed by its own
+inputs is not a check.** Before trusting one, ask what value of the world would make it fail.
+If there is none, it is a comment.
+
+#### The decision: use all five boards as built
+
+Taken by Kenny, 2026-09-18, and it is better than the alternative of desoldering J1.
+
+- **J1 stays fitted and dead** on every board. Its bore opens inboard at x 133.68, where D1 and
+  C1 block it, so nothing can ever be plugged into it by mistake. Its contacts stay on
+  `+12V_RAW` / `GNDP` — inert inside a closed case.
+- **The 12 V feed is taken from J1's own pad tails on the hat's UNDERSIDE**, which is open air:
+  board x 144 is 26 mm outboard of the ESP32's right edge (118.15), a fact `af4_enclosure_ocp.py`
+  already asserts. Clear height from the floor at z −9.50 to the hat underside at 14.118, minus
+  J1's 3.4 mm pin drop.
+- **From there to a panel-mount jack in the +X wall**, at enclosure **y −172.50, z +6.00** —
+  mid-window between the hat's near edge (−160.0) and the −Y/+X lid boss (edge −184.5), and low
+  enough that the cable passes under the hat.
+- **The old J1 wall penetration is gone**, Ø7.4 hole and Ø13 × 1.8 counterbore both. The wall is
+  solid there, and `verify_enclosure.py` check 4 now proves it on the printed mesh.
+- **A polarised 2-pin inline connector goes in the run**, near the jack. Without one the hat is
+  tethered to the case and cannot be lifted off its headers for service.
+- **A cable tie post** stands on the floor at (143.00, −162.50), between the jack and the hat.
+  The wires land on J1's pad tails, which is the weakest joint in the repair; nothing should be
+  able to pull on them.
+
+**Identifying the two pads from the underside.** The three tails are in a row at board x 144,
+and the asymmetric spacing is the key: **the wider gap is on the ground side.**
+
+| Order, running toward J2 | Net | Board y | Gap to the next |
+|---|---|---|---|
+| nearest the board's own edge | `GNDP` — pad 2 | 112.50 | 5.3 mm |
+| middle | the jack's switch contact — **unconnected, leave it** | 117.80 | 3.2 mm |
+| nearest J2 | `+12V_RAW` — pad 1 | 121.00 | — |
+
+Confirm with a meter before soldering: **the GND tail to TP4 is a dead short.** That pins it
+unambiguously. ⚠️ **Do not try to confirm +12 V against TP1 the same way** — F1 and D1 sit
+between them, so it reads a diode drop, not continuity, and a correct board looks like a fault.
+
+#### Retention, and what is still a placeholder
+
+The jack is not yet sourced. Every dimension in the `PJ_*` block of `af4_enclosure_ocp.py` is a
+placeholder for a common M8-thread 5.5 × 2.5 panel jack, and `PJ_DIMS_VERIFIED = False` makes
+the script say so on every run. **Measure the part, set the six numbers, re-run, and only then
+print.** This is exactly the trap this section is about; the flag is there so it cannot be
+walked into twice.
+
+Retention is the jack's own nut on the plain 3.0 mm wall — a 7 mm thread leaves 4.0 mm for a
+1.6 mm nut, so nothing has to be added and nothing rests on a guess. Anti-rotation is opt-in and
+comes as a **pair**: `PJ_PAD_T` thickens the wall locally from the inside, and `PJ_NUT_AF` sinks
+the nut into that pad, vertex-up so the pocket roof self-supports in a z-up print. **Set both or
+neither** — a nut pocket alone eats the wall the flange clamps. The `panel jack thread reaches
+its nut` and `wall left under the jack flange` checks police the combination.
+
+#### Carried to rev F
+
+- **J1 to rotation 90**, with the body re-placed so the nose overhangs the right edge. This is a
+  re-layout of that corner, not a nudge: at rot 90 the pin column moves to x ≈ 135.8.
+- **Both jack datums taken from the vendor STEP**, bore axis and bore face, never from a body
+  outline or a typed face coordinate.
+- Already carried, unchanged: J3/J4 footprints onto `B.Cu` (item 24), the hat underside kept
+  clear over the Olimex cap, C1's EOL replacement, R5 to 0.25 W (item 18), J1/J2 sourcing.
 
 ---
 
@@ -1334,6 +1456,8 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 24 | **Move the J3/J4 footprints to `B.Cu`** (silkscreen to `B.SilkS`) in `pcb/gen_pcb.py`, rewrite the `PCBWay-README.txt` ASSEMBLY line to name the face by designator, and add the THT parts to the centroid with a side column. The fix for the *cause* of item 23, as opposed to this run's rework | No — but it is the only thing that stops item 23 recurring |
 | 25 | **D3/D5 LED polarity is unverified on the built boards.** 0805 water-clear packages show no cathode mark at either photo set's resolution. Referred to PCBWay 2026-09-11, then **explicitly released on 2026-09-12** so the question could not hold the EQ open. It now falls to commissioning 6.1 / 6.5. Low consequence either way: a reversed indicator fails to light and does not touch the trigger path | No — resolves at commissioning |
 | 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1, and **check the J3/J4 mounting face on every board**: only the reworked sample was ever photographed (§A3.2). Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
+| 28 | **Source the 12 V panel-mount jack** (5.5 × 2.5, centre-positive, threaded panel barrel), a polarised 2-pin inline connector for the run, and hook-up wire. Then **measure the jack** — thread Ø and length, flange Ø, body Ø and length, nut thickness and across-flats — set the `PJ_*` block in `hardware/enclosure/af4_enclosure_ocp.py`, set `PJ_DIMS_VERIFIED = True`, and re-run both it and `verify_enclosure.py`. ⚠️ **The script's placeholders are not dimensions of any part in hand.** → §A4 | **Printing** — and therefore assembly |
+| 29 | **Reprint case and lid** from the exports regenerated 2026-09-18, once item 28 has replaced the placeholder jack dimensions. The 09-17 print is retired: it has the old J1 hole and no panel-jack hole. Print dimensions are unchanged at 65.2 × 117.0 × 39.9 mm. Then fit the panel jack, solder the 12 V pair to J1's pad tails on the hat underside (GND tail to TP4 reads a dead short — confirm that way, never against TP1), anchor the cable at the tie post, and fit the inline connector → §A4 | **Assembly** |
 | 27 | **Case and lid reprinted 2026-09-17** (Kenny) from the exports verified on the Mac 2026-09-16: the case for the 1.5 mm hat lift (§6.3), the lid for the portrait label (§6.4). **Still open:** cut the two PoE light pipes to 24.2 mm (hat pipes unchanged, 10.1), and move the hat up 1.5 mm in the Tinkercad model. The pre-lift case is retired — do not assemble into it | **Assembly** — the PoE light pipes only; the enclosure itself no longer blocks |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
@@ -1342,7 +1466,7 @@ All voltages referenced to **TP4 (power ground)**, not the ESP32's ground.
 
 | # | Check | Expect |
 |---|---|---|
-| 6.1 | Splitter tap into J1 | D3 green lit |
+| 6.1 | Splitter tap into the **12 V panel jack** (not J1 — J1 is dead, §A4) | D3 green lit |
 | 6.2 | TP1 (12 V) → TP4 | **11.4–12.0 V** (12 V less the Schottky drop) |
 | 6.3 | TP2 (10.4 V) → TP4 | **10.0–10.9 V** — the check that matters |
 | 6.4 | TP3 (tip) → TP4 at rest | 0 V, D5 dark |

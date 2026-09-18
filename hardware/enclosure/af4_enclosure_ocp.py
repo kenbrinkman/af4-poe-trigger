@@ -12,6 +12,16 @@ REV D CHANGE OF SHAPE
   buck pocket, the DC-099 hole in the input wall, and the PG7 gland in the output
   wall. The case loses 38 mm of length and gains 5.5 mm of width.
 
+2026-09-18 CHANGE — 12 V INPUT MOVED TO A PANEL JACK
+  The rev E boards arrived with J1, the board-mounted barrel jack, rotated 180
+  deg: gen_pcb.py places it at rot 270, which aims CUI's bore (footprint-local
+  y +10.32) at board x 133.68 — into the middle of the hat. All five boards are
+  built that way. They are used AS BUILT: J1 stays fitted and dead, and the 12 V
+  feed is taken from its pads on the hat's UNDERSIDE (pad 1 +12V_RAW at y -121.0,
+  pad 2 GNDP at y -112.5, both outboard of the ESP32's right edge, so there is
+  open air under them) to a panel-mount jack in the +X wall. The old J1
+  penetration is gone and the wall is solid there. See §A4.
+
 COORDINATE NOTE
   The hat is designed in KiCad with +Y running the other way. Enclosure Y is the
   negative of the hat's KiCad Y:  enclosure_y = -kicad_y.
@@ -104,10 +114,20 @@ TALL_MAX_Z = max(t[5] for t in TALL_PARTS)
 HAT_PIN_DROP = 3.4                      # THT pin protrusion below the hat
 
 # jack axes, from the vendor 3D models (see aF4-pcb-notes.md)
-J1_Y, J1_AXIS_Z = -116.56, HAT_TOP + 3.60   # barrel jack, body 7.2 tall
-J1_FACE_X = 145.28                          # front face of the jack body
 J2_Y, J2_AXIS_Z = -148.50, HAT_TOP + 2.50   # 3.5 mm jack, body 5.0 tall
 J2_NOSE_X = 148.45                          # nose tip, 6.0 mm dia
+
+# J1 is still FITTED to the hat — dead, bore facing inward, 7.2 mm tall — so it
+# still needs room under the lid. It no longer penetrates any wall.
+J1_BODY_H = 7.2
+# Kept so the verifier can prove the old hole is CLOSED in the printed case:
+J1_OLD_Y, J1_OLD_AXIS_Z, J1_OLD_HOLE_D = -116.56, HAT_TOP + 3.60, 7.4
+# ...and as a warning. J1_OLD_Y is the jack BODY centre (footprint-local x
+# -4.45). The bore axis is at local x -3.19, i.e. y -117.81, so this hole was
+# 1.25 mm off axis against 0.95 mm of radial slack in a 7.4 mm bore: the plug
+# would have fouled the wall even had the jack faced outward. A second datum
+# taken by hand rather than from the part, same family as the 4.40 mm UEXT
+# height. Rev F takes it from the model.
 
 # --- interior -------------------------------------------------------------
 IX0 = 87.50                              # 1.65 clear of the hat's left edge
@@ -125,10 +145,53 @@ RJX0, RJX1, RJZ0, RJZ1 = 100.76, 117.64, 0.26, 15.0
 WGX0, WGX1, WGZ0, WGZ1, WG_D = 98.4, 119.9, 3.5, 11.8, 1.5
 
 # --- wall penetrations for the hat's jacks ---------------------------------
-J1_HOLE_D = 7.4          # passes a 5.5 mm plug barrel with room, blocks the body
-J1_CBORE_D = 13.0        # outside counterbore: thins the wall so the plug seats
-J1_CBORE_T = 1.8         # leaves 1.2 mm of wall -> ~6.9 mm of plug engagement
 J2_HOLE_D = 6.6          # 6.0 mm nose + 0.3 clearance per side
+# J1's Ø7.4 hole and its Ø13 x 1.8 outside counterbore are deliberately absent.
+
+# --- 12 V input: panel-mount jack in the +X wall ---------------------------
+# POSITION. The window is bounded by the hat's near edge (HAT_Y0 = -160.0) and
+# the -Y/+X lid boss (centre -189.0, Ø9 -> edge -184.5). PJ_Y sits mid-window.
+# PJ_AXIS_Z keeps the whole jack below the hat plane (HAT_Z = 14.118) so the
+# cable run to J1's pads passes under the hat, and 15.5 mm above the floor.
+PJ_Y      = -172.50
+PJ_AXIS_Z = 6.00
+
+# THE JACK ITSELF IS NOT YET IN HAND. Every dimension below is a placeholder for
+# a common M8-thread 5.5 x 2.5 mm panel jack. Lesson 13 applies literally here —
+# a clearance check is only as good as the number it checks against. MEASURE THE
+# PART, set these five, set PJ_DIMS_VERIFIED, re-run, and only then print.
+PJ_THREAD_D = 8.00       # threaded barrel diameter          [UNVERIFIED]
+PJ_THREAD_L = 7.00       # thread length behind the flange   [UNVERIFIED]
+PJ_FLANGE_D = 11.00      # flange that seats on the wall     [UNVERIFIED]
+PJ_BODY_D   = 10.00      # body diameter behind the wall     [UNVERIFIED]
+PJ_BODY_L   = 14.00      # how far it protrudes inboard      [UNVERIFIED]
+PJ_NUT_T    = 1.60       # supplied nut thickness            [UNVERIFIED]
+PJ_DIMS_VERIFIED = False
+
+# RETENTION. The baseline is the jack's own nut on the plain 3.0 mm wall: a
+# 7 mm thread leaves 4.0 mm for a 1.6 mm nut, so nothing has to be added and
+# nothing rests on a guessed number. Anti-rotation is opt-in and comes as a
+# PAIR, because a nut pocket on its own would eat the wall the flange clamps:
+#   PJ_PAD_T   thickens the wall locally from the inside (a Ø PJ_PAD_D boss)
+#   PJ_NUT_AF  sinks the nut into that pad, vertex-up so the pocket roof is
+#              self-supporting; the nut then cannot turn and the jack is
+#              tightened from outside without twisting the cable.
+# Set BOTH once the nut is measured. The thread check below polices the
+# combination and fails if pad plus pocket outruns the thread.
+PJ_PAD_D  = 16.00
+PJ_PAD_T  = 0.00         # 0 = no pad; try 2.00 together with a nut pocket
+PJ_NUT_AF = None         # nut across-flats, or None for no pocket
+
+PJ_HOLE_D   = PJ_THREAD_D + 0.40
+PJ_POCKET_T = (PJ_NUT_T + 0.30) if PJ_NUT_AF else 0.0
+PJ_CLAMP_T  = WALL + PJ_PAD_T - PJ_POCKET_T   # plastic the flange clamps
+
+# CABLE TIE POST. The 12 V pair is soldered to J1's pad tails on the hat's
+# underside, which is the weakest joint in the whole repair. Anchor the cable
+# here, between the jack and the hat, so nothing can pull on those tails.
+TIE_X, TIE_Y = 143.00, -162.50
+TIE_W, TIE_T, TIE_H = 8.0, 2.4, 6.0     # along y, along x, above the floor
+TIE_SLOT_W, TIE_SLOT_H, TIE_SLOT_Z = 4.0, 2.2, 2.0
 
 # --- mounts ----------------------------------------------------------------
 BOSSES_BOARD = [(97.79, -185.42), (92.71, -117.47), (115.57, -117.47)]
@@ -247,6 +310,18 @@ def teardrop_x(cy, cz, x0, x1, d, cap=TD_CAP):
     f = BRepBuilderAPI_MakeFace(mw.Wire()).Face()
     tri = BRepPrimAPI_MakePrism(f, gp_Vec(ln, 0, 0)).Shape()
     return fuse(s, tri)
+
+def hex_x(cy, cz, x0, ln, af):
+    """Hex pocket along +X, VERTEX UP so its roof is self-supporting in a
+    z-up print. `af` is across-flats; the circumradius is af/sqrt(3)."""
+    r = af / math.sqrt(3)
+    pts = [gp_Pnt(x0, cy + r * math.sin(math.radians(60 * i)),
+                  cz + r * math.cos(math.radians(60 * i))) for i in range(6)]
+    mw = BRepBuilderAPI_MakeWire()
+    for i in range(6):
+        mw.Add(BRepBuilderAPI_MakeEdge(pts[i], pts[(i + 1) % 6]).Edge())
+    f = BRepBuilderAPI_MakeFace(mw.Wire()).Face()
+    return BRepPrimAPI_MakePrism(f, gp_Vec(ln, 0, 0)).Shape()
 
 def fillet_vertical_edges(shape, r):
     mk = BRepFilletAPI_MakeFillet(shape)
@@ -398,11 +473,26 @@ case = cut(case, box(RJX0, OY0 - 1, RJZ0, RJX1, IY0 + 0.01, RJZ1))
 case = cut(case, box(WGX0, IY0 - WG_D, WGZ0, WGX1, IY0 + 0.01, WGZ1))
 case = cut(case, box(104.5, IY0 - WG_D, 14.8, 113.9, IY0 + 0.01, 17.0))
 
-# +X wall: the hat's two jacks
-case = cut(case, teardrop_x(J1_Y, J1_AXIS_Z, IX1 - 1, OX1 + 1, J1_HOLE_D))
-case = cut(case, cyl_x(J1_Y, J1_AXIS_Z, OX1 - J1_CBORE_T, J1_CBORE_T + 1,
-                       J1_CBORE_D))
+# +X wall: the hat's 3.5 mm trigger jack. J1's barrel hole is deliberately
+# absent — see the 2026-09-18 change note at the top of this file.
 case = cut(case, teardrop_x(J2_Y, J2_AXIS_Z, IX1 - 1, OX1 + 1, J2_HOLE_D))
+
+# +X wall: the 12 V panel jack. Optional inside pad first, then the bore, then
+# the optional vertex-up hex pocket that captures the nut. Order matters.
+if PJ_PAD_T > 0:
+    case = fuse(case, cyl_x(PJ_Y, PJ_AXIS_Z, IX1 - PJ_PAD_T, PJ_PAD_T, PJ_PAD_D))
+case = cut(case, teardrop_x(PJ_Y, PJ_AXIS_Z, IX1 - PJ_PAD_T - 1, OX1 + 1,
+                            PJ_HOLE_D))
+if PJ_NUT_AF:
+    case = cut(case, hex_x(PJ_Y, PJ_AXIS_Z, IX1 - PJ_PAD_T - 0.01,
+                           PJ_POCKET_T + 0.01, PJ_NUT_AF + 0.40))
+
+# cable tie post on the floor, between the panel jack and the hat
+case = fuse(case, box(TIE_X - TIE_T / 2, TIE_Y - TIE_W / 2, IZ0,
+                      TIE_X + TIE_T / 2, TIE_Y + TIE_W / 2, IZ0 + TIE_H))
+case = cut(case, box(TIE_X - TIE_T, TIE_Y - TIE_SLOT_W / 2, IZ0 + TIE_SLOT_Z,
+                     TIE_X + TIE_T, TIE_Y + TIE_SLOT_W / 2,
+                     IZ0 + TIE_SLOT_Z + TIE_SLOT_H))
 
 # ESP32 board standoffs (top z=0), M2 pilots
 for bx, by in BOSSES_BOARD:
@@ -475,7 +565,7 @@ ok &= clear("hat left edge to interior wall", HAT_X0 - IX0, 1.0)
 ok &= clear("hat right edge to interior wall", IX1 - HAT_X1, 0.3)
 ok &= clear("hat front edge to interior wall", HAT_Y0 - IY0, 1.0)
 ok &= clear("hat back edge to interior wall", IY1 - HAT_Y1, 1.0)
-ok &= clear("barrel jack crown to lid underside", IZ1 - (HAT_TOP + 7.2), 1.0)
+ok &= clear("dead J1 crown to lid underside", IZ1 - (HAT_TOP + J1_BODY_H), 1.0)
 ok &= clear("hat underside pins to ESP32 top", (HAT_Z - HAT_PIN_DROP) - 1.578, 2.0)
 # Measured tall parts vs the hat's bare underside. Nothing on the hat hangs
 # below its underside over the ESP32: J3/J4 pins solder on the top face, and the
@@ -489,8 +579,27 @@ ok &= clear("interior past antenna tip", IY1 - (-83.69), 1.0)
 for bx, by in BOSSES_HAT:
     ok &= clear("hat boss %.1f clear of ESP32 edge" % bx,
                 bx - HAT_BOSS_D / 2 - 118.15, 0.5)
-ok &= clear("J1 plug engagement", 9.5 - ((WALL - J1_CBORE_T) + (IX1 - J1_FACE_X)), 5.0)
 ok &= clear("J2 nose recess inside outer face", OX1 - J2_NOSE_X, 0.5)
+
+# --- 12 V panel jack --------------------------------------------------------
+if not PJ_DIMS_VERIFIED:
+    print("  [WARN] panel jack dimensions are PLACEHOLDERS — measure the part,"
+          " set PJ_DIMS_VERIFIED, re-run, then print")
+PJ_ENV_D = max(PJ_BODY_D, PJ_FLANGE_D, PJ_PAD_D if PJ_PAD_T > 0 else 0.0)
+ok &= clear("panel jack thread reaches its nut",
+            PJ_THREAD_L - (PJ_CLAMP_T + PJ_NUT_T), 0.50)
+ok &= clear("wall left under the jack flange", PJ_CLAMP_T, 2.00)
+ok &= clear("panel jack to hat near edge", HAT_Y0 - (PJ_Y + PJ_ENV_D / 2), 2.00)
+ok &= clear("panel jack to the -Y lid boss",
+            (PJ_Y - PJ_ENV_D / 2) - (IY0 + LB_IN + LID_BOSS_D / 2), 2.00)
+ok &= clear("panel jack body above the floor",
+            (PJ_AXIS_Z - PJ_BODY_D / 2) - IZ0, 2.00)
+ok &= clear("panel jack body under the hat plane",
+            HAT_Z - (PJ_AXIS_Z + PJ_BODY_D / 2), 0.00)
+ok &= clear("panel jack body clear of the ESP32 edge",
+            (IX1 - PJ_BODY_L) - 118.15, 2.00)
+ok &= clear("tie post clear of the jack body",
+            (TIE_Y - TIE_W / 2) - (PJ_Y + PJ_BODY_D / 2), 0.50)
 
 # --- light pipes -----------------------------------------------------------
 PIPE_SEAT_Z = IZ1 + LID_T - LED_APERTURE_T      # the land the rod seats on
@@ -536,7 +645,7 @@ print("  all geometry checks pass" if ok else "  *** CHECKS FAILED ***")
 # solid interference test: does the case body intersect the hat's envelope?
 # The bosses are meant to touch each board's underside, so the tests start at
 # the plane each board sits on: anything above that is a real collision.
-hat_env = box(HAT_X0, HAT_Y0, HAT_Z, HAT_X1, HAT_Y1, HAT_TOP + 7.2)
+hat_env = box(HAT_X0, HAT_Y0, HAT_Z, HAT_X1, HAT_Y1, HAT_TOP + J1_BODY_H)
 v1 = volume(common(case, hat_env))
 esp_env = box(90.15, -188.15, 0.0, 118.15, -90.0, TALL_MAX_Z)
 v2 = volume(common(case, esp_env))
@@ -575,6 +684,26 @@ print("  [%s] light pipes intersect hat PCB       %8.3f mm3 (want 0)"
       % ("OK " if v4 < 1e-6 else "FAIL", v4))
 print("  [%s] light pipes intersect ESP32 PCB     %8.3f mm3 (want 0)"
       % ("OK " if v5 < 1e-6 else "FAIL", v5))
+
+# The panel jack's body is the one solid this case now has to make room for
+# that no earlier revision had. Test it the way the light pipes are tested:
+# as a solid, against every other solid in the box.
+pj_body = cyl_x(PJ_Y, PJ_AXIS_Z, IX1 - PJ_BODY_L, PJ_BODY_L, PJ_BODY_D)
+furniture = None
+for bx, by, zb in LID_BOSSES:
+    f_ = cyl_z(bx, by, zb, IZ1 - zb, LID_BOSS_D)
+    furniture = f_ if furniture is None else fuse(furniture, f_)
+for bx, by in BOSSES_HAT:                       # boss plus its gusset foot
+    furniture = fuse(furniture, cyl_z(bx, by, IZ0, HAT_Z - IZ0, HAT_BOSS_D + 6.0))
+for bx, by in BOSSES_BOARD:
+    furniture = fuse(furniture, cyl_z(bx, by, IZ0, -IZ0, 6.0))
+furniture = fuse(furniture, box(TIE_X - TIE_T / 2, TIE_Y - TIE_W / 2, IZ0,
+                                TIE_X + TIE_T / 2, TIE_Y + TIE_W / 2, IZ0 + TIE_H))
+for _nm, _other in (("hat envelope", hat_env), ("ESP32 envelope", esp_env),
+                    ("lid volume", lid_env), ("case furniture", furniture)):
+    _v = volume(common(pj_body, _other))
+    print("  [%s] panel jack body vs %-16s %8.3f mm3 (want 0)"
+          % ("OK " if _v < 1e-6 else "FAIL", _nm, _v))
 
 print("case volume cm3:", round(volume(case) / 1000, 1),
       " lid:", round(volume(lid) / 1000, 1))

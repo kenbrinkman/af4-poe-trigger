@@ -102,15 +102,24 @@ The hat arrives populated. Give it thirty seconds:
 
 - **C2 polarity** — the tantalum's stripe/+ end must face the 10.4 V rail (pad 1,
   marked on the silkscreen).
-- **J1 is the 2.5 mm centre-pin jack.** Plug the feeder splitter's tap lead into
-  it and confirm it seats with a click, not a wobble. A 2.1 mm part will feel
-  loose; if it does, stop — see the note in the BOM.
+- ⚠️ **J1 is fitted backwards on every rev E board and is DEAD.** Its bore faces
+  into the middle of the hat. Do not try to plug anything into it, and do not
+  remove it. The 12 V feed comes in through a panel-mount jack in the +X wall,
+  wired to J1's pad tails on the hat's **underside**. → §A4
 - **U1 pin 1** dot toward the ESP32 side of the board.
 - Nothing bridging the copper-free isolation band running down the middle.
 
-Meter, board unpowered: **J1 centre pin to J2 sleeve should read open** (the
-PhotoMOS is off and the LM1117 is unpowered). Between the 12 V test pad and GND
-you will read the reverse-polarity diode, not a short.
+Meter, board unpowered: **the +12 V pad tail to J2 sleeve should read open**
+(the PhotoMOS is off and the LM1117 is unpowered). Between the 12 V test pad and
+GND you will read the reverse-polarity diode, not a short.
+
+**Identifying the two pad tails on the hat's underside.** J1's three tails sit in
+a row at board x 144. The spacing is asymmetric and that is the key — **the wider
+gap is on the ground side**: nearest the board's own edge is **GND** (pad 2), then
+5.3 mm to the jack's **switch contact** (pad 3, unconnected — leave it), then
+3.2 mm to **+12 V** (pad 1), nearest J2. Confirm before soldering: **the GND tail
+to TP4 is a dead short.** ⚠️ Do not try the same test on +12 V against TP1 — F1
+and D1 sit between them, so a correct board reads a diode drop, not continuity.
 
 ## 3. Fit the male headers to the ESP32
 
@@ -183,7 +192,7 @@ test pad on the power side of the board (TP4), not to the ESP32's ground.
 
 | # | Check | Expect |
 |---|---|---|
-| 6.1 | Splitter tap plugged into J1 | Green LED (D3) lit |
+| 6.1 | Splitter tap plugged into the **12 V panel jack** in the +X wall (J1 is dead, §A4) | Green LED (D3) lit |
 | 6.2 | TP1 (12 V) to TP4 | **11.4–12.0 V** (12 V less the Schottky drop) |
 | 6.3 | TP2 (10.4 V) to TP4 | **10.0–10.9 V.** This is the check that matters — it confirms the R4/R5 divider |
 | 6.4 | TP3 (tip) to TP4, at rest | 0 V, and the yellow LED (D5) dark |

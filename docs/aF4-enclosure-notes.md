@@ -178,20 +178,25 @@ the script will tell you if anything now collides.
 | Hat screws | 2 | M3 × 8–10 self-tapping |
 | Wall-mount screws | 2 | #8 or M4, into the tabs |
 
-No glands, no locknuts, no panel-mount jacks, no cable feed-throughs. The only
-things that pass through a wall are the RJ45 and the two jacks, and all three are
-soldered to a board.
+⚠️ **This stopped being true on 2026-09-18.** Rev E's J1 came back rotated 180°,
+so the 12 V input is now a **panel-mount jack** in the +X wall at (y −172.50,
+z +6.00), wired back to J1's pad tails on the hat's underside, with a cable tie
+post on the floor at (143.00, −162.50) and a polarised inline connector in the
+run. The old J1 penetration is gone and the wall is solid there. What still holds:
+the RJ45 and the 3.5 mm trigger jack pass through walls and are soldered to a
+board. → §A4, and items 28 and 29.
 
 ## Assembly order
 
-1. Print both parts. Test-fit a barrel plug and a 3.5 mm plug into the two
-   +X wall holes **before** going further — a light chase with a round file is
-   normal.
+1. Print both parts. Fit the 12 V panel jack into its +X wall hole and test-fit
+   a 3.5 mm plug into the trigger hole **before** going further — a light chase
+   with a round file is normal. ⚠️ The +X wall has **no barrel hole** any more;
+   if the print has one it is the retired 09-17 case (§A4).
 2. Fit the ESP32-POE-ISO onto its three standoffs, RJ45 into the wall opening,
    3 × M2. **This has to happen first** — the hat covers two of its screws.
 3. Solder two 1 × 10 male headers into EXT1/EXT2, pins up, if not already done.
-4. Drop the hat on: sockets onto the headers, both jack noses into their wall
-   holes, until the hat **rests on its two standoffs** — the sockets stop 1.5 mm short of
+4. Drop the hat on: sockets onto the headers, the 3.5 mm nose into its wall
+   hole, until the hat **rests on its two standoffs** — the sockets stop 1.5 mm short of
    the header plastic by design. Then 2 × M3. **Never press the hat fully home on the
    headers outside the case:** without the standoffs it would bottom on the plastic and
    land on the cap beside DCDC1.
@@ -207,15 +212,17 @@ rather than against a bounding box:
 
 ```
   board outline 57.0 x 50.0 x 1.6, both M3 holes at 3.30 (real board is 3.20)
-  J1 PJ-079BH body 11.5 x 10.1 x 7.2, bored 6.0 x 9.5 from the front face
+  J1 PJ-079BH body 11.5 x 10.1 x 7.2, bored 6.0 x 9.5 INBOARD (corrected §A4)
   J2 SJ1-3523N body 11.0 x 12.0 x 5.0, 9.0 mm shoulder, 6.0 mm nose to x=147.95
   U1, D3 and D5 bumps under the two lid sight holes
   two detachable 8.5 mm socket bars (J3/J4) that peg into the underside
 ```
 
 Checks, all passing: zero intersection with the case solid and with the lid
-solid; an M3 shank passes both mounting holes; a 5.5 mm plug pushed through the
-wall bore reaches the J1 bore; and each socket bar clears the tallest ESP32
+solid; an M3 shank passes both mounting holes; **J1 is walled off, its bore
+opening inboard where no plug can reach it** (this line read "a 5.5 mm plug pushed
+through the wall bore reaches the J1 bore" until 2026-09-18, and that check was
+hollow — see the table in §A4); and each socket bar clears the tallest ESP32
 feature under it by 1.17 mm, taken from the vertices of
 `reference/vendor/ESP32-PoE-ISO_Rev_N.stl` rather than assumed.
 

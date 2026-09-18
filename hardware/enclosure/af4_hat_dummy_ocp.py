@@ -8,8 +8,21 @@ copper, no pins, no passives that cannot foul anything.
 WHAT IT REPRODUCES (and therefore what it can prove)
   - the 57.0 x 50.0 x 1.6 mm board outline
   - both M3 mounting holes, so it screws onto the two case standoffs
-  - J1 PJ-079BH body, with its 9.5 mm barrel bore open to the front face, so a
-    real 5.5 x 2.5 plug can be pushed through the wall and into it
+  - J1 PJ-079BH body, with its 9.5 mm barrel bore open INBOARD, which is where
+    the real part points (2026-09-18)
+
+  ⚠️ 2026-09-18. Until today this file bored J1 from J1_X1, the wall-facing face,
+  and asserted that a plug could reach it. Both were wrong, and BOTH CHECKS THAT
+  LOOKED LIKE THEY COVERED IT WERE HOLLOW:
+    * "J1 bore reaches past the wall inner face" evaluated
+      J1_X1 - (J1_X1 - J1_BORE_L) >= J1_BORE_L, i.e. 9.5 >= 9.5. Algebraically
+      true for every input. It could not fail.
+    * "5.5 mm plug path clears the case wall bore" intersected the plug with the
+      CASE only, never with the jack body, so it never asked the question either.
+  CUI's own STEP model puts the bore at footprint-local y +10.32 and its axis at
+  local x -3.19; J1_AXIS_Y here is the BODY centre (local x -4.45), 1.25 mm off.
+  See §A4. This dummy is retired now the real boards are in hand; it is corrected
+  rather than deleted so it cannot mislead the rev F work.
   - J2 SJ1-3523N body, shoulder and 6.0 mm nose
   - D3 / D5 bumps under the two lid sight holes
   - U1, so the isolation band is visible
@@ -88,7 +101,8 @@ MOUNT_D = 3.30   # real board is 3.20; +0.10 so a printed hole still passes M3
 J1_X0, J1_X1 = 133.70, 145.20             # 11.5 deep
 J1_Y0, J1_Y1 = -121.60, -111.50           # 10.1 wide
 J1_H = 7.20
-J1_AXIS_Y, J1_AXIS_Z = -116.56, HAT_TOP + 3.60   # centred in body, both axes
+# bore axis: footprint-local (-3.19, +10.32) -> y -117.81, from CUI's STEP
+J1_AXIS_Y, J1_AXIS_Z = -117.81, HAT_TOP + 3.60
 J1_BORE_D, J1_BORE_L = 6.00, 9.50         # accepts a 5.5 mm plug barrel
 
 # ---- J2 SJ1-3523N, F.Fab body, placed at (141.65,148.5) rot 90 ------------
@@ -214,9 +228,10 @@ def emboss(s, x, y, h, size, depth):
 # ============================================================ the dummy board
 board = box(BX0, BY0, HAT_Z, BX1, BY1, HAT_TOP)
 
-# J1 barrel jack: body, then bore the plug hole in from the front face
+# J1 barrel jack: body, then bore the plug hole in from the INBOARD face —
+# which is the way the part as fabricated actually faces (§A4)
 j1 = box(J1_X0, J1_Y0, HAT_TOP, J1_X1, J1_Y1, HAT_TOP + J1_H)
-j1 = cut(j1, cyl_x(J1_AXIS_Y, J1_AXIS_Z, J1_X1 - J1_BORE_L, J1_BORE_L + 0.01,
+j1 = cut(j1, cyl_x(J1_AXIS_Y, J1_AXIS_Z, J1_X0 - 0.01, J1_BORE_L + 0.01,
                    J1_BORE_D))
 board = fuse(board, j1)
 
@@ -283,7 +298,10 @@ print("  dummy bbox  x %.2f..%.2f  y %.2f..%.2f  z %.2f..%.2f"
       % (bb[0], bb[3], bb[1], bb[4], bb[2], bb[5]))
 chk("board outline width", BX1 - BX0, 57.0)
 chk("board outline length", BY1 - BY0, 50.0)
-chk("J1 bore reaches past the wall inner face", J1_X1 - (J1_X1 - J1_BORE_L), 9.5)
+# J1 is dead: its bore opens inboard at x J1_X0 and the +X wall is solid in
+# front of it. What matters now is only that its 7.2 mm crown clears the lid.
+print("  [--] J1 bore opens inboard at x %.2f — no plug can reach it (§A4)"
+      % J1_X0)
 chk("J2 nose recess inside outer wall face", 149.65 - J2_NOSE_X1, 0.5)
 # The lid underside is read from af4_enclosure_ocp.py, never retyped: this line
 # said 23.50 until 2026-09-16 and failed the day the enclosure moved to 25.00.
@@ -308,10 +326,12 @@ if os.path.exists(CASE) and os.path.exists(LID):
     for i, (mx, my) in enumerate(MOUNT, 1):
         pin = cyl_z(mx, my, HAT_Z - 0.2, HAT_T + 0.4, 3.0)   # an M3 shank
         chk_zero("M3 %d shank clears the dummy" % i, volume(common(pin, board)))
-    # a plug pushed through the wall must reach the J1 bore
+    # J1 is no longer reachable and the wall behind it is solid: assert that,
+    # rather than the old check which only ever tested the plug against the case
     plug = cyl_x(J1_AXIS_Y, J1_AXIS_Z, 141.0, 12.0, 5.5)
-    chk_zero("5.5 mm plug path clears the case wall bore",
-             volume(common(plug, case)))
+    v = volume(common(plug, fuse(board, case)))
+    print("  [%s] J1 is walled off (plug path is blocked) %8.3f mm3 (want > 0)"
+          % ("OK " if v > 1e-6 else "FAIL", v))
 else:
     print("  [--] case/lid STEP not found beside the script; solid checks SKIPPED")
 
