@@ -44,75 +44,78 @@ one pass.
 > 🔑 **Do not read this file whole.** Find the section here, then read only its
 > line range. Numbers drift — confirm with `grep -n "^### 2.4" <file>`.
 
-  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L123
-  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L141
-  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L164
-  - §A1.3 Isolation, re-derived `[AUDIT]` — L193
-  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L215
-  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L226
-  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L283
-  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L331
-  - §A4 J1, the 12 V barrel jack, faces inboard on all five boards `[CAD] 2026-09-18` — L377
-- **§1 What the system must do** — L573
-  - §1.1 Requirements — L581
-  - §1.2 Measured facts about the port — L592
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L609
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L649
-- **§2 Circuit** — L678
-  - §2.1 Regulator — the calculation that matters — L725
-  - §2.2 Load on the 10.4 V rail — L758
-  - §2.3 PhotoMOS drive — L809
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L834
-  - §2.5 Protection — L876
-  - §2.6 Indicator LEDs — L899
-- **§3 Bill of materials — with verification status** — L933
-  - §3.1 Sourcing traps recorded — L962
-  - §3.2 Bought separately (not on the board) — L970
-- **§4 Board** — L978
-  - §4.1 Geometry from vendor CAD `[CAD]` — L996
-  - §4.2 Verification status of the board — L1006
-  - §4.3 Isolation — L1028
-  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L1041
-- **§5 Firmware** — L1076
-  - §5.1 The safety architecture — L1082
-  - §5.2 Timing check against the spec `[CALC]` — L1099
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1119
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1143
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1154
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1172
-  - §5.7 Home Assistant integration — L1183
-- **§6 Enclosure** — L1264
-  - §6.1 The vertical stack — the governing dimension — L1272
-  - §6.2 Two details that are easy to lose — L1307
-  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1325
-  - §6.4 Lid label turned to read portrait `2026-09-16` — L1438
-- **§7 Errors already found and fixed** — L1458
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1493
-- **§8 Open items** — L1513
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1566
-- **§9 Repository map** — L1597
-  - §9.1 Toolchain constraints worth knowing — L1620
-  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1635
-- **§10 Audit status** — L1677
-  - §10.1 Still unverified after the audit — L1693
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1727
-- **§11 The PoE board was replaced `[MEAS] 2026-09-18`** — L1739
-  - §11.1 Every board has two MACs, three apart, and the two systems use different ones — L1754
-  - §11.2 Home Assistant migrates the device; it does not need a delete and re-add — L1773
-  - §11.3 The OPNsense reservation is one line — L1795
-  - §11.4 The OTA password rotation, and the character that broke it — L1807
-  - §11.5 The standing corrections — L1832
-- **§12 Commissioning passed, end to end `[MEAS] 2026-09-18`** — L1854
-  - §12.1 Polarity, settled by meter — L1867
-  - §12.2 The numbers — L1878
-  - §12.3 The reef system is plumbed and running — L1915
-  - §12.4 What a manual feed deliberately does not touch — L1934
-  - §12.5 The decision taken, and the one question it opens — L1948
-  - §12.6 The standing corrections — L1962
-- **§13 The retired board was erased `[MEAS] 2026-09-19`** — L1978
-  - §13.1 Erase, don't overwrite — and verify by read-back — L2001
-  - §13.2 What survives, and what it means for reuse — L2017
-  - §13.3 The standing corrections — L2038
+  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L126
+  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L144
+  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L167
+  - §A1.3 Isolation, re-derived `[AUDIT]` — L196
+  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L218
+  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L229
+  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L286
+  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L334
+  - §A4 J1, the 12 V barrel jack, faces inboard on all five boards `[CAD] 2026-09-18` — L380
+- **§1 What the system must do** — L576
+  - §1.1 Requirements — L584
+  - §1.2 Measured facts about the port — L595
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L612
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L652
+- **§2 Circuit** — L681
+  - §2.1 Regulator — the calculation that matters — L728
+  - §2.2 Load on the 10.4 V rail — L761
+  - §2.3 PhotoMOS drive — L812
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L837
+  - §2.5 Protection — L879
+  - §2.6 Indicator LEDs — L902
+- **§3 Bill of materials — with verification status** — L936
+  - §3.1 Sourcing traps recorded — L965
+  - §3.2 Bought separately (not on the board) — L973
+- **§4 Board** — L981
+  - §4.1 Geometry from vendor CAD `[CAD]` — L999
+  - §4.2 Verification status of the board — L1009
+  - §4.3 Isolation — L1031
+  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L1044
+- **§5 Firmware** — L1079
+  - §5.1 The safety architecture — L1085
+  - §5.2 Timing check against the spec `[CALC]` — L1102
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1122
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1146
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1157
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1175
+  - §5.7 Home Assistant integration — L1186
+- **§6 Enclosure** — L1267
+  - §6.1 The vertical stack — the governing dimension — L1275
+  - §6.2 Two details that are easy to lose — L1310
+  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1328
+  - §6.4 Lid label turned to read portrait `2026-09-16` — L1441
+- **§7 Errors already found and fixed** — L1461
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1496
+- **§8 Open items** — L1516
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1569
+- **§9 Repository map** — L1600
+  - §9.1 Toolchain constraints worth knowing — L1623
+  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1638
+- **§10 Audit status** — L1680
+  - §10.1 Still unverified after the audit — L1696
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1730
+- **§11 The PoE board was replaced `[MEAS] 2026-09-18`** — L1742
+  - §11.1 Every board has two MACs, three apart, and the two systems use different ones — L1757
+  - §11.2 Home Assistant migrates the device; it does not need a delete and re-add — L1776
+  - §11.3 The OPNsense reservation is one line — L1798
+  - §11.4 The OTA password rotation, and the character that broke it — L1810
+  - §11.5 The standing corrections — L1835
+- **§12 Commissioning passed, end to end `[MEAS] 2026-09-18`** — L1857
+  - §12.1 Polarity, settled by meter — L1870
+  - §12.2 The numbers — L1881
+  - §12.3 The reef system is plumbed and running — L1918
+  - §12.4 What a manual feed deliberately does not touch — L1937
+  - §12.5 The decision taken, and the one question it opens — L1951
+  - §12.6 The standing corrections — L1965
+- **§13 The retired board was erased `[MEAS] 2026-09-19`** — L1981
+  - §13.1 Erase, don't overwrite — and verify by read-back — L2004
+  - §13.2 What survives, and what it means for reuse — L2020
+  - §13.3 The standing corrections — L2041
+- **§14 The case is closed, mounted, and the system is live `[MEAS] 2026-09-19`** — L2054
+  - §14.1 The 23:45 "missed feed(s)" alert was correct, and cannot recur — L2084
+  - §14.2 The standing corrections — L2102
 
 <!-- /SECTION-INDEX -->
 
@@ -1559,7 +1562,7 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1, and **check the J3/J4 mounting face on every board**: only the reworked sample was ever photographed (§A3.2). Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
 | 28 | ✅ **CLOSED same day, 2026-09-18.** Nothing was ordered: Kenny already had six **DALQUIS DC-099** panel jacks, the same part rev C used, with 150 mm of 18 AWG pre-soldered leads. Calipered, the `PJ_*` block set, `PJ_DIMS_VERIFIED` flipped, both scripts re-run and the exports regenerated. The measurement also revealed a **flat on the barrel**, which replaced the printed anti-rotation scheme with a D-hole. Flange Ø and body Ø remain uncalipered upper bounds and gate nothing. → §A4 | — |
 | 29 | **Reprint the CASE** from the exports regenerated 2026-09-18 — **the lid does not change**, its STL is byte-identical, so the 09-17 lid print still stands. The 09-17 case is retired: old J1 hole, no panel-jack hole. Print size unchanged at 65.2 × 117.0 × 39.9 mm. Then fit the DC-099 **flat up** and tighten its 14 mm nut **before the boards go in**, solder the pair to J1's pad tails on the hat underside (**red +12 V, black −**; GND tail to TP4 reads a dead short — confirm that way, never against TP1), and anchor the cable at the tie post → §A4. ✅ **CLOSED 2026-09-18.** Case printed; DC-099 fitted flat up in the D-hole with its 14 mm nut tightened while the box was empty; the pair soldered to J1's pad tails and routed **inboard**, clear of the 0.50 mm edge. Polarity then confirmed by meter — black tail → TP4 a dead short, red → TP4 open (§12.1). Tie-post anchoring goes with the final close-up under item 27 | — |
-| 27 | **Case and lid reprinted 2026-09-17** (Kenny) from the exports verified on the Mac 2026-09-16: the case for the 1.5 mm hat lift (§6.3), the lid for the portrait label (§6.4). **Still open:** cut the two PoE light pipes to 24.2 mm (hat pipes unchanged, 10.1), and move the hat up 1.5 mm in the Tinkercad model. The pre-lift case is retired — do not assemble into it | **Assembly** — the PoE light pipes only; the enclosure itself no longer blocks |
+| 27 | **Case and lid reprinted 2026-09-17** (Kenny) from the exports verified on the Mac 2026-09-16: the case for the 1.5 mm hat lift (§6.3), the lid for the portrait label (§6.4). **Still open:** cut the two PoE light pipes to 24.2 mm (hat pipes unchanged, 10.1), and move the hat up 1.5 mm in the Tinkercad model. The pre-lift case is retired — do not assemble into it. ✅ **CLOSED 2026-09-18** (recorded 09-19). Pipes cut and fitted — both lit through the lid — M3s in, 12 V cable anchored, lid on with all four screws, and the box wall-mounted above the sump on its printed bracket. Reported by Kenny and corroborated by the install photo; no dimension was re-measured here. The Tinkercad hat lift is cosmetic-model housekeeping and is not tracked further → §14 | — |
 | 30 | **Erase the retired ESP32-POE-ISO.** `python -m esptool --port /dev/cu.usbserial-XXXX erase-flash`, then label it *"retired 2026-09-18 — was af4-feeder, base MAC `20:e7:c8:74:a6:d4`"* and bag it. Until it is erased it still carries the node name `af4-feeder`, a valid API encryption key and an OTA password, so powering it on the LAN puts a second board answering to the same name beside the real one — a genuine feed hazard, not a theoretical one. Safe to do now: the replacement is adopted and verified (§11), so no rollback is being destroyed. ✅ **CLOSED 2026-09-19.** Full-chip `erase-flash` on the bench over USB with the Ethernet lead out; identity confirmed by `read-mac` **before** the erase and the erase confirmed by reading five offsets back as `0xFF` **after** it. The board carries no credentials now. Labelling and bagging is physical and is Kenny's; it is housekeeping, not a hazard → §13 | — |
 | 31 | **Confirm the aF4's internal 24 h schedule resumes once the link cable is removed.** Opened 2026-09-18. §1.4 establishes that the built-in schedule is *completely overridden while the port is connected* — but both inD guides describe only the connected state, and **neither says what happens on release.** This project already assumed the override direction backwards once, so the reverse direction is not to be assumed either. The check is free: pull the cable and read the feeder's own display for a next feed time. Consequence if it does not resume and nobody looks: the feeder is silently dark for as long as the case is on the bench | No — but it is the live-animal risk while the enclosure is away |
 
@@ -2045,3 +2048,64 @@ issues no DHCP request, so any stale lease for `…A6:D7` expires unused.
   running one.
 - **The eFuse MAC is permanent.** A wiped board is anonymous in firmware and still recognisable on
   the wire — plan reservations around that, do not try to change it. → §13.2
+
+---
+
+## 14. The case is closed, mounted, and the system is live `[MEAS] 2026-09-19`
+
+The enclosure was finished and wall-mounted above the sump on **2026-09-18**, and
+`input_boolean.reef_af4_schedule_enabled` was switched **on at 23:26** the same night. Item 27 is
+closed. **This is go-live**: every gate from §8.1 through §12 has passed and the system is now
+feeding on its own schedule rather than under supervision.
+
+Verified against the live instance 2026-09-19:
+
+| | |
+|---|---|
+| Board | `binary_sensor.af4_feeder_status` **on** since 2026-09-18 23:18, `192.168.1.55`, uninterrupted |
+| Lockout | `binary_sensor.af4_feeder_feed_lockout` **off** — at rest, matching D5 dark in the photo |
+| Schedule toggle | **on** since 2026-09-18 23:26 |
+| `automation.reef_tank_af4_scheduled_feed` | **on**, `last_triggered: null` — it has never yet fired |
+| `automation.reef_tank_feeder_health_watchdog` | **on**, queued mode |
+| Feeds | 2/day, 13:30 and 20:30; `counter.reef_af4_feeds_today` **0** |
+
+**The enclosure as installed:** lid on with all four screws, both PoE light pipes lit — amber and
+green — through the lid, D3 lit and D5 dark on the hat, both jack noses through the wall with
+their cables dressed downward, and the whole box on its printed wall bracket above the sump.
+The 24.2 mm pipe length, the two M3s into the tall standoffs and the tie-post anchor are **Kenny's
+report plus the photo**, not a measurement taken here.
+
+⚠️ **Nothing has yet run unattended.** `last_triggered: null` on the scheduled feed is the plain
+statement of it: every feed so far has been a button press with someone watching. **The first
+fully automated feed is 13:30 on 2026-09-19**, and it passes when `counter.reef_af4_feeds_today`
+reads 1 — the counter increments only after the board confirms the pulse by raising its lockout
+(§12.4), so a stuck 0 is the signal.
+
+### 14.1 The 23:45 "missed feed(s)" alert was correct, and cannot recur
+
+Nineteen minutes after the toggle went on, the watchdog's daily backstop fired and pushed to both
+phones:
+
+> 🐟 **aF4 missed feed(s)** — Schedule is enabled but only 0 of 2 due aF4 feeds were confirmed
+> today. Check the trigger board and lockout.
+
+It also wrote an `error` row through `script.reef_log`. **Nothing is wrong.** The backstop
+evaluates the whole day's due slots against the counter, and both 13:30 and 20:30 had already
+passed while the schedule was still off — so at 23:45 the day genuinely held 0 of 2 confirmed
+feeds. The trace confirms it took the alert branch on a true condition, not on an error.
+
+The exposure is narrow and now spent: it can only happen on a day where the toggle is switched on
+**after** a slot time. On any day that begins with the schedule on, a missed feed at 23:45 means a
+missed feed. **Do not "fix" the backstop for this case** — widening it to ignore slots that
+predate the toggle would also teach it to ignore a real outage that straddled a restart.
+
+### 14.2 The standing corrections
+
+- ⚠️ **The aF4's internal schedule is overridden again** — the link cable is back in. Item 31 is
+  still unverified and its free window has closed; the fallback nobody has tested is the one that
+  matters the next time this board is out of service for a day. → §12.5 · §1.4
+- **Go-live is not commissioning.** §12 proved the hardware under supervision; the first
+  *unattended* feed is 13:30 on 2026-09-19 and is the only thing that proves the scheduler.
+- **A missed-feed alert dated to a day the toggle was flipped mid-day is expected.** → §14.1
+- **The installed-enclosure details are reported, not measured here.** If a dimension ever matters
+  again — pipe length, standoff engagement — measure the part, do not cite this section (§6.3).

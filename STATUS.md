@@ -16,29 +16,29 @@ return-pump interlock. **Go-live is no longer gated on anything but closing the 
 **🟢 The retired ESP32 is erased** — full chip, verified by read-back. Item 30 and the LAN hazard
 close together; the bare board is stock silicon now and all it still wants is a label. → §13
 
-**🟠 The enclosure goes back to the bench to be finished** — light pipes, M3s, tie-post anchor,
-lid. The link cable is pulled meanwhile so the feeder runs on its own internal schedule, and
-**Kenny turns `input_boolean.reef_af4_schedule_enabled` on by hand once the case is closed.**
+**🟢 LIVE. The case is closed, wall-mounted above the sump, and the schedule is on** — Kenny
+enabled `input_boolean.reef_af4_schedule_enabled` at **2026-09-18 23:26**, and the board has been
+up continuously since 23:18 at `192.168.1.55`. Item 27 is closed. **The first fully automated feed
+is 13:30 on 2026-09-19** — nothing has yet run unattended end to end. → §14
 
 | | |
 |---|---|
-| Board + hat | **Assembled and commissioned** `[MEAS] 2026-09-18`. Hat on both headers, resting on its standoffs, both jack noses through the +X wall |
+| Board + hat | **Assembled, commissioned and installed.** Case closed and wall-mounted 2026-09-18; both jack noses through the wall, both PoE pipes lit, D5 dark at rest |
 | ESP32 | **Online at 192.168.1.55**, adopted in HA, all seven entity IDs intact. Ethernet MAC `00:70:07:7F:48:C3` |
 | Firmware | **Complete.** Build `2026-09-18 18:07:52`, config hash `0xd4f82693`. OTA path proven |
 | Credentials | ✅ All three rotated and verified |
 | 12 V wiring | ✅ **Polarity confirmed by meter** — black tail → TP4 a dead short, red → TP4 open. **Red is +12 V** |
-| Enclosure | Case printed 09-18 and in use; **lid unchanged**. Light pipes uncut (item 27) |
+| Enclosure | **Finished and mounted.** Lid on, four screws, light pipes fitted and lit. Item 27 closed |
 | HA software | **Complete**, re-verified against the live instance 2026-09-18 |
-| Go-live | `input_boolean.reef_af4_schedule_enabled` **OFF**. Kenny enables it manually after the case closes. Schedule stands at **2/day, 13:30 and 20:30** |
+| Go-live | ✅ **ON since 2026-09-18 23:26.** Both automations armed. Schedule stands at **2/day, 13:30 and 20:30** |
 
 **Nothing is on order and nothing is waiting.**
 
-1. **Pull the link cable and confirm the feeder shows a next feed time on its own display**
-   (item 31). Nothing establishes that the internal schedule resumes on release — and while the
-   cable is in with the schedule off, the feeder is silently dark.
-2. **Finish the case:** cut the two PoE light pipes to 24.2 mm (item 27), the 2 × M3 into the
-   tall standoffs, anchor the 12 V cable at the tie post, lid on.
-3. **Then turn the schedule on.** Next scheduled feed would be 13:30.
+1. **Watch the 13:30 feed on 2026-09-19** — the first unattended one. It passes when
+   `counter.reef_af4_feeds_today` reads 1 and the lockout raises; the counter increments only on a
+   *confirmed* pulse, so a stuck 0 is the signal, not a silent success. → §12.4
+2. **Nothing else is gated.** Items 26, 24, 20, 22, 14, 18 and the bench leftovers are all
+   improvements to a running system.
 
 ## What 6.1–6.8 measured
 
@@ -56,6 +56,9 @@ answers bench item **A6** for free.
 - **The build board end to end**: online, adopted, entity IDs intact, OTA path proven, all four
   consumers resolving. Re-checked 09-19: seven entities, no `_2`, online at `192.168.1.55`.
 - **That the retired board carries nothing** — erased, and verified at five offsets. → §13
+- **That the 23:45 "missed feed(s)" alert on 09-18 was correct and is spent.** The backstop
+  counts the day's due slots whole; the schedule went on at 23:26, after both had passed. It
+  cannot recur on a day that starts with the toggle already on. → §14.1
 - **D3 and D5 are the right way round** — on the build board. Item 25 closed at 6.1 and 6.5.
 - **The reef is running.** Return pump 142.245 W against a 10 W threshold.
 - **A manual feed leaves no trace in `counter.reef_af4_feeds_today`** — by design; it stayed at 0
@@ -102,9 +105,7 @@ answers bench item **A6** for free.
 
 | # | Item | Blocks |
 |---|---|---|
-| 31 | **Confirm the feeder's internal schedule resumes** once the link cable is pulled. Free to check; the cost of not checking is a silently dark feeder | **The fish, tonight** |
-| 27 | **Cut the two PoE light pipes to 24.2 mm** (hat pipes unchanged, 10.1); move the hat up 1.5 mm in Tinkercad. Then M3s, tie-post anchor, lid | **Closing the case** |
-| — | **Turn on `input_boolean.reef_af4_schedule_enabled`** — Kenny, by hand, once the case is closed. Every engineering gate has passed | **Go-live** |
+| 31 | **Confirm the feeder's internal schedule resumes once the link cable is pulled.** ⚠️ **Still unverified, and the free window has closed** — the cable is back in and the aF4 is overridden again. It stops being urgent only because HA now feeds on schedule; it bites the next time the board is out of service for more than a day | No longer tonight — but it is the fallback nobody has tested |
 | 26 | **Inspect the other four hats** — the build board is chosen, so this is no longer a selection question, but their J3/J4 faces and joints are ungraded if one is ever needed | No |
 | 24 | **Fix the cause of the J3/J4 error:** footprints to `B.Cu`, silkscreen to `B.SilkS`, face named in `PCBWay-README.txt`, THT parts in the centroid with a side column | No |
 | 20 | **No dispense confirmation.** A power-monitoring smart plug on the 12 V supply is the only fix short of opening the unit | No — the last unmonitored failure direction |
@@ -115,7 +116,7 @@ answers bench item **A6** for free.
 
 **Out of scope**, decided 2026-09-01: eWeLink → Home Assistant integration.
 **Closed 2026-09-18:** items 16, 28, 12, 15, 25, 29, and the reef-plumbing long pole.
-**Closed 2026-09-19:** item 30.
+**Closed 2026-09-19:** item 30. **Closed 2026-09-18 (recorded 09-19):** item 27, and go-live.
 
 ### Carried to the next board revision
 
@@ -125,7 +126,9 @@ vendor STEP rather than by hand.
 ## Last session — 2026-09-19
 
 The retired board identified by `read-mac`, full-chip erased over USB with the Ethernet lead out,
-and the erase verified by read-back at five offsets. Item 30 closed; HA holds no orphan. → §13
+and the erase verified by read-back at five offsets — item 30 closed, HA holds no orphan (§13).
+**Then the install was found already finished and live:** case closed and wall-mounted, schedule
+on since 23:26 the night before, both automations armed, item 27 closed (§14).
 
 ## 2026-09-18
 
