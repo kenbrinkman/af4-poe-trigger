@@ -103,9 +103,10 @@ Every one of these has actually cost time here.
    had simply never been written back. Item 11 sat "open" for a day after the firmware was
    already flashed. **A ledger built by reading the repo invents open items as readily as it
    misses closed ones.** Check for the *function*, not the name. → §7.1
-9. **The reef system is not plumbed.** Every reef power and flow sensor reads zero, and zero is
-   correct. A 31-day run of 0 W on the return pump was once written up as a go-live blocker.
-   *Before calling a zero a fault, verify the system is supposed to be non-zero.*
+9. **Before calling a zero a fault, verify the system is supposed to be non-zero.** A 31-day run
+   of 0 W on the return pump was once written up as a go-live blocker; the reef simply was not
+   plumbed yet. ⚠️ **It is plumbed and running as of 2026-09-18** — return pump 142 W — so the
+   rule now bites the other way: **a reef sensor reading zero is suspect, not expected.** → §12.3
 10. **A fixed-output permanent install gets an IC and fixed resistors, never a trimpot module.**
     Three MP1584EN buck modules failed in sequence in rev C before this was accepted.
 11. **Answer the question you were asked *and* the next most likely one, in the same reply.**
@@ -175,7 +176,7 @@ Every one of these has actually cost time here.
 | Wiring | `reference/diagrams/` · §2 · §2.5 |
 | Bill of materials, sourcing traps | §3 · §3.1 · `docs/aF4-esp32-trigger-BOM.md` |
 | Board geometry, isolation, DRC | §4.1 · §4.2 · §4.3 |
-| Commissioning checks 6.1–6.8 | §8.1 |
+| Commissioning checks 6.1–6.8 | §8.1 for the gate · **§12.2 for the measured results** |
 | Enclosure, the vertical stack | §6.1 · §6.3 · `docs/aF4-enclosure-notes.md` |
 | Regenerate or verify the enclosure meshes | §6.3 · `docs/aF4-enclosure-notes.md` Files. Both run in `~/.venvs/cad` (§9.2) |
 | Validate the firmware YAML locally | §9.2 — `esphome config`, stdout to `/dev/null`. Says nothing about the Device Builder copy |

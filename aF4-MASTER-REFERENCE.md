@@ -44,64 +44,71 @@ one pass.
 > 🔑 **Do not read this file whole.** Find the section here, then read only its
 > line range. Numbers drift — confirm with `grep -n "^### 2.4" <file>`.
 
-  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L112
-  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L130
-  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L153
-  - §A1.3 Isolation, re-derived `[AUDIT]` — L182
-  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L204
-  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L215
-  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L272
-  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L320
-  - §A4 J1, the 12 V barrel jack, faces inboard on all five boards `[CAD] 2026-09-18` — L366
-- **§1 What the system must do** — L562
-  - §1.1 Requirements — L570
-  - §1.2 Measured facts about the port — L581
-  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L598
-  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L638
-- **§2 Circuit** — L667
-  - §2.1 Regulator — the calculation that matters — L714
-  - §2.2 Load on the 10.4 V rail — L747
-  - §2.3 PhotoMOS drive — L798
-  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L823
-  - §2.5 Protection — L865
-  - §2.6 Indicator LEDs — L888
-- **§3 Bill of materials — with verification status** — L922
-  - §3.1 Sourcing traps recorded — L951
-  - §3.2 Bought separately (not on the board) — L959
-- **§4 Board** — L967
-  - §4.1 Geometry from vendor CAD `[CAD]` — L985
-  - §4.2 Verification status of the board — L995
-  - §4.3 Isolation — L1017
-  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L1030
-- **§5 Firmware** — L1065
-  - §5.1 The safety architecture — L1071
-  - §5.2 Timing check against the spec `[CALC]` — L1088
-  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1108
-  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1132
-  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1143
-  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1161
-  - §5.7 Home Assistant integration — L1172
-- **§6 Enclosure** — L1253
-  - §6.1 The vertical stack — the governing dimension — L1261
-  - §6.2 Two details that are easy to lose — L1296
-  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1314
-  - §6.4 Lid label turned to read portrait `2026-09-16` — L1427
-- **§7 Errors already found and fixed** — L1447
-  - §7.1 The inverse failure mode, named 2026-09-02 — L1482
-- **§8 Open items** — L1502
-  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1554
-- **§9 Repository map** — L1585
-  - §9.1 Toolchain constraints worth knowing — L1608
-  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1623
-- **§10 Audit status** — L1665
-  - §10.1 Still unverified after the audit — L1681
-  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1715
-- **§11 The PoE board was replaced `[MEAS] 2026-09-18`** — L1727
-  - §11.1 Every board has two MACs, three apart, and the two systems use different ones — L1742
-  - §11.2 Home Assistant migrates the device; it does not need a delete and re-add — L1761
-  - §11.3 The OPNsense reservation is one line — L1783
-  - §11.4 The OTA password rotation, and the character that broke it — L1795
-  - §11.5 The standing corrections — L1820
+  - §A1 U1 is on the wrong footprint — the board cannot be built `[AUDIT]` — L119
+  - §A1.1 FIXED — a project-local footprint built from Panasonic's drawing — L137
+  - §A1.2 Rejected: `SO-4_4.4x4.3mm_P2.54mm`, matched on dimensions but not on pad shape — L160
+  - §A1.3 Isolation, re-derived `[AUDIT]` — L189
+  - §A2 `pcb/gen_pcb.py` says `SMAJ15A` for D2; everything else says `SMAJ13A` `[AUDIT]` — L211
+  - §A3 J3/J4 are built on the wrong face — the fab data cannot carry a THT mounting side `[EQ]` — L222
+  - §A3.1 Rework verified from photographs, and accepted with two defects open `[EQ] 2026-09-12` — L279
+  - §A3.2 The EQ closed and the order shipped `[EQ] 2026-09-14` — L327
+  - §A4 J1, the 12 V barrel jack, faces inboard on all five boards `[CAD] 2026-09-18` — L373
+- **§1 What the system must do** — L569
+  - §1.1 Requirements — L577
+  - §1.2 Measured facts about the port — L588
+  - §1.3 ⚠️ `[VENDOR] 2026-09-01` inD publishes THREE different hold times — L605
+  - §1.4 ✅ `[VENDOR] 2026-09-01` RESOLVED — and the assumption was backwards — L645
+- **§2 Circuit** — L674
+  - §2.1 Regulator — the calculation that matters — L721
+  - §2.2 Load on the 10.4 V rail — L754
+  - §2.3 PhotoMOS drive — L805
+  - §2.4 The GPIO13 problem — why the trigger is on GPIO32 — L830
+  - §2.5 Protection — L872
+  - §2.6 Indicator LEDs — L895
+- **§3 Bill of materials — with verification status** — L929
+  - §3.1 Sourcing traps recorded — L958
+  - §3.2 Bought separately (not on the board) — L966
+- **§4 Board** — L974
+  - §4.1 Geometry from vendor CAD `[CAD]` — L992
+  - §4.2 Verification status of the board — L1002
+  - §4.3 Isolation — L1024
+  - §4.4 The ordered board re-checked on KiCad 9.0.7 `[MEAS] 2026-09-17` — L1037
+- **§5 Firmware** — L1072
+  - §5.1 The safety architecture — L1078
+  - §5.2 Timing check against the spec `[CALC]` — L1095
+  - §5.3 ✅ `[AUDIT]` The lockout did not survive a reboot — CLOSED 2026-09-01 — L1115
+  - §5.4 ✅ `[AUDIT]` The web server was a second, unauthenticated control path — CLOSED 2026-09-01 — L1139
+  - §5.5 ✅ The related hygiene problem — the worse one — CLOSED 2026-09-02 — L1150
+  - §5.6 `[AUDIT]` Held-high failure modes are bounded — the design's best safety property — L1168
+  - §5.7 Home Assistant integration — L1179
+- **§6 Enclosure** — L1260
+  - §6.1 The vertical stack — the governing dimension — L1268
+  - §6.2 Two details that are easy to lose — L1303
+  - §6.3 The hat collided with an Olimex capacitor — raised 1.5 mm `[MEAS] 2026-09-16` — L1321
+  - §6.4 Lid label turned to read portrait `2026-09-16` — L1434
+- **§7 Errors already found and fixed** — L1454
+  - §7.1 The inverse failure mode, named 2026-09-02 — L1489
+- **§8 Open items** — L1509
+  - §8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6) — L1562
+- **§9 Repository map** — L1593
+  - §9.1 Toolchain constraints worth knowing — L1616
+  - §9.2 The toolchain under Claude Code on the Mac `[MEAS] 2026-09-17` — L1631
+- **§10 Audit status** — L1673
+  - §10.1 Still unverified after the audit — L1689
+  - §10.2 Bench work still unrun (`docs/aF4-meter-test-battery.md`) — L1723
+- **§11 The PoE board was replaced `[MEAS] 2026-09-18`** — L1735
+  - §11.1 Every board has two MACs, three apart, and the two systems use different ones — L1750
+  - §11.2 Home Assistant migrates the device; it does not need a delete and re-add — L1769
+  - §11.3 The OPNsense reservation is one line — L1791
+  - §11.4 The OTA password rotation, and the character that broke it — L1803
+  - §11.5 The standing corrections — L1828
+- **§12 Commissioning passed, end to end `[MEAS] 2026-09-18`** — L1850
+  - §12.1 Polarity, settled by meter — L1863
+  - §12.2 The numbers — L1874
+  - §12.3 The reef system is plumbed and running — L1911
+  - §12.4 What a manual feed deliberately does not touch — L1930
+  - §12.5 The decision taken, and the one question it opens — L1944
+  - §12.6 The standing corrections — L1958
 
 <!-- /SECTION-INDEX -->
 
@@ -1531,10 +1538,10 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 9 | ~~`web_server: auth:`~~ — **CLOSED 2026-09-01**, and it created item 16 | — |
 | 10 | ~~C1 substitute~~ — **CLOSED 2026-08-31.** LCSC holds ~123 k of `GRM31CR61H106KA12L`; pre-approved alternate `C3216X5R1H106K160AB` (TDK) is in the order notes. PCBWay quoted the correct MPN 2026-09-02 and did not substitute | — |
 | 11 | ~~`firmware/af4-feeder.yaml` needs pasting into the ESPHome Device Builder + OTA~~ — **CLOSED 2026-09-01**, and this row was stale for a day before anyone noticed. The device reports its firmware as built 18:54:20 that evening, three minutes after the commit that wrote it. GPIO32, the 20 s pulse, the boot lockout and web auth have been live since | — |
-| 12 | Solder two 1×10 male headers into EXT1/EXT2, pins up | **YES** — blocks assembly |
+| 12 | ~~Solder two 1×10 male headers into EXT1/EXT2, pins up~~ — ✅ **CLOSED 2026-09-18.** Both rows fitted, plastic on the top face. The hat drops onto them and rests on its two tall standoffs with both jack noses through the +X wall — the 1.5 mm socket-to-plastic gap that keeps the hat off the Olimex capacitor is present as designed (§6.3). → §12 | — |
 | 13 | ~~Confirm the internal 24 h timer under external triggering~~ — **CLOSED `[VENDOR]`: the built-in schedule is completely overridden while the link port is connected.** The old assumption was backwards; this is what item 17 exists to cover | — |
 | 14 | Resolve the LED viewing-angle conflict, 120° vs 160°/140° (§2.6) | No — cosmetic |
-| 15 | Commissioning steps 6.1–6.8 must all pass before the schedule toggle is enabled | **YES** — gates go-live |
+| 15 | ~~Commissioning steps 6.1–6.8 must all pass before the schedule toggle is enabled~~ — ✅ **CLOSED `[MEAS] 2026-09-18`.** All eight passed against the real feeder in one sitting: 6.2 = 11.4 V, 6.3 = 10.37 V, 6.4 = 0 V with D5 dark, 6.5 = 10.37 V held 20 s with a clean edge, 6.6 = 310.007 s then 310.013 s, 6.7 link solid, 6.8 the unit fed. Measured values and what each one settles are in §12.2 | — |
 | 16 | ~~Rotate the OTA password~~ — ✅ **CLOSED 2026-09-18.** All three credentials are now rotated and verified live. `af4_api_key` and the web password went over OTA on 2026-09-02; `af4_ota_password` rotated at the serial flash of the **replacement** board (§11.4) and was then proven end to end by a successful Device Builder OTA install — the one credential OTA cannot change, verified by the path that needs it. The first attempt failed `authentication is invalid` because the chosen password contained YAML-significant characters, so the Mac and Device Builder secrets stores resolved to different strings; a punctuation-free `openssl rand -hex 24` value pasted into both fixed it. The old values remain in git history and are worthless by design | — |
 | 17 | ~~Missed-feed alert in HA~~ — **ALREADY CLOSED, and this item should never have been opened.** `automation.reef_tank_feeder_health_watchdog` has done it since 2026-08-27: a 23:45 counter-vs-elapsed-feed-times backstop, plus a board-offline branch. The scheduled-feed automation independently notifies on skip and on unacknowledged press. Read from HA 2026-09-02; the work existed and was simply never written back to this repo | — |
 | 18 | **R5 runs at 77 % of an 0805's 125 mW rating.** A 0.25 W part is a drop-in; raising the divider impedance is NOT available, it is the minimum-load ballast. **Window has now closed for this run** — boards are in fabrication | No — note for a future rev |
@@ -1544,12 +1551,13 @@ open items as readily as it misses closed ones.** Check reality before adding a 
 | 22 | `pcb/gen_pcb.py` stray "exclude from BOM/pos" flags on J2. Added to the registry 2026-09-05; the handoff numbered it 9, a number already spent on the closed `web_server: auth:` item | No |
 | 23 | ~~J3/J4 built on the wrong face~~ — **CLOSED 2026-09-12.** Rework requested 2026-09-11 (§A3), reply sent 08:17 the same day, one reworked board photographed and verified 2026-09-12: bodies on the bottom face, joints on top, pin 1 unchanged, both seated flush and square (§A3.1). Two workmanship defects were left open deliberately and rolled into item 26 rather than reworked again | — |
 | 24 | **Move the J3/J4 footprints to `B.Cu`** (silkscreen to `B.SilkS`) in `pcb/gen_pcb.py`, rewrite the `PCBWay-README.txt` ASSEMBLY line to name the face by designator, and add the THT parts to the centroid with a side column. The fix for the *cause* of item 23, as opposed to this run's rework | No — but it is the only thing that stops item 23 recurring |
-| 25 | **D3/D5 LED polarity is unverified on the built boards.** 0805 water-clear packages show no cathode mark at either photo set's resolution. Referred to PCBWay 2026-09-11, then **explicitly released on 2026-09-12** so the question could not hold the EQ open. It now falls to commissioning 6.1 / 6.5. Low consequence either way: a reversed indicator fails to light and does not touch the trigger path | No — resolves at commissioning |
+| 25 | ~~D3/D5 LED polarity unverified~~ — ✅ **CLOSED 2026-09-18 on the build board.** Resolved exactly where it was routed: **D3 lit at 6.1 and D5 lit at 6.5.** Both indicators are the right way round. Referred to PCBWay 2026-09-11 and explicitly released 2026-09-12 so it could not hold the EQ open — the right call, since commissioning answered it for nothing. ⚠️ Verified on the **built board only**; the other four are untested and the question would return with them | — |
 | 26 | **Inspect all five boards on arrival and select the best one to build** — do not assume board 1, and **check the J3/J4 mounting face on every board**: only the reworked sample was ever photographed (§A3.2). Two known defects on every board, accepted rather than reworked (§A3.1): pin 10 of each socket row carries excess solder with burnt flux, and the bottom face has uncleaned flux residue at that end. Reflow the two joints, clean with IPA, and check the ten J3 joints that the photograph could not grade. Do this **before** the item-12 header work, in the same bench session | No — but it gates a clean commissioning run |
 | 28 | ✅ **CLOSED same day, 2026-09-18.** Nothing was ordered: Kenny already had six **DALQUIS DC-099** panel jacks, the same part rev C used, with 150 mm of 18 AWG pre-soldered leads. Calipered, the `PJ_*` block set, `PJ_DIMS_VERIFIED` flipped, both scripts re-run and the exports regenerated. The measurement also revealed a **flat on the barrel**, which replaced the printed anti-rotation scheme with a D-hole. Flange Ø and body Ø remain uncalipered upper bounds and gate nothing. → §A4 | — |
-| 29 | **Reprint the CASE** from the exports regenerated 2026-09-18 — **the lid does not change**, its STL is byte-identical, so the 09-17 lid print still stands. The 09-17 case is retired: old J1 hole, no panel-jack hole. Print size unchanged at 65.2 × 117.0 × 39.9 mm. Then fit the DC-099 **flat up** and tighten its 14 mm nut **before the boards go in**, solder the pair to J1's pad tails on the hat underside (**red +12 V, black −**; GND tail to TP4 reads a dead short — confirm that way, never against TP1), and anchor the cable at the tie post → §A4 | **Assembly** |
+| 29 | **Reprint the CASE** from the exports regenerated 2026-09-18 — **the lid does not change**, its STL is byte-identical, so the 09-17 lid print still stands. The 09-17 case is retired: old J1 hole, no panel-jack hole. Print size unchanged at 65.2 × 117.0 × 39.9 mm. Then fit the DC-099 **flat up** and tighten its 14 mm nut **before the boards go in**, solder the pair to J1's pad tails on the hat underside (**red +12 V, black −**; GND tail to TP4 reads a dead short — confirm that way, never against TP1), and anchor the cable at the tie post → §A4. ✅ **CLOSED 2026-09-18.** Case printed; DC-099 fitted flat up in the D-hole with its 14 mm nut tightened while the box was empty; the pair soldered to J1's pad tails and routed **inboard**, clear of the 0.50 mm edge. Polarity then confirmed by meter — black tail → TP4 a dead short, red → TP4 open (§12.1). Tie-post anchoring goes with the final close-up under item 27 | — |
 | 27 | **Case and lid reprinted 2026-09-17** (Kenny) from the exports verified on the Mac 2026-09-16: the case for the 1.5 mm hat lift (§6.3), the lid for the portrait label (§6.4). **Still open:** cut the two PoE light pipes to 24.2 mm (hat pipes unchanged, 10.1), and move the hat up 1.5 mm in the Tinkercad model. The pre-lift case is retired — do not assemble into it | **Assembly** — the PoE light pipes only; the enclosure itself no longer blocks |
 | 30 | **Erase the retired ESP32-POE-ISO.** `python -m esptool --port /dev/cu.usbserial-XXXX erase-flash`, then label it *"retired 2026-09-18 — was af4-feeder, base MAC `20:e7:c8:74:a6:d4`"* and bag it. Until it is erased it still carries the node name `af4-feeder`, a valid API encryption key and an OTA password, so powering it on the LAN puts a second board answering to the same name beside the real one — a genuine feed hazard, not a theoretical one. Safe to do now: the replacement is adopted and verified (§11), so no rollback is being destroyed | No — but it is a standing hazard while it waits |
+| 31 | **Confirm the aF4's internal 24 h schedule resumes once the link cable is removed.** Opened 2026-09-18. §1.4 establishes that the built-in schedule is *completely overridden while the port is connected* — but both inD guides describe only the connected state, and **neither says what happens on release.** This project already assumed the override direction backwards once, so the reverse direction is not to be assumed either. The check is free: pull the cable and read the feeder's own display for a next feed time. Consequence if it does not resume and nobody looks: the feeder is silently dark for as long as the case is on the bench | No — but it is the live-animal risk while the enclosure is away |
 
 ### 8.1 Commissioning gate (from `docs/aF4-assembly-guide.md` §6)
 
@@ -1836,3 +1844,127 @@ hash `0xa8529b6a` → `0xd4f82693`, build `2026-09-18 18:07:52`.
   and xtensa toolchains are already cached in `~/.platformio`, so no long first build. The Olimex
   enumerates as a CH340 (`0x1a86:0x7523`). If it will not enter the bootloader: hold **BUT1**,
   tap **RST**, release **BUT1**. → §9.2
+
+---
+
+## 12. Commissioning passed, end to end `[MEAS] 2026-09-18`
+
+The rev E hat was assembled into the reprinted case and every check in the commissioning gate
+was run against the real feeder the same evening. **6.1 through 6.8 all pass.** This is the
+first time the trigger circuit has been measured rather than argued, and the first time it has
+driven an actual aF4.
+
+**Assembly, as it stands.** Case printed from the 09-18 exports; DC-099 fitted flat up with its
+14 mm nut tightened in the empty box; the 12 V pair soldered to J1's pad tails and routed
+inboard; ESP32 on its three M2 standoffs; hat down onto both 1×10 headers and resting on its two
+tall standoffs, with both jack noses through the +X wall. Items **12** and **29** are closed.
+The lid is off, the light pipes are uncut (item 27), and the board is at 192.168.1.55 on PoE.
+
+### 12.1 Polarity, settled by meter
+
+The last unverified thing on the build. Power off, splitter tap unplugged, continuity mode:
+
+- **black tail → TP4: dead short.** ✅
+- **red tail → TP4: open.** ✅
+
+**Red is +12 V, black is −, confirmed.** The photograph and Same Sky's PCB layout drawing had
+both said so; this is the meter agreeing. The mirror test on red against TP1 was correctly not
+attempted — F1 and D1 make a good board read a diode drop. → §A4
+
+### 12.2 The numbers
+
+| # | Check | Expected | Measured | |
+|---|---|---|---|---|
+| 6.1 | D3 with the panel jack fed | lit | **lit** | ✅ |
+| 6.2 | TP1 → TP4 | 11.4–12.0 V | **11.4 V** | ✅ |
+| 6.3 | TP2 → TP4 | 10.0–10.9 V | **10.37 V** | ✅ |
+| 6.4 | TP3 → TP4 at rest | 0 V, D5 dark | **0 V, dark** | ✅ |
+| 6.5 | Feed pressed (HA) | D5 lit, ~10.4 V, 20 s | **10.37 V solid, 20 s** | ✅ |
+| 6.6 | Lockout on, clears 310 s | 310 s | **310.007 s / 310.013 s** | ✅ |
+| 6.7 | Patch cable into J2 | link LED solid | **solid** | ✅ |
+| 6.8 | Feed pressed again | link flashes, unit cycles | **fed** | ✅ |
+
+**6.2 landed on its predicted value, not merely inside its band.** A2 measured the feeder's rail
+at 11.77 V under load and §8.1 forecast TP1 "near 11.47 V"; 11.77 less the D1 Schottky drop is
+11.4 V. ⚠️ **Under the original 11.6–12.2 V band this good board would have failed 6.2.** The
+2026-09-01 widening was not cosmetic and this is the evidence — see §8.1.
+
+**6.3 at 10.37 V is the OEM dongle's own measured open-circuit output to the hundredth** (§1.2).
+Note what it also disproves: with 11.4 V in and 10.4 V wanted out the LM1117 has ~1.0 V of
+headroom and was *expected* to be in dropout, which would have put the output near 10.5 V
+regardless of R4/R5 and made 6.3 uninformative about the divider. It is not in dropout. It is
+regulating, and **the R4/R5 divider is therefore confirmed by measurement**, not merely passed.
+
+**6.4 is the first measurement of the GPIO32 decision.** 0 V at rest with D5 dark means no idle
+or boot leakage through U1 at all. The pin move was justified on datasheet arithmetic — AQY212
+guaranteed-off 0.3 mA against 0.72–0.85 mA of GPIO13 boot leakage — and had never been checked
+on hardware. → §2.4
+
+**6.5 adds two facts nothing had established.** TP3 under the pulse reads **10.37 V, identical
+to TP2 at rest**: the AQY212GS drops essentially nothing into the feeder's high-impedance input,
+so the ≥ 9 V window has ~1.4 V of margin in hand. And the falling edge is **clean, with no decay
+tail** — which answers bench item **A6** incidentally: R3's bleed path is not needed to get a
+sharp release, and remains harmless-but-redundant as suspected. → §10.2
+
+**6.6 ran twice and the on-device timing does not drift:** 310.007 s and 310.013 s, 6 ms apart.
+
+### 12.3 The reef system is plumbed and running
+
+⚠️ **This invalidates the premise of a standing project fact.** `CLAUDE.md` lesson 9 reads "the
+reef system is not plumbed; every reef power and flow sensor reads zero, and zero is correct."
+As of tonight that is history. `sensor.utility_room_return_pump_electric_consumption_w` reads
+**142.245 W** against the binary sensor's 10 W threshold, and Kenny confirmed directly: the
+system is completely up and running.
+
+**The lesson survives; only its example expired.** "Before calling a zero a fault, verify the
+system is supposed to be non-zero" cost this project a 31-day write-up of a go-live blocker that
+was a correct reading. Tonight is the same trap inverted — a *non*-zero where the record said
+zero — and it was worth checking rather than assuming a sensor fault.
+
+**Consequence for go-live:** `automation.reef_tank_af4_scheduled_feed` carries a hard interlock
+requiring the return pump to be running, on the reasoning that the feeder dumps into the sump and
+without return flow the food never reaches the display. **That interlock is now satisfied.**
+Go-live is no longer gated on the plumbing — only on closing the case. The long-pole open item
+is closed.
+
+### 12.4 What a manual feed deliberately does not touch
+
+`counter.reef_af4_feeds_today` stayed at **0** across both of tonight's feeds, and that is
+correct. The counter is incremented only inside `automation.reef_tank_af4_scheduled_feed`, and
+only *after* the board confirms the pulse by raising its lockout — an unconfirmed press must
+never log a phantom feed and blind the health watchdog (§5.7). **A manual bench session
+therefore leaves no trace in the counter.** Do not read that as a missing count later.
+
+The same gating makes case work quiet: **both branches of
+`automation.reef_tank_feeder_health_watchdog`** — the 15-minute board-offline alert and the
+23:45 missed-feed backstop — **are conditioned on `input_boolean.reef_af4_schedule_enabled`
+being `on`.** With the schedule off, the board can be off the network indefinitely without
+notifying anyone.
+
+### 12.5 The decision taken, and the one question it opens
+
+The enclosure goes back to the bench to be finished — light pipes, M3s, tie-post anchoring, lid.
+**The link cable is pulled meanwhile, to hand the feeder back its own internal schedule**, and
+Kenny turns `input_boolean.reef_af4_schedule_enabled` on by hand once the case is closed. The
+schedule stands at **2 feeds/day, 13:30 and 20:30**.
+
+⚠️ **New open item 31: nothing establishes that the internal schedule resumes when the link
+cable is removed.** Both inD guides state the built-in schedule is overridden *while the port is
+connected* — Hydros words it as connection rather than signalling — but **neither describes the
+release.** §1.4 already records that this project assumed the override direction backwards once.
+Do not assume the reverse direction either: **confirm the feeder shows a next feed time on its
+own display after the cable comes out.**
+
+### 12.6 The standing corrections
+
+- ✅ **The commissioning bands are validated by a passing board, not just by argument.** 6.2
+  measured 11.4 V — the floor of its band. Anyone tempted to tighten either band should read
+  §8.1 and this section first. → §8.1
+- **A passing 6.3 only clears the divider if 6.2 is healthy.** Here it was in dropout territory
+  by headroom yet regulating, which is what made 10.37 V informative. Check 6.2 before drawing
+  any conclusion from 6.3.
+- **A manual feed is invisible to `counter.reef_af4_feeds_today` by design.** → §12.4
+- ⚠️ **Do not assume the aF4's internal schedule returns when the link cable is pulled.**
+  Verify on the unit. → item 31
+- **The reef system is plumbed as of 2026-09-18.** Reef sensors reading zero are now suspect
+  rather than expected — the opposite of the rule that held until tonight. → §12.3
