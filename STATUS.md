@@ -1,6 +1,6 @@
 # STATUS — aF4 PoE Trigger
 
-**Rewritten 2026-09-18 (night).** The only live-status document in this project. Rewrite it;
+**Rewritten 2026-09-19.** The only live-status document in this project. Rewrite it;
 never append to it. If it passes ~120 lines, something in it belongs in `aF4-MASTER-REFERENCE.md`.
 
 ## Phase
@@ -12,6 +12,9 @@ Items 12, 15, 25 and 29 are closed. → §12
 **🟢 The reef system is plumbed and running** — confirmed by Kenny, return pump at 142 W. That
 retires the longest-standing item in this project and satisfies the scheduled-feed automation's
 return-pump interlock. **Go-live is no longer gated on anything but closing the case.** → §12.3
+
+**🟢 The retired ESP32 is erased** — full chip, verified by read-back. Item 30 and the LAN hazard
+close together; the bare board is stock silicon now and all it still wants is a label. → §13
 
 **🟠 The enclosure goes back to the bench to be finished** — light pipes, M3s, tie-post anchor,
 lid. The link cable is pulled meanwhile so the feeder runs on its own internal schedule, and
@@ -36,7 +39,6 @@ lid. The link cable is pulled meanwhile so the feeder runs on its own internal s
 2. **Finish the case:** cut the two PoE light pipes to 24.2 mm (item 27), the 2 × M3 into the
    tall standoffs, anchor the 12 V cable at the tie post, lid on.
 3. **Then turn the schedule on.** Next scheduled feed would be 13:30.
-4. **Erase the retired ESP32** (item 30) — still a standing hazard.
 
 ## What 6.1–6.8 measured
 
@@ -52,7 +54,8 @@ answers bench item **A6** for free.
 - **Every number above**, and the polarity behind them. This is the first evidence in the project
   that is measurement rather than inference.
 - **The build board end to end**: online, adopted, entity IDs intact, OTA path proven, all four
-  consumers resolving.
+  consumers resolving. Re-checked 09-19: seven entities, no `_2`, online at `192.168.1.55`.
+- **That the retired board carries nothing** — erased, and verified at five offsets. → §13
 - **D3 and D5 are the right way round** — on the build board. Item 25 closed at 6.1 and 6.5.
 - **The reef is running.** Return pump 142.245 W against a 10 W threshold.
 - **A manual feed leaves no trace in `counter.reef_af4_feeds_today`** — by design; it stayed at 0
@@ -67,8 +70,6 @@ answers bench item **A6** for free.
 - ⚠️ **That the aF4's internal schedule resumes when the link cable comes out.** Both vendor
   guides describe only the *connected* state. This project assumed the override direction
   backwards once already — do not assume the reverse. **Verify on the unit.** → item 31
-- ⚠️ **The retired ESP32 is still flashed** and holds the node name, a valid API key and an OTA
-  password. Until item 30 it must not be powered on the LAN. → item 30
 - ⚠️ **Only the build board is proven.** The other four are uninspected (item 26): D3/D5 untested,
   ten J3 joints ungraded, pin-10 excess solder on every board.
 - **The 0.72 mm cap clearance is still calculated**, not measured — the stack assembles and the fit
@@ -92,6 +93,9 @@ answers bench item **A6** for free.
 - 🚫 **A check whose result is fixed by its own inputs is not a check.** → §A4
 - 🚫 **Never mount the ESP32 bottom side up**, and **never press the hat fully home on the headers
   outside the case** (§6.3). 🚫 **Item 17 does not exist and never did** (§7.1).
+- 🚫 **Wiping an ESP32 is `erase-flash`, not a re-flash** — credentials live in NVS — and the
+  verification is a read-back, never the tool's own success line. `read-mac` resets the board it
+  is pointed at: identify bench boards with it, never a running one. → §13.1
 - ⚠️ **Item numbers are `aF4-MASTER-REFERENCE.md` §8 numbers** — the only numbering.
 
 ## Open items — by consequence
@@ -101,7 +105,6 @@ answers bench item **A6** for free.
 | 31 | **Confirm the feeder's internal schedule resumes** once the link cable is pulled. Free to check; the cost of not checking is a silently dark feeder | **The fish, tonight** |
 | 27 | **Cut the two PoE light pipes to 24.2 mm** (hat pipes unchanged, 10.1); move the hat up 1.5 mm in Tinkercad. Then M3s, tie-post anchor, lid | **Closing the case** |
 | — | **Turn on `input_boolean.reef_af4_schedule_enabled`** — Kenny, by hand, once the case is closed. Every engineering gate has passed | **Go-live** |
-| 30 | **Erase the retired ESP32** and label it. Safe now — the replacement is proven | No — standing hazard |
 | 26 | **Inspect the other four hats** — the build board is chosen, so this is no longer a selection question, but their J3/J4 faces and joints are ungraded if one is ever needed | No |
 | 24 | **Fix the cause of the J3/J4 error:** footprints to `B.Cu`, silkscreen to `B.SilkS`, face named in `PCBWay-README.txt`, THT parts in the centroid with a side column | No |
 | 20 | **No dispense confirmation.** A power-monitoring smart plug on the 12 V supply is the only fix short of opening the unit | No — the last unmonitored failure direction |
@@ -112,17 +115,21 @@ answers bench item **A6** for free.
 
 **Out of scope**, decided 2026-09-01: eWeLink → Home Assistant integration.
 **Closed 2026-09-18:** items 16, 28, 12, 15, 25, 29, and the reef-plumbing long pole.
+**Closed 2026-09-19:** item 30.
 
 ### Carried to the next board revision
 
 **§A4 holds the full list**, headed by J1 to rotation 90 and both jack datums taken from the
 vendor STEP rather than by hand.
 
-## Last session — 2026-09-18
+## Last session — 2026-09-19
 
-Three pieces of work. **Morning:** J1 diagnosed as rotated 180° on all five boards and the
-panel-jack repair taken into the scripts → §A4, items 28 and 29. **Evening:** the PoE board
-swapped, OTA password rotated, OTA path proven → §11. **Night:** the hat assembled into the
-reprinted case, 12 V polarity settled with a meter, and **commissioning 6.1–6.8 run and passed
-against the real feeder** → §12. The reef turned out to be plumbed and running, closing the
-go-live long pole. Item 31 opened.
+The retired board identified by `read-mac`, full-chip erased over USB with the Ethernet lead out,
+and the erase verified by read-back at five offsets. Item 30 closed; HA holds no orphan. → §13
+
+## 2026-09-18
+
+J1 found rotated 180° on all five boards and the panel-jack repair taken into the scripts (§A4,
+items 28–29); the PoE board swapped, OTA password rotated, OTA path proven (§11); the hat
+assembled into the reprinted case, 12 V polarity settled with a meter, and **commissioning
+6.1–6.8 passed against the real feeder** (§12). The reef proved plumbed; item 31 opened.
